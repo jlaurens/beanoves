@@ -9432,7 +9432,6 @@ end
 % Workflows:
 % \begin{BNVS.workflow}
 % \KWNstep & \KWNlatex{\__bnvs_gdef:nnn}\\
-% \KWNstep & \KWNlatex{\__bnvs_gdef:nn}\\
 % \end{BNVS.workflow}
 % We parse definitions and collect material between curly or square brackets.
 % ^^A
@@ -9818,7 +9817,6 @@ end
 % Parses the definitions as a standalone value.
 % Other values are errors.
 % It does not mean that standalone values are free from errors by themselves.
-% Called by \KWNlatex{\__bnvs_gdef:nn}.
 % \end{function}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
@@ -10025,139 +10023,6 @@ end
 }
 %    \end{macrocode}
 % \end{BNVS.macrocode}
-% ^^A
-% \begin{function}{
-%   \__bnvs_gdef:nn,
-% }
-%   \begin{syntax}
-%     \KWNlatex*{\__bnvs_gdef:nn} \KWNmarg{tag} \KWNmarg{value}
-%   \end{syntax}
-% A top level \KWNmeta{tag}--\KWNmeta{value} has been parsed.
-% Ensure that \KWNmeta{tag} is correct and then deal with the value.
-% \end{function}
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-\BNVS_new:cpn { gdef:nn } #1 #2 {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\BNVS_DEBUG_log_f:nncn p {} { gdef:nn }  { ... }
-\BNVS_DEBUG_log_arg:nnnnn p { TAG } { #1 } { VALUE } { #2 }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-  \__bnvs_match_if_once:NnTF \c__bnvs_A_IKPN_Z_regex { #1 } {
-    \__bnvs_match_pop:
-    \__bnvs_match_pop:cccc IKPN
-    \__bnvs_tl_if_empty:cTF K {
-      \__bnvs_tl_set_eq:cc I J
-    } {
-      \__bnvs_tl_set_eq:cc J I
-    }
-    \__bnvs_tl_if_empty:cTF N {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-    \BNVS_coverage:n { => gdef:nnn }
-%</!final>
-% \end{BNVS.gobble}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nn }{/421}, ignore}
-% \__bnvs_gdef:nn { X } { 421 }
-% \assert_coverage:nnn { gdef:nn } { => gdef:nnn } A
-% \__bnvs_if_get:nnncTF {} X = { ans } {
-%   \assert_equal_ans:nn { 421 } A
-% } {
-%   \test_fail:n B
-% }
-% \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nn }{/SUKS,ESON}, eringo, debug}
-% \__bnvs_gdef:nn { I!P } { SUKS, ESON }
-% \__bnvs_if_get:nnncTF IP = { ans } {
-%   \assert_equal_ans:nn { \BNVS:n { SUKS } \BNVS:n { ESON } } A
-% } {
-%   \test_fail:n B
-% }
-% \end{BNVS.test}
-%    \begin{macrocode}
-      \__bnvs_gdef:vvn IP { #2 }
-    } {
-      \__bnvs_normalize_N:
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-    \BNVS_coverage:n { => keyval_IPNV:w }
-%</!final>
-% \end{BNVS.gobble}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nn }{ ...X!A.123 }, eringo}
-% \cs_set:Npn \__bnvs_keyval_IPNV:w #1 #2 #3 #4 {
-%   \tl_set:Nn \l__bnvs_TEST_A_tl { #1 }
-%   \tl_set:Nn \l__bnvs_TEST_B_tl { #2 }
-%   \tl_set:Nn \l__bnvs_TEST_C_tl { #3 }
-%   \tl_set:Nn \l__bnvs_TEST_D_tl { #4 }
-% }
-% \coverage_clear:
-% \BNVS_DEBUG_ON:
-% \__bnvs_gdef:nn { X!A.123 } { F00 }
-% \assert_coverage:nnn { gdef:nn } { => keyval_IPNV:w } A
-% \assert_equal_tl:vnn { TEST_A } { X   } I
-% \assert_equal_tl:vnn { TEST_B } { A   } T
-% \assert_equal_tl:vnn { TEST_C } { 123 } N
-% \assert_equal_tl:vnn { TEST_D } { F00 } V
-% \coverage_clear:
-% \__bnvs_gdef:nn { X!A.+123 } { F00 }
-% \assert_coverage:nnn { gdef:nn } { => keyval_IPNV:w } A
-% \assert_equal_tl:vnn { TEST_A } { X   } I
-% \assert_equal_tl:vnn { TEST_B } { A   } T
-% \assert_equal_tl:vnn { TEST_C } { 123 } N
-% \assert_equal_tl:vnn { TEST_D } { F00 } V
-% \coverage_clear:
-% \__bnvs_gdef:nn { X!A.-0 } { F00 }
-% \assert_coverage:nnn { gdef:nn } { => keyval_IPNV:w } A
-% \assert_equal_tl:vnn { TEST_A } { X   } I
-% \assert_equal_tl:vnn { TEST_B } { A   } T
-% \assert_equal_tl:vnn { TEST_C } { 0   } N
-% \assert_equal_tl:vnn { TEST_D } { F00 } V
-% \end{BNVS.test}
-%    \begin{macrocode}
-      \BNVS_tl_use:Nvvv \__bnvs_keyval_IPNV:w IPN { #2 }
-    }
-  } {
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nn }{/Unexpected}, eringo}
-% \test_catch_error:n {}
-% \__bnvs_gdef:nn { !!! } { FOO }
-% \assert_in_error:nn { Unexpected~ref:~!!! } A
-% \end{BNVS.test}
-%    \begin{macrocode}
-    \BNVS_error:n { Unexpected~ref:~#1 }
-  }
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\BNVS_DEBUG_log_f:nncn p { ... } { gdef:nn }  { ...END }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-}
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nn }{/provide}, eringo}
-% \__bnvs_provide_ON:
-% \__bnvs_gdef:nn { I!P } { SUKS, ESON }
-% \__bnvs_if_get:nnncTF IP = { ans } {
-%   \assert_equal_ans:nn { \BNVS:n { SUKS } \BNVS:n { ESON } } A
-% } {
-%   \test_fail:n B
-% }
-% \__bnvs_gdef:nn { I!P } { BAR }
-% \__bnvs_tl_clear_ans:
-% \__bnvs_if_get:nnncTF IP = { ans } {
-%   \assert_equal_ans:nn { \BNVS:n { SUKS } \BNVS:n { ESON } } C
-% } {
-%   \test_fail:n D
-% }
-% \end{BNVS.test}
-% \end{BNVS.macrocode}
-% ^^A
 % ^^A
 % \subsubsection{Material between square brackets}
 % Here is the \hyperref[section:ValueSpecifiers]{documentation}.
@@ -10546,7 +10411,7 @@ end
 %     "\__bnvs_root_keyval:nc" \KWNmarg{definitions} \KWNmarg{aux}
 %   \end{syntax}
 % \KWNmeta{aux} is an auxiliary variable name unused on return.
-% Calls \KWNlatex{\__bnvs_gdef:nn} and is called by
+% Is called by
 % \KWNlatex{\BeanovesReset} and
 % \KWNlatex{\__bnvs_root_keyval:NNn}.
 % \begin{enumerate}
