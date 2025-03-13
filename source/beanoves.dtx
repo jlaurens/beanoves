@@ -7130,23 +7130,6 @@ end
 %   \test_fail:n J
 % }
 % \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn }{/[]}, ignore, debug}
-% \BNVS_begin:
-% \BNVS_set:cpn { gclear:nn } #1 #2 {
-%   \test_fail:n { #1!#2 }
-% }
-% \BNVS_set:cpn { gdef_square_keyval:nnn } #1 #2 #3 {
-%   \hook_gput_next_code:nn { BNVS.test } {
-%     \__bnvs_tl_set:cn { ans } { #1!#2<=#3 }
-%   }
-% }
-% \__bnvs_gdef:nnn I P { \BNVS_square:n {SUKSESON} }
-% \assert_coverage:nnn { gdef:nnn} { ...STANDALONE... } A
-% \assert_coverage:nnn { gdef:nnn} { Branch~[] } B
-% \hook_use:n { BNVS.test }
-% \assert_equal_ans:nn { I!P<=SUKSESON } C
-% \BNVS_end:
-% \end{BNVS.test}
 % \end{BNVS.macrocode}
 % ^^A
 % \begin{BNVS.macrocode}
@@ -9429,10 +9412,6 @@ end
 % ^^A
 % \subsection{Definition}
 % Lower level function names generally contain "_gdef".
-% Workflows:
-% \begin{BNVS.workflow}
-% \KWNstep & \KWNlatex{\__bnvs_gdef:nnn}\\
-% \end{BNVS.workflow}
 % We parse definitions and collect material between curly or square brackets.
 % ^^A
 % There is a pretreatment before the storage to anticipate the resolution.
@@ -9517,14 +9496,6 @@ end
 %    \end{macrocode}
 % \end{BNVS.macrocode}
 % ^^A
-% \begin{function}{
-%   \__bnvs_gdef:nnn,
-%   \__bnvs_gdef:vvn,
-% }
-%   \begin{syntax}
-%     \KWNlatex*{\__bnvs_gdef:nnn} \KWNmarg{id} \KWNmarg{path} \KWNmarg{def}
-%   \end{syntax}
-% \end{function}
 % For \KWNlatex{|\KWNmeta{id}|!|\KWNmeta{path}|=|\KWNmeta{def}|}
 % where \KWNmeta{def} is the most general one.
 % Workflow: \KWNlatex{\__bnvs_gclear:nn} or
@@ -9540,273 +9511,6 @@ end
 % \\ \KWNstep &
 % \KWNlatex{\__bnvs_ginit:nnn}.
 % \end{BNVS.workflow}
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-\BNVS_new:cpn { gdef:nnn } #1 #2 #3 {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\tl_if_empty:nT { #2 } {
-  \BNVS_error:n { Forbidden~empty~tag }
-}
-\BNVS_DEBUG_log_f:nncn p {} { gdef:nnn } { ... }
-\BNVS_DEBUG_log_arg_IT:nnnnn p { #1 } { #2 } { DEF } { #3 }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-  \tl_if_empty:nTF { #3 } {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-    \BNVS_DEBUG_log_f:nncn p {...} { gdef:nnn } { ...EMPTY... }
-    \BNVS_coverage:n { ...EMPTY... }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-    \__bnvs_gclear:nn { #1 } { #2 }
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn } { /EMPTY }, ignore}
-% \BNVS_set:cpn { gclear:nn } #1 #2 {
-%   \hook_gput_next_code:nn { BNVS.test } {
-%     \__bnvs_tl_set:cn { ans } { #1!#2 }
-%   }
-% }
-% \__bnvs_gdef:nnn I P { }
-% \assert_coverage:nnn { gdef:nnn} { ...EMPTY... } A
-% \hook_use:n { BNVS.test }
-% \assert_equal_ans:nn { I!P } B
-% \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn } { /EMPTY }, ignore}
-% \__bnvs_gset:nnnn IPK { 421 }
-% \__bnvs_is_gset:nnnF IPK {
-%   \test_fail:n A
-% }
-% \coverage_clear:
-% \__bnvs_gdef:nnn IP {}
-% \assert_coverage:nnn { gdef:nnn } { ...EMPTY... } B
-% \__bnvs_is_gset:nnnT IPK {
-%   \test_fail:n C
-% }
-% \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn } { /EMPTY+provide }, ignore}
-% \__bnvs_provide_ON:
-% \__bnvs_gset:nnnn IPK { 421 }
-% \__bnvs_is_gset:nnnF IPK {
-%   \test_fail:n A
-% }
-% \coverage_clear:
-% \__bnvs_gdef:nnn IP {}
-% \assert_coverage:nnn { gdef:nnn } { ...EMPTY... } B
-% \__bnvs_is_gset:nnnT IPK {
-%   \test_fail:n C
-% }
-% \end{BNVS.test}
-%    \begin{macrocode}
-  } {
-    \__bnvs_if_should_provide:nnT { #1 } { #2 } {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-      \BNVS_DEBUG_begin:n { gdef:nnn }
-%</!final>
-%<*!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-      \BNVS_begin:
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%</!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-      \__bnvs_keyval:ncc { #3 } V a
-      \__bnvs_tl_if_empty:cTF a {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% Standalone key stored in vaariable |V|.
-% \begin{BNVS.macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\BNVS_DEBUG_log_f:nncn p {...} { gdef:nnn } { ...STANDALONE... }
-\BNVS_coverage:n { ...STANDALONE... }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-        \BNVS_tl_last_unbraced:nv {
-          \__bnvs_peek_branch_until_s_stop:nnnnw {
-            \tl_if_empty:nTF { ##1 } {
-              \__bnvs_gclear:nn { #1 } { #2 }
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn }{/[]}, ignore}
-% \BNVS_set:cpn { gclear:nn } #1 #2 {
-%   \hook_gput_next_code:nn { BNVS.test } {
-%     \__bnvs_tl_set:cn { ans } { #1!#2 }
-%   }
-% }
-% \BNVS_set:cpn { gdef_square_keyval:nnn } #1 #2 #3 {
-%   \test_fail:n { #1!#2<=#3 }
-% }
-% \__bnvs_gdef:nnn I P { \BNVS_square:n {} }
-% \assert_coverage:nnn { gdef:nnn} { ...STANDALONE... } A
-% \assert_coverage:nnn { gdef:nnn} { Branch~[] } B
-% \hook_use:n { BNVS.test }
-% \assert_equal_ans:nn { I!P } C
-% \end{BNVS.test}
-%    \begin{macrocode}
-            } {
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn }{/[]}, ignore, debug}
-% \BNVS_begin:
-% \BNVS_set:cpn { gclear:nn } #1 #2 {
-%   \test_fail:n { #1!#2 }
-% }
-% \BNVS_set:cpn { gdef_square_keyval:nnn } #1 #2 #3 {
-%   \hook_gput_next_code:nn { BNVS.test } {
-%     \__bnvs_tl_set:cn { ans } { #1!#2<=#3 }
-%   }
-% }
-% \__bnvs_gdef:nnn I P { \BNVS_square:n {SUKSESON} }
-% \assert_coverage:nnn { gdef:nnn} { ...STANDALONE... } A
-% \assert_coverage:nnn { gdef:nnn} { Branch~[] } B
-% \hook_use:n { BNVS.test }
-% \assert_equal_ans:nn { I!P<=SUKSESON } C
-% \BNVS_end:
-% \end{BNVS.test}
-%    \begin{macrocode}
-              \__bnvs_gdef_square_keyval:nnn { #1 } { #2 } { ##1 }
-            }
-          } {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% For \KWNlatex{|\KWNmeta{id}|!|\KWNmeta{path}|={|\KWNmeta{...}|}}.
-% \begin{BNVS.macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\BNVS_DEBUG_log_f:nncn p {...} { gdef:nnn } { ...{{}}... }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-            \tl_if_empty:nTF { ##1 } {
-              \__bnvs_gclear:nn { #1 } { #2 }
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn }{/[]}, ignore}
-% \BNVS_set:cpn { gclear:nn } #1 #2 {
-%   \hook_gput_next_code:nn { BNVS.test } {
-%     \__bnvs_tl_set:cn { ans } { #1!#2 }
-%   }
-% }
-% \__bnvs_gdef:nnn I P { \BNVS_curly:n {} }
-% \assert_coverage:nnn { gdef:nnn} { ...STANDALONE... } A
-% \assert_coverage:nnn { gdef:nnn} { Branch~{} } B
-% \hook_use:n { BNVS.test }
-% \assert_equal_ans:nn { I!P } C
-% \end{BNVS.test}
-%    \begin{macrocode}
-            } {
-              \__bnvs_gdef_by_key:nnn { #1 } { #2 } { ##1 }
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn }{/[]}, ignore}
-% \BNVS_set:cpn { gdef_by_key:nnn } #1 #2 #3 {
-%   \hook_gput_next_code:nn { BNVS.test } {
-%     \__bnvs_tl_set:cn { ans } { #1!#2<=#3 }
-%   }
-% }
-% \__bnvs_gdef:nnn I P { \BNVS_curly:n { SUKSESON } }
-% \assert_coverage:nnn { gdef:nnn } { ...STANDALONE... } A
-% \assert_coverage:nnn { gdef:nnn } { Branch~{} } B
-% \hook_use:n { BNVS.test }
-% \assert_equal_ans:nn { I!P<=SUKSESON } C
-% \end{BNVS.test}
-%    \begin{macrocode}
-            }
-          } {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\BNVS_DEBUG_log_f:nncn p {...} { gdef:nnn } { ...NON~EMPTY... }
-%</!final>
-% \end{BNVS.gobble}
-% \end{BNVS.macrocode}
-% For \KWNlatex{|\KWNmeta{id}|!|\KWNmeta{path}|=|\KWNmeta{...}|}.
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-            \__bnvs_ginit:nnn { #1 } { #2 } { ##1 }
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ gdef:nnn }{ ...NON~EMPTY... }, ignore}
-% \BNVS_set:cpn { ginit:nnn } #1 #2 #3 {
-%   \hook_gput_next_code:nn { BNVS.test } {
-%     \__bnvs_tl_set:cn { ans } { #1!#2<=#3 }
-%   }
-% }
-% \__bnvs_gdef:nnn I P { SUKSESON }
-% \assert_coverage:nnn { gdef:nnn } { Branch~non~empty } A
-% \hook_use:n { BNVS.test }
-% \assert_equal_ans:nn { I!P<=SUKSESON } B
-% \end{BNVS.test}
-%    \begin{macrocode}
-          } {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% Unreachable.
-% \begin{BNVS.macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\BNVS_DEBUG_log_f:nncn p {...} { gdef:nnn } { ...EMPTY... }
-            \BNVS_error:n { UNREACHABLE }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-          }
-        } V \s_stop
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\BNVS_DEBUG_log_f:nncn p  {} { gdef:nnn } { ...END_STANDALONE }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-      } {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% A single value or range specification.
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-        \__bnvs_gunset_deep:nn { #1 } { #2 }
-        \__bnvs_tl_clear:c b
-        \cs_set:Npn \BNVS:nn ##1 ##2 {
-          \__bnvs_gdef:nnn { #1 } { #2.##1 } { ##2 }
-          \__bnvs_tl_put_right:cn b { \BNVS:n { ##1 } }
-        }
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% Tiny subtlety with great impact:
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-        \__bnvs_tl_if_empty:cF V {
-          \BNVS_tl_use:Nv \BNVS:nn V 1
-        }
-        \__bnvs_tl_use:c a
-        \__bnvs_gset:nnnv { #1 } { #2 } 2 b
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-\BNVS_DEBUG_log_f:nncn p  {} { gdef:nnn } { ...~END(non~VOID) }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-      }
-      \BNVS_end:
-    }
-  }
-}
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-\BNVS_new:cpn { gdef:vvn } {
-  \BNVS_tl_use:Nvv \__bnvs_gdef:nnn
-}
-%    \end{macrocode}
-% \end{BNVS.macrocode}
 % ^^A
 % \begin{function}{
 %   \__bnvs_keyval_IPNV:w,
@@ -10030,8 +9734,6 @@ end
 % Workflow:
 % \begin{BNVS.workflow}
 % \KWNstep &
-% \KWNlatex{\__bnvs_gdef:nnn}
-% or
 % \KWNlatex{\__bnvs_gdef_square:nnnn}
 % \\ \KWNstep &
 % \KWNlatex{\__bnvs_gdef_square_keyval:nnn}
