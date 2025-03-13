@@ -9,12 +9,14 @@
   },
   minted language=latex,
 }
-\__bnvs_gset_unresolvable:nnn |\KWNmarg{id}| |\KWNmarg{tag}| |\KWNmarg{key}|
+\__bnvs_will_gset:nnn {|\KWNmeta{id}|} {|\KWNmeta{path}|} {|\KWNmeta{key}|}
 |...|
-\__bnvs_if_get:nnncT |\KWNmarg{id}| |\KWNmarg{tag}| |\KWNmarg{key}| |\KWNmarg{in}| {
+\__bnvs_if_get:nnncT {|\KWNmeta{id}|} {|\KWNmeta{path}|} {|\KWNmeta{key}|} {|\KWNmeta{in}|} {
 | | ...
-| | \__bnvs_if_unresolvable:cTF |\KWNmarg{in}| {
-| |   |\KWNmarg{yes code}| } { |\KWNmarg{no code}| }
+| | \__bnvs_is_will_gset:cTF
+| |   {|\KWNmeta{in}|}
+| |   {|\KWNmeta{yes code}|}
+| |   {|\KWNmeta{no code}|}
 | | ...
 }
 \end{tcblisting}
