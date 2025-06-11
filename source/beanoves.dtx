@@ -8955,26 +8955,27 @@ end
 % \end{BNVS.macrocode}
 % ^^A
 % \begin{function}{
-%   \__bnvs_map_R:nnnn,
+%   \__bnvs_map:nnnn,
 % }
 % \begin{syntax}
-% \KWNlatex*{\__bnvs_map_R:nnnn} \KWNlatex{{|\KWNmeta{dotted path}|}} \KWNlatex{{|\KWNmeta{yes:}|}} \KWNlatex{{|\KWNmeta{inline:n}|}} \KWNlatex{{|\KWNmeta{no:}|}}
+% \KWNlatex*{\__bnvs_map:nnnn} \KWNlatex{{|\KWNmeta{tag}|}} \KWNlatex{{|\KWNmeta{S code:n}|}} \KWNlatex{{|\KWNmeta{R code:n}|}} \KWNlatex{{|\KWNmeta{no:n}|}}
 % \end{syntax}
-% If the \KWNmeta{dotted path} is not empty, execute \KWNmeta{yes:}
-% and then apply \KWNmeta{inline:n} to each component
-% of the \KWNmeta{dotted path}. Otherwise, execute \KWNmeta{no:} with
-% \KWNmeta{dotted path}.
+% If the \KWNmeta{tag} is not empty, execute \KWNmeta{S code:n} for
+% the first component and then apply \KWNmeta{R code:n} to each next component.
+% Otherwise, execute \KWNmeta{no:n} with the \KWNmeta{tag}.
 % \end{function}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
 \BNVS_new:cpn { map_R:nnnn } #1 #2 #3 #4 {
-  \tl_if_head_eq_meaning:nNTF { #1 } . {
+  \tl_if_empty:nTF { #1 } {
+    \cs_set:Npn \BNVS:n ##1 { #4 }
+    \BNVS:n { #1 }
+  } {
     \__bnvs_seq_set_split:cnn R { . } { #1 }
     \__bnvs_seq_pop_left:cc R R
-    #2
+    \cs_set:Npn \BNVS:n ##1 { #2 }
+    \BNVS_tl_use:Nv \BNVS:n R
     \__bnvs_seq_map_inline:cn R { #3 }
-  } {
-    #4
   }
 }
 %    \end{macrocode}
@@ -8983,18 +8984,18 @@ end
 % \__bnvs_map_R:nnnn { }
 %   { \test_fail:n A } { \test_fail:n B } { \BNVS_coverage:n { 421 } }
 % \assert_coverage:nn { 421 } 0
-% \__bnvs_map_R:nnnn { X }
-%   { \test_fail:n C } { \test_fail:n D } { \BNVS_coverage:n { 123 } }
+% \__bnvs_map_R:nnnn { 123 }
+%   { \BNVS_coverage:n { #1 } } { \test_fail:n C } { \test_fail:n D }
 % \assert_coverage:nn { 123 } 1
 % \BNVS_coverage_clear:
 % \__bnvs_map_R:nnnn { .X }
-% { \BNVS_coverage:n { 421 } } { \assert_equal:nnn #1 { X } E } { \test_fail:n F }
-% \assert_coverage:nn { 421 } G
+%   { \BNVS_coverage:n { 42#1 } } { \BNVS_coverage:n { #123 } } { \test_fail:n F }
+% \assert_coverage:nnn { 42 } { X23 } G
 % \BNVS_coverage_clear:
 % \__bnvs_map_R:nnnn { .Y.Z }
-%   { \BNVS_coverage:n { 123 } } { \BNVS_coverage:n { #1 } } { \BNVS_coverage:n { #1 } }
-% \assert_coverage:nnn { 123 } Y F
-% \assert_coverage:nnn Y Z G
+%   { \BNVS_coverage:n { 42#1 } } { \BNVS_coverage:n { #123 } } { \test_fail:n H }
+% \assert_coverage:nnn { 42 } { Y23 } I
+% \assert_coverage:nnn { Y23 } { Z23 } J
 % \end{BNVS.test}
 % \end{BNVS.macrocode}
 % ^^A
@@ -10557,7 +10558,8 @@ end
 % Calls
 % \KWNlatex[from:c={root_parsed:n}]{\__bnvs_if_IT:nTF}
 % to parse the \KWNmeta{key},
-% \KWNlatex[from:c={root_parsed:n}]{\__bnvs_gdef:nnn}.
+% \KWNlatex[from:c={root_parsed:n}]{\__bnvs_ginit:nnn}
+% to define the value.
 % \end{function}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
