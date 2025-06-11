@@ -7,6 +7,35 @@
 \begin{document}
 \noindent
 \ExplSyntaxOn
+\cs_new:Npn \map_AZ:nw #1 #2 : #3 : #4 \s_stop {
+  \typeout{2/3/4=#2/#3/#4}
+  \cs_set:Npn \:w ##1 ##2 ##3 { #1 }
+  \tl_if_blank:nTF { #4 } {
+    \:w { #2 } { } { }
+  } {
+    \:w { } { #2 } { #3 }
+  } 
+}
+\def\BNVS:w #1 #2 #3 #4 {
+  \map_AZ:nw {
+    \typeout{1=>##1}
+    \typeout{2=>##2}
+    \typeout{3=>##3}
+  }
+}
+\BNVS:w { A } { B } { C } { D } A : Z : : \s_stop
+\BNVS:w { A } { B } { C } { D } A : : : \s_stop
+\BNVS:w { A } { B } { C } { D } A : : \s_stop
+\typein\foo
+\seq_clear_new:N \l_A_seq
+\regex_extract_once:nnNTF { . } { x } \l_A_seq TF
+\seq_show:N \l_A_seq
+\ExplSyntaxOff
+DONE
+\end{document}
+\begin{docu\begin{document}
+\noindent
+\ExplSyntaxOn
 \tl_set:Nn \l_A_tl { abcabc }
 \tl_map_inline:Nn \l_A_tl {
 #1\\
