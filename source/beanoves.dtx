@@ -387,12 +387,25 @@ end
    \__bnvs_root_keyval:nc { #1 } { TEST_A }
    \__bnvs_tl_clear_ans:
    \__bnvs_if_ginit:nncTF { #2 } { #3 } { ans } {
-     \assert_equal_ans:nn { #4 } { #5 }
+     \assert_equal_str_ans:nn { #4 } { #5 }
    } {
      \test_fail:n { #5 }
    }
  }
- \BNVS_test:nnnnn { I!S=[ A ]  } I{S.1} D
+ \BNVS_test:nnnnn { I!S=[ X ] } I{S.1} { X } A
+ \cs_set:Npn \BNVS_test:nnn #1 #2 #3 {
+   \__bnvs_if_ginit:nncTF I {#1 } { ans } {
+     \assert_equal_ans:nn { #2 } { #3 }
+   } {
+     \test_fail:n { #3 }
+   }
+ }
+ \BNVS_test:nnn { S  } {   } B
+ \BNVS_test:nnn { S.1} { X } C
+ \__bnvs_root_keyval:nc { I!S=[ K=V ] } { TEST_A }
+ \BNVS_test:nnn { S.K} { V } D
+ \BNVS_foreach_IP:n {
+ }
  \end{BNVS.test}
 \typein{}
 \begin{document}
@@ -3955,6 +3968,8 @@ end
     \cs_set_eq:NN \assert_equal_tl:vxn \BNVS_ASSERT_equal_tl:vxn
     \cs_set_eq:NN \assert_equal_int:vnn \BNVS_ASSERT_equal_int:vnn
     \cs_set_eq:NN \assert_equal_int:vxn \BNVS_ASSERT_equal_int:vxn
+    \cs_set_eq:NN \assert_equal_str:nnn \BNVS_ASSERT_equal_str:nnn
+    \cs_set_eq:NN \assert_equal_str:vnn \BNVS_ASSERT_equal_str:vnn
     \cs_set_eq:NN \test_fail:n \BNVS_TEST_fail:n
     \cs_set_eq:NN \test_fail:x \BNVS_TEST_fail:x
     \cs_set_eq:NN \test_catch_error:n \BNVS_TEST_catch_error:n
@@ -3969,6 +3984,9 @@ end
     }
     \cs_set:Npn \assert_equal_ans:vn {
       \assert_equal_tl:vvn { ans }
+    }
+    \cs_set:Npn \assert_equal_str_ans:nn {
+      \assert_equal_str:vnn { ans }
     }
 %   Usage ##1: banner
     \cs_set:Npn \preflight:n ##1 {
@@ -4738,10 +4756,16 @@ end
 %    \tl_analysis_show:n { #3 }
   }
 }
-\cs_set:Npn \BNVS_ASSERT_equal:nnn #1 #2 #3 {
-  \BNVS_ASSERT_equal:nnnn { tl } { #1 } { #2 } { #3 }
+\cs_set:Npn \BNVS_ASSERT_equal:nnn {
+  \BNVS_ASSERT_equal:nnnn { tl }
 }
 \cs_generate_variant:Nn \BNVS_ASSERT_equal:nnn { x, xx }
+\cs_set:Npn \BNVS_ASSERT_equal_str:nnn {
+  \BNVS_ASSERT_equal:nnnn { str }
+}
+\cs_set:Npn \BNVS_ASSERT_equal_str:vnn {
+  \BNVS_tl_use:nv { \BNVS_ASSERT_equal:nnnn { str } }
+}
 \cs_set:Npn \BNVS_ASSERT_in:nnn #1 #2 #3 {
   \tl_if_in:nnF { #1 } { #2 } {
     \msg_error:nnnx { beanoves } { :nn } { FAILED~`#2'~not~in~`#1' } { \BeanovesCurrentTestFile :\the\inputlineno :#3}
@@ -6290,12 +6314,12 @@ end
 % }
 % \begin{syntax}
 % \KWNlatex*{\__bnvs_foreach_P:nNTF} \KWNlatex{{|\KWNmeta{id}|}} \KWNmeta{function:nn} \KWNlatex{{|\KWNmeta{yes:}|}} \KWNlatex{{|\KWNmeta{no:}|}}
-% \KWNlatex*{\__bnvs_foreach_P:nnTF} \KWNlatex{{|\KWNmeta{id}|}} \KWNlatex{{|\KWNmeta{:nn code}|}} \KWNlatex{{|\KWNmeta{yes:}|}} \KWNlatex{{|\KWNmeta{no:}|}}
+% \KWNlatex*{\__bnvs_foreach_P:nnTF} \KWNlatex{{|\KWNmeta{id}|}} \KWNlatex{{|\KWNmeta{code:nn}|}} \KWNlatex{{|\KWNmeta{yes:}|}} \KWNlatex{{|\KWNmeta{no:}|}}
 % \end{syntax}
 % If \KWNmeta{id} is a declared identifier, execute \KWNmeta{function:nn}
-% or \KWNmeta{code} for each combination of \KWNmeta{id} and its associate 
+% or \KWNmeta{code:nn} for each combination of \KWNmeta{id} and its associate 
 % \KWNmeta{path}s. Both are the arguments passed to \KWNmeta{function:nn}
-% or \KWNmeta{:nn code} (through \KWNlatex{#1} and \KWNlatex{#2}).
+% or \KWNmeta{:nn code} body (through \KWNlatex{#1} and \KWNlatex{#2}).
 % \end{function}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
@@ -6356,12 +6380,13 @@ end
 % }
 % \begin{syntax}
 % \KWNlatex*{\__bnvs_foreach_K:nnN} \KWNlatex{{|\KWNmeta{id}|}} \KWNlatex{{|\KWNmeta{path}|}} \KWNmeta{function:nnn}
-% \KWNlatex*{\__bnvs_foreach_K:nnn} \KWNlatex{{|\KWNmeta{id}|}} \KWNlatex{{|\KWNmeta{path}|}} \KWNlatex{{|\KWNmeta{:nnn code}|}}
+% \KWNlatex*{\__bnvs_foreach_K:nnn} \KWNlatex{{|\KWNmeta{id}|}} \KWNlatex{{|\KWNmeta{path}|}} ^^A
+% \KWNlatex{{|\KWNmeta{code:nnn}|}}
 % \end{syntax}
-% Execute the \KWNmeta{function:nnn} or the \KWNmeta{:nnn code} for each
-% of \KWNmeta{id}\KWNlatex{!}\KWNmeta{path}\KWNlatex{/}\KWNmeta{key}
+% Execute the \KWNmeta{function:nnn} or the \KWNmeta{code:nnn} body for each
+% of \KWNmeta{id}\KWNlatex{!}\KWNmeta{tag}\KWNlatex{/}\KWNmeta{key}
 % combination.
-% These are the arguments to the function or code argument.
+% These are the arguments to the function or code body.
 % \end{function}
 % \begin{BNVS.macrocode}
 % \begin{BNVS.gobble}
@@ -10958,10 +10983,13 @@ end
 %</!final>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-  \__bnvs_if:cF { provide } {
-    \__bnvs_gunset:nn { #1 } { #2 }
+  \__bnvs_if_should_ginit:nnT { #1 } { #2 } {
+    \__bnvs_gunset_deep:nn { #1 } { #2 }
   }
   \tl_if_empty:nF { #3 } {
+    \__bnvs_if_should_ginit:nnT { #1 } { #2 } {
+      \__bnvs_ginit:nnn { #1 } { #2 } {}
+    }
     \keyval_parse:nnn {
       \__bnvs_sqr_parsed:nnn { #1 } { #2 }
     } {
@@ -11042,10 +11070,13 @@ end
 %</!final>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-  \__bnvs_if_should_ginit:nnF { #1 } { #2 } {
-    \__bnvs_gunset:nn { #1 } { #2 }
+  \__bnvs_if_should_ginit:nnT { #1 } { #2 } {
+    \__bnvs_gunsedeep:nn { #1 } { #2 }
   }
   \tl_if_empty:nF { #3 } {
+    \__bnvs_if_should_ginit:nnT { #1 } { #2 } {
+      \__bnvs_ginit:nnn { #1 } { #2 } {}
+    }
     \keyval_parse:nnn {
       \__bnvs_crl_parsed:nnn { #1 } { #2 }
     } {
