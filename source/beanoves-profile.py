@@ -20,7 +20,6 @@ for row in df.iloc[1:,:].itertuples():
         parent_queue = parent_queue[:row.Scope]
         parents.append(parent_queue[-1])
         parent_queue.append(row.Tag)
-
     prev_scope = row.Scope
 
 # insert parent column as second column
