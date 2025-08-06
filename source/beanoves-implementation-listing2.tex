@@ -1,3 +1,15 @@
+\begin{@empty}
+\ExplSyntaxOn
+\cs_set:Npn \make #1 {
+  \clist_map_inline:nn { #1 } {
+    \cs_set:cpn { BNVS##1 } { \KWNmeta{ ##1 } }
+  }
+}
+\ExplSyntaxOff
+\make{blnc,other,assign,IKSR,P,R,S,index,VAZL,list,call,rslv,rnd,sqr,crl,alnum,lower,upper,digit}
+\def\BNVSs{\backslash s}
+\def\BNVSor{\KWNmeta{or}}
+\def\BNVSblnc{\KWNmeta{blnc}}
 \begin{tcblisting} {
   listing only,
   minted options={
@@ -5,20 +17,30 @@
     breaklines,
     linenos,
     numbersep=0.5\baselineskip,
-    escapeinside=||,
+    escapeinside=&&,
   },
   minted language=latex,
 }
-\__bnvs_will_gset:nnn
-| |\__bnvs_will_gset:nnn
-\__bnvs_will_gset:nnn {|\KWNmeta{id}|} {|\KWNmeta{tag}|} {|\KWNmeta{key}|}
-|...|
-\__bnvs_if_get:nnncT {|\KWNmeta{id}|} {|\KWNmeta{tag}|} {|\KWNmeta{key}|} {|\KWNmeta{in}|} {
-| | ...
-| | \__bnvs_is_will_gset:cTF
-| |   {|\KWNmeta{in}|}
-| |   {|\KWNmeta{yes code}|}
-| |   {|\KWNmeta{no code}|}
-| | ...
-}
+&\BNVSblnc&   = ( &\BNVScall& | &\BNVSrslv& | &\BNVSrnd& | &\BNVSsqr& | &\BNVScrl& | &\BNVSother& ) *
+&\BNVSother&  = [^()"[]"{},] *
+&\BNVSassign& = ( ( &\BNVSIKSR& | &\BNVSP& ) ( [!?] )? "=" )+ &\BNVSblnc&
+&\BNVSIKSR&   = &\BNVSs& * ( &\BNVSS& ? ! )? &\BNVSS& ( "." &\BNVSR& )* &\BNVSs& *
+&\BNVSP&      = &\BNVSs& * [&\BNVSalnum&_]+ ( "." &\BNVSR& )* &\BNVSs& *
+&\BNVSR&      = &\BNVSindex& | [&\BNVSalnum&_]+
+&\BNVSS&      = ( ( &\BNVSlower& | _ )? &\BNVSalnum& * )?
+           &\BNVSupper&
+           ( &\BNVSalnum& | _ ) *
+&\BNVSindex&  = [-+&\BNVSs&]* &\BNVSdigit& +
+&\BNVSVAZL&   = &\BNVSblnc&
+        | &\BNVSblnc& :  &\BNVSblnc&?  ( :: &\BNVSblnc& ? ) ?
+        | &\BNVSblnc& :: &\BNVSblnc&?  ( :  &\BNVSblnc& ? ) ?
+&\BNVSlist&   =  &\BNVSVAZL& ( , &\BNVSVAZL& ) *
+&\BNVScall&   =  [&\BNVSalnum&_][&\BNVSdigit&&\BNVSalnum&_"."]* &\BNVSrnd&
+&\BNVSrslv&   = "?" &\BNVSrnd&
+&\BNVSrnd&    = "(" &\BNVSlist& ")"
+&\BNVSsqr&    = "[" &\BNVSlist& "]"
+&\BNVScrl&    = "{" &\BNVSlist& "}"
 \end{tcblisting}
+\end{@empty}
+\begin{BNVS.gobble}
+\end{BNVS.gobble}
