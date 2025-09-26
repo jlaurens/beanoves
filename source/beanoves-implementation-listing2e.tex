@@ -1,0 +1,38 @@
+\begin{@empty}
+\ExplSyntaxOn
+\cs_set_eq:NN \saved_langle \langle
+\cs_set:Npn \langle {
+  \texttt{\hbox to 0.5em{\hss$\saved_langle$\hss}}
+}
+\cs_set_eq:NN \saved_rangle \rangle
+\cs_set:Npn \rangle {
+  \texttt{\hbox to 0.5em{\hss$\saved_rangle$\hss}}
+}
+\cs_set:Npn \make #1 {
+  \clist_map_inline:nn { #1 } {
+    \cs_set:cpn { BNVS##1 } { \KWNmeta{ ##1 } }
+  }
+}
+\ExplSyntaxOff
+\make{space,comma,Rnd,Sqr,Crl,Rlv,Raw,IKSPR,other}
+\make{VAZL,VAZLRnd,VAZLLst,Blnc}
+\begin{tcblisting} {
+  listing only,
+  minted options={
+    fontsize=\small,
+    breaklines,
+    linenos,
+    numbersep=0.5\baselineskip,
+    escapeinside=&&,
+    firstnumber=last
+  },
+  minted language=bnf,
+}
+&\BNVSVAZL&    ::= &\BNVSBlnc& | ( &\BNVSBlnc& ':'  &\BNVSBlnc&? ( "::" &\BNVSBlnc&? )? )
+                     | ( &\BNVSBlnc& "::" &\BNVSBlnc&? ( ':'  &\BNVSBlnc&? )? )
+&\BNVSBlnc&    ::= ( &\BNVSspace& | &\BNVSIKSPR& | &\BNVSRnd& | &\BNVSSqr& | &\BNVSCrl& | &\BNVSRlv& | &\BNVSRaw& | &\BNVSother& )*
+&\BNVSVAZLRnd& ::= '(' &\BNVSVAZLLst& ')'
+&\BNVSVAZLLst& ::= &\BNVSspace& &\BNVSVAZL& ( &\BNVScomma& &\BNVSVAZL& )* &\BNVSspace&
+&\BNVSRlv&     ::= '?' &\BNVSVAZLRnd&
+\end{tcblisting}
+\end{@empty}

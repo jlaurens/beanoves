@@ -6,8 +6,11 @@
   }
 }
 \ExplSyntaxOff
-\make{blnc,other,assign,IKSR,P,R,S,index,VAZL,list,call,rslv,rnd,sqr,crl,alnum,lower,upper,digit}
-\def\BNVSs{\backslash s}
+\make{TopList,RndList,SqrList,CrlList}
+\make{TopItem,RndItem,SqrItem,CrlItem}
+\make{blnc,other,assign,IKSR,P,R,S,index,VAZL,list,item,call,rslv,rnd,sqr,crl}
+\make{space,comma,lower,upper,alpha,digit,alnum}
+\make{sign,sgnfcnd,xpnnt,number,chrctr}
 \def\BNVSor{\KWNmeta{or}}
 \def\BNVSblnc{\KWNmeta{blnc}}
 \begin{tcblisting} {
@@ -19,27 +22,41 @@
     numbersep=0.5\baselineskip,
     escapeinside=&&,
   },
-  minted language=latex,
+  minted language=bnf,
 }
-&\BNVSblnc&   = ( &\BNVScall& | &\BNVSrslv& | &\BNVSrnd& | &\BNVSsqr& | &\BNVScrl& | &\BNVSother& ) *
-&\BNVSother&  = [^()"[]"{},] *
-&\BNVSassign& = ( ( &\BNVSIKSR& | &\BNVSP& ) ( [!?] )? "=" )+ &\BNVSblnc&
-&\BNVSIKSR&   = &\BNVSs& * ( &\BNVSS& ? ! )? &\BNVSS& ( "." &\BNVSR& )* &\BNVSs& *
-&\BNVSP&      = &\BNVSs& * [&\BNVSalnum&_]+ ( "." &\BNVSR& )* &\BNVSs& *
-&\BNVSR&      = &\BNVSindex& | [&\BNVSalnum&_]+
-&\BNVSS&      = ( ( &\BNVSlower& | _ )? &\BNVSalnum& * )?
-           &\BNVSupper&
-           ( &\BNVSalnum& | _ ) *
-&\BNVSindex&  = [-+&\BNVSs&]* &\BNVSdigit& +
-&\BNVSVAZL&   = &\BNVSblnc&
-        | &\BNVSblnc& :  &\BNVSblnc&?  ( :: &\BNVSblnc& ? ) ?
-        | &\BNVSblnc& :: &\BNVSblnc&?  ( :  &\BNVSblnc& ? ) ?
-&\BNVSlist&   =  &\BNVSVAZL& ( , &\BNVSVAZL& ) *
-&\BNVScall&   =  [&\BNVSalnum&_][&\BNVSdigit&&\BNVSalnum&_"."]* &\BNVSrnd&
-&\BNVSrslv&   = "?" &\BNVSrnd&
-&\BNVSrnd&    = "(" &\BNVSlist& ")"
-&\BNVSsqr&    = "[" &\BNVSlist& "]"
-&\BNVScrl&    = "{" &\BNVSlist& "}"
+&\BNVSTopList& ::= &\BNVSspace& &\BNVSTopItem& ( &\BNVScomma& &\BNVSTopItem& )* &\BNVSspace&
+&\BNVSRndList& ::= &\BNVSspace& &\BNVSRndItem& ( &\BNVScomma& &\BNVSRndItem& )* &\BNVSspace&
+&\BNVSSqrList& ::= &\BNVSspace& &\BNVSSqrItem& ( &\BNVScomma& &\BNVSSqrItem& )* &\BNVSspace&
+&\BNVSCrlList& ::= &\BNVSspace& &\BNVSCrlItem& ( &\BNVScomma& &\BNVSCrlItem& )* &\BNVSspace&
+&\BNVSspace&   ::= &\textrm{Horizontal white space characters}&
+&\BNVScomma&   ::= &\BNVSspace& "," &\BNVSspace&
+&\BNVSitem&    ::= &\BNVSsqr& | &\BNVScrl& | &\BNVSVAZL&
+&\BNVSsqr&     ::= "[" &\BNVSlist& "]"
+&\BNVScrl&     ::= "{" &\BNVSlist& "}"
+&\BNVSVAZL&    ::= &\BNVSblnc&
+          | ( &\BNVSblnc& ":"  &\BNVSblnc&?  ( "::" &\BNVSblnc&? )? )
+          | ( &\BNVSblnc& "::" &\BNVSblnc&?  ( ":"  &\BNVSblnc&? )? )
+&\BNVSblnc&    ::= ( &\BNVSspace& | &\BNVSrnd& | &\BNVSsqr& | &\BNVScrl& | &\BNVSrslv& | &\BNVSIKSR& | &\BNVSassign& | &\BNVScall& | &\BNVSother& )*
+&\BNVSrnd&     ::= "(" &\BNVSlist& ")"
+&\BNVSrslv&    ::= "?" &\BNVSrnd&
+&\BNVSIKSR&    ::= ( &\BNVSS& ? "!" ) ? &\BNVSS& ( "." &\BNVSR& )*
+&\BNVSS&       ::= &\BNVSalpha& &\BNVSalnum&*
+&\BNVSalpha&   ::= &\BNVSlower& | &\BNVSupper& | "_"
+&\BNVSlower&   ::= 'a'-'z'
+&\BNVSupper&   ::= 'A'-'Z'
+&\BNVSalnum&   ::= &\BNVSalpha& | &\BNVSdigit&
+&\BNVSdigit&   ::= '0'-'9'
+&\BNVSR&       ::= &\BNVSindex& | &\BNVSS&
+&\BNVSindex&   ::= &\BNVSsign&* &\BNVSdigit&+
+&\BNVSsign&    ::= "-" | "+"
+&\BNVSchrctr&  :: &\BNVSalnum& | "_"
+&\BNVSassign&  ::= ( ( &\BNVSIKSR& | &\BNVSP& ) [ "!" | "?"] "=" )+ &\BNVSblnc&
+&\BNVSP&       ::= &\BNVSspace&* &\BNVSchrctr&+ ( "." &\BNVSR& )* &\BNVSspace&* &\BNVSalnum& | "_" )*
+&\BNVScall&    ::=  ( &\BNVSalpha& | "_" ) ( &\BNVSchrctr& | "." )* &\BNVSspace& * &\BNVSrnd&
+&\BNVSother&  ::= &\BNVSnumber& | "+" | "-" | "*" | "/" | "(" | ")"
+&\BNVSnumber&  ::= &\BNVSsign&? &\BNVSsgnfcnd& &\BNVSxpnnt&?
+&\BNVSsgnfcnd& ::= &\BNVSdigit&+ | ( "." &\BNVSdigit&+ ) | ( &\BNVSdigit&+ "." "." &\BNVSdigit&* )
+&\BNVSxpnnt&   ::= ( "e" | "E" ) &\BNVSsign&? &\BNVSindex&
 \end{tcblisting}
 \end{@empty}
 \begin{BNVS.gobble}

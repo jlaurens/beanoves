@@ -1,0 +1,40 @@
+\begin{@empty}
+\ExplSyntaxOn
+\cs_set_eq:NN \saved_langle \langle
+\cs_set:Npn \langle {
+  \texttt{\hbox to 0.5em{\hss$\saved_langle$\hss}}
+}
+\cs_set_eq:NN \saved_rangle \rangle
+\cs_set:Npn \rangle {
+  \texttt{\hbox to 0.5em{\hss$\saved_rangle$\hss}}
+}
+\cs_set:Npn \make #1 {
+  \clist_map_inline:nn { #1 } {
+    \cs_set:cpn { BNVS##1 } { \KWNmeta{ ##1 } }
+  }
+}
+\ExplSyntaxOff
+\make{alpha,alnum,index,digit,space}
+\make{S,P,R,IKSPR}
+\make{N,Rhs}
+\make{Crl,Sqr,VAZL,VAZLRnd}
+\begin{tcblisting} {
+  listing only,
+  minted options={
+    fontsize=\small,
+    breaklines,
+    linenos,
+    numbersep=0.5\baselineskip,
+    escapeinside=&&,
+    firstnumber=last,
+  },
+  minted language=bnf,
+}
+&\BNVSS&     ::= &\BNVSalpha& &\BNVSalnum&*
+&\BNVSP&     ::= &\BNVSdigit&* &\BNVSS&
+&\BNVSR&     ::= ( '.' &\BNVSP& ) | ( '.' &\BNVSindex& ) | &\BNVSN&
+&\BNVSN&     ::= '[' &\BNVSRhs& ']'
+&\BNVSIKSPR& ::= (  ( &\BNVSS&? '!' )? &\BNVSS& ) | '.' &\BNVSP& ) &\BNVSR&*
+&\BNVSRhs&   ::= &\BNVSCrl& | &\BNVSSqr& | &\BNVSVAZL& | &\BNVSVAZLRnd&
+\end{tcblisting}
+\end{@empty}

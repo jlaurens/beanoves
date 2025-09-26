@@ -1,0 +1,47 @@
+\begin{@empty}
+\ExplSyntaxOn
+\cs_set_eq:NN \saved_langle \langle
+\cs_set:Npn \langle {
+  \texttt{\hbox to 0.5em{\hss$\saved_langle$\hss}}
+}
+\cs_set_eq:NN \saved_rangle \rangle
+\cs_set:Npn \rangle {
+  \texttt{\hbox to 0.5em{\hss$\saved_rangle$\hss}}
+}
+\cs_set:Npn \make #1 {
+  \clist_map_inline:nn { #1 } {
+    \cs_set:cpn { BNVS##1 } { \KWNmeta{ ##1 } }
+  }
+}
+\ExplSyntaxOff
+\make{LstEql,RndLst,SqrLst,CrlLst}
+\make{DefItem,RndItm,SqrItm,CrlItm}
+\make{alpha,space,comma,equal,lower,upper,digit,alnum}
+\make{sign,digit,index,significand,exponent,number,other}
+\begin{tcblisting} {
+  listing only,
+  minted options={
+    fontsize=\small,
+    breaklines,
+    linenos,
+    numbersep=0.5\baselineskip,
+    escapeinside=&&,
+  },
+  minted language=bnf,
+}
+&\BNVSspace&       ::= &\textrm{Horizontal white space characters}&
+&\BNVSlower&       ::= &\textrm{a lowercase letter}&
+&\BNVSupper&       ::= &\textrm{an uppercase letter}&
+&\BNVSdigit&       ::= &\textrm{a decimal digit}&
+&\BNVSsign&        ::= '-' | '+'
+&\BNVScomma&       ::= &\BNVSspace& ',' &\BNVSspace&
+&\BNVSequal&       ::= &\BNVSspace& ( '=' | '?=' | '"=' | '+=' ) &\BNVSspace&
+&\BNVSalpha&       ::= &\BNVSlower& | &\BNVSupper& | '_'
+&\BNVSalnum&       ::= &\BNVSalpha& | &\BNVSdigit&
+&\BNVSindex&       ::= &\BNVSsign&* &\BNVSdigit&+
+&\BNVSnumber&      ::= &\BNVSsign&? &\BNVSsignificand& &\BNVSexponent&?
+&\BNVSsignificand& ::= ( '.'? &\BNVSdigit&+ ) | ( &\BNVSdigit&+ '.' &\BNVSdigit&* )
+&\BNVSexponent&    ::= ( 'e' | 'E' ) &\BNVSsign&? &\BNVSdigit&+
+&\BNVSother&       ::= &\BNVSnumber& | '+' | '-' | '*' | '/'
+\end{tcblisting}
+\end{@empty}
