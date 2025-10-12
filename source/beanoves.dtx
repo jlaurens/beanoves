@@ -372,67 +372,7 @@ end
   \RenewDocumentEnvironment {BNVS.OnlyImplementation} { +b } {} {}%
 }%
 %\OnlyDescription
- \begin{BNVS.test}{BNVS:Nn=\BNVS_end_scan:n{/POC0}, eringo, debug}
- \cs_set:Npn \BNVS_test:n #1 {
-   \exp_args:NNe \relax \BNVS_xprt:n {
-     \tl_if_empty:nTF { #1 } {
-       \BNVS_scan_xprt:n { }
-     } {
-       \BNVS_scan_xprt:n { \exp_not:n { #1 } }
-     }
-   }
- }
- \BNVS_test:n { SUKSESON }
- \assert_scanned:nn { SUKSESON } A
- \end{BNVS.test}
- \typein{}
- \begin{BNVS.test}{BNVS:Nn=\BNVS_end_scan:n{/2}, eringo, debug}
- \BNVS_DEBUG_begin_scan:nnnnnnnn { TEST } { / #1 / } {} {} {} {} {} {}
- \show \BNVS_xprt:n
- \show \BNVS_scan_xprt:n
- \BNVS_end_scan:n { ABC }
- \assert_scanned:nn { / ABC / } Z
- \end{BNVS.test}
- \typein{}
- \begin{BNVS.test}{BNVS:Nn=\BNVS_end_scan:n{/1}, eringo}
- \BNVS_begin_scan:nnnnnnn { \foo:n { #1 } } {} {} {} {} {} {}
- \BNVS_end_scan:n { \X: }
- \assert_scanned:nn { \foo:n { #1 } } Z
- \end{BNVS.test}
-\typein{}
- \begin{BNVS.test}{BNVS:Nn=\BNVS_begin_scan_close:nnNn{/1}, eringo, debug}
- \cs_set:Npn \BNVS_TEST:w {
-   \peek_charcode_remove:NTF A {
-     \BNVS_xprt:n { \A: }
-     \peek_charcode_remove:NTF > {
-       \BNVS_scanned_close:N >x
-     } {
-       \test_fail:n B
-     }
-   } {
-     \test_fail:n A
-   }
- }
- \TEST_undefine:n { \BNVS_TEST:w }
- \BNVS_DEBUG_begin_scan_close:nnnNn { TEST } { \foo:n { #1 } } {
-   \BNVS_coverage:n { EXPECTED-NEXT }
-%   \peek_charcode_remove:NTF Y {
-%     \BNVS_coverage:n { YYY }
-%   } {
-%     \peek_analysis_map_inline:n {
-%       \exp_args:Ne\typeout{*****#1}
-%       \typeout{*****#2}
-%       \typeout{*****#3}
-%       \peek_analysis_map_break:n { \test_fail:n B }
-%     }
-%   }
- } > { \BNVS_TEST:w } % [
-A >
- \relax
- \assert_scanned:nn { \foo:n { \A: } } C
- \assert_coverage:nn { YYY } Y
- \end{BNVS.test}
-\typein{}
+%\typein{}
 \begin{document}
 \maketitle
 \changes{v1.0}{2025/01/01}{First public release}
@@ -5060,7 +5000,12 @@ end
 % \BNVS_end:
 % \end{BNVS.test}
 % \begin{BNVS.gobble}
-\hook_gput_code:nnn{env/BNVS.test/begin} {bnvs} {\BNVS_coverage_clear:}
+\hook_gput_code:nnn{env/BNVS.test/begin} {bnvs} {
+  \BNVS_coverage_clear:
+  \cs_set:Npn \test_coverage:n #1 {
+    \BNVS_coverage:n { TEST / #1 }
+  }
+}
 \cs_set:Npn \BNVS_ASSERT_coverage:nn #1 #2 {
   \bool_if:NT \l__BNVS_coverage_bool {
     \cs_set:Npn \BNVS: {
@@ -9809,7 +9754,6 @@ end
 % \begin{BNVS.gobble}
 %<*!final>
       \BNVS_DEBUG_coverage_scan:n { wrap_xprt:n }
-      \typeout{\tl_to_str:n { #1 } }
 %</!final>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
@@ -9889,6 +9833,69 @@ end
   }
 }
 %    \end{macrocode}
+% \end{BNVS.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_next_set:n,
+%   \BNVS_next_use:n,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_next_set:n} \KWNlatex*{{|\KWNmeta{next:}|}}
+% \KWNlatex*{\BNVS_next_use:n} \KWNlatex*{{|\KWNmeta{code:}|}}
+% \end{syntax}
+% \KWNlatex*{\BNVS_next_set:n} stores \KWNmeta{next:} to be executed
+% later by \KWNlatex*{\BNVS_next_use:n}, just after \KWNmeta{code:}.
+% Typically, \KWNlatex*{\BNVS_next_set:n} is used in
+% a scan group closed by \KWNmeta{code:}.
+% \KWNlatex*{\BNVS_end_scan_next:} ends the scan
+% and executes \KWNmeta{next:} code.
+% \end{function}
+% \begin{BNVS.macrocode}
+%    \begin{macrocode}
+\BNVS_tl_new:c { next }
+\cs_new:Npn \BNVS_next_set:n #1 {
+%    \end{macrocode}
+% \begin{BNVS.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { next:set }
+%</!final>
+% \end{BNVS.gobble}
+%    \begin{macrocode}
+  \__bnvs_tl_set:cn { next } {
+    \exp_not:n {
+%    \end{macrocode}
+% \begin{BNVS.gobble}
+%<*!final>
+      \BNVS_DEBUG_coverage_scan:n { next:use }
+%</!final>
+% \end{BNVS.gobble}
+%    \begin{macrocode}
+      #1
+    }
+  }
+}
+%    \end{macrocode}
+% \end{BNVS.macrocode}
+% ^^A
+% \begin{BNVS.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_next_use:n #1 {
+%    \end{macrocode}
+% \begin{BNVS.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { next:will~use }
+%  \typeout { what:\BNVS_tl_use:Nv \tl_to_str:n { next } }
+%</!final>
+% \end{BNVS.gobble}
+%    \begin{macrocode}
+  \BNVS_tl_last_unbraced:nv { #1 } { next }
+}
+%    \end{macrocode}
+% \begin{BNVS.test}{BNVS:N=\BNVS_next_use:n, eringo}
+% \BNVS_next_set:n { \BNVS_coverage:n { TEST/set } }
+% \BNVS_next_use:n { \BNVS_coverage:n { TEST/use } }
+% \assert_coverage:nnn { TEST/use } { TEST/set } A
+% \end{BNVS.test}
 % \end{BNVS.macrocode}
 % ^^A
 % \begin{function} {
@@ -9984,6 +9991,40 @@ end
   \BNVS_scan_begun:nnnnnnn
 }
 %    \end{macrocode}
+% \begin{BNVS.test}{BNVS:Nn=\BNVS_begin_scan:nnnnnn{/1}, eringo}
+% \BNVS_begin_scan:nnnnnnn { \foo:n { #1 } } {
+%   \BNVS_coverage:n { TEST/next:/set }
+% } {
+%   \BNVS_coverage:n { TEST/closed: }
+% } {
+%   \BNVS_coverage:n { TEST/comma: }
+% } {
+%   \BNVS_coverage:n { TEST/one_colon: }
+% } {
+%   \BNVS_coverage:n { TEST/colons: }
+% } {
+%   \BNVS_coverage:n { TEST/stopped: }
+% }
+% \BNVS_next_use:n { \BNVS_coverage:n { TEST/next:/use } }
+% \assert_coverage:nnn { TEST/next:/use } { TEST/next:/set } A
+% \BNVS_coverage_clear:
+% \BNVS_scanned_close:
+% \assert_coverage:nn { TEST/closed: } B
+% \BNVS_coverage_clear:
+% \BNVS_scanned_comma:
+% \assert_coverage:nn { TEST/comma: } C
+% \BNVS_coverage_clear:
+% \BNVS_scanned_one_colon:
+% \assert_coverage:nn { TEST/one_colon: } D
+% \BNVS_coverage_clear:
+% \BNVS_scanned_colons:
+% \assert_coverage:nn { TEST/colons: } E
+% \BNVS_coverage_clear:
+% \BNVS_scanned_stop:
+% \assert_coverage:nn { TEST/stopped: } F
+% \BNVS_end_scan:n { \X: }
+% \assert_scanned:nn { \foo:n { \X: } } Z
+% \end{BNVS.test} 
 % \end{BNVS.macrocode}
 % \begin{BNVS.gobble}
 %<*!final>
@@ -9999,6 +10040,7 @@ end
 % \begin{function} {
 %   \BNVS_end_scan:,
 %   \BNVS_end_scan:n,
+%   \BNVS_end_scan_next:
 % }
 % \begin{syntax}
 % \KWNlatex*{\BNVS_end_scan:}
@@ -10053,71 +10095,16 @@ end
 % \BNVS_end_scan:n { ABC }
 % \assert_scanned:nn { / ABC / } Z
 % \end{BNVS.test}
+% \begin{BNVS.test}{BNVS:Nn=\BNVS_end_scan:n{/0}, eringo}
+% \BNVS_DEBUG_begin_scan:nnnnnnnn { TEST } { / #1 / } {} {} {} {} {} {}
+% \BNVS_end_scan:n { ABC }
+% \assert_scanned:nn { / ABC / } Z
+% \end{BNVS.test}
 % \begin{BNVS.test}{BNVS:Nn=\BNVS_end_scan:n{/1}, eringo}
 % \BNVS_begin_scan:nnnnnnn { \foo:n { #1 } } {} {} {} {} {} {}
 % \BNVS_end_scan:n { \X: }
 % \assert_scanned:nn { \foo:n { \X: } } Z
 % \end{BNVS.test}
-% \end{BNVS.macrocode}
-% ^^A
-% \begin{function} {
-%   \BNVS_next_set:n,
-%   \BNVS_next_use:n,
-%   \BNVS_end_scan_next:
-% }
-% \begin{syntax}
-% \KWNlatex*{\BNVS_next_set:n} \KWNlatex*{{|\KWNmeta{next:}|}}
-% \KWNlatex*{\BNVS_next_use:n} \KWNlatex*{{|\KWNmeta{code:}|}}
-% \end{syntax}
-% \KWNlatex*{\BNVS_next_set:n} stores \KWNmeta{next:} to be executed
-% later by \KWNlatex*{\BNVS_next_use:n}, just after \KWNmeta{code:}.
-% Typically, \KWNlatex*{\BNVS_next_set:n} is used in
-% a scan group closed by \KWNmeta{code:}.
-% \KWNlatex*{\BNVS_end_scan_next:} ends the scan
-% and executes \KWNmeta{next:} code.
-% \end{function}
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-\BNVS_tl_new:c { next }
-\cs_new:Npn \BNVS_next_set:n #1 {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-  \BNVS_DEBUG_coverage_scan:n { next:set }
-  \exp_args:Ne\typeout{what: \tl_to_str:n { #1 } }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-  \__bnvs_tl_set:cn { next } {
-    \exp_not:n {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-      \BNVS_DEBUG_coverage_scan:n { next:use }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-      #1
-    }
-  }
-}
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% ^^A
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-\cs_new:Npn \BNVS_next_use:n #1 {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-  \BNVS_DEBUG_coverage_scan:n { next:will~use }
-%  \typeout { what:\BNVS_tl_use:Nv \tl_to_str:n { next } }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-  \BNVS_tl_use:nv { #1 } { next }
-}
-%    \end{macrocode}
 % \end{BNVS.macrocode}
 % ^^A
 % \begin{BNVS.macrocode}
@@ -10180,22 +10167,24 @@ end
 % \BNVS_end_scan:
 % \assert_scanned:nn { 2 3 } E
 % \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:N=\BNVS_scan_xprt:n,eringo}
+% \begin{BNVS.test}{bnvs:Nn=\BNVS_scan_xprt:n{/0},eringo}
 % \group_begin:
 % \BNVS_xprt:n { \BNVS: }
 % \cs_set:Npn \BNVS_scan_xprt:n #1 {
-%   \exp_not:N \BNVS:w { #1 }
+%   \exp_not:N \BNVS:w { \exp_not:n { #1 } }
 % }
 % \BNVS_end_scan:
 % \assert_scanned:nn { \BNVS:w { \BNVS: } } A
 % \BNVS_xprt_reset:
 % \assert_scanned:nn { } B
+% \end{BNVS.test}
+% \begin{BNVS.test}{bnvs:Nn=\BNVS_scan_xprt:n{/1},eringo}
 % \BNVS_begin_scan:nnnnnnn {
-%   \exp_not:N \BNVS:w { #1 }
+%   \BNVS_TEST:w { #1 }
 % } {} {} {} {} {} {}
-% \BNVS_xprt:n { \BNVS: }
+% \BNVS_xprt:n { \BNVS_TEST: }
 % \BNVS_end_scan:
-% \assert_scanned:nn { \BNVS:w { \BNVS: } } C
+% \assert_scanned:nn { \BNVS_TEST:w { \BNVS_TEST: } } A
 % \end{BNVS.test}
 % \end{BNVS.macrocode}
 % ^^A
@@ -11004,39 +10993,32 @@ end
 }
 %    \end{macrocode}
 % \begin{BNVS.test}{BNVS:Nn=\BNVS_begin_scan_close:nnNn{/1}, eringo}
-% \cs_set:Npn \BNVS_TEST:w #1 {
-%   \peek_charcode_remove:NTF X {
-%     \BNVS_xprt:x { \X: }
+% \cs_set:Npn \BNVS_TEST:w {
+%   \peek_charcode_remove:NTF A {
+%     \BNVS_xprt:n { \A: }
+%     \peek_charcode_remove:NTF > {
+%       \BNVS_scanned_close:N >
+%     } {
+%       \test_fail:n B
+%     }
 %   } {
 %     \test_fail:n A
 %   }
 % }
 % \TEST_undefine:n { \BNVS_TEST:w }
-% \BNVS_begin_scan_close:nnNn { \foo:n } {
-%   \peek_charcode_remove:NTF Y {
-%     \BNVS_coverage:n { 123 }
+% \BNVS_DEBUG_begin_scan_close:nnnNn { TEST } { \foo:n { #1 } } {
+%   \peek_charcode_remove:NTF Z {
+%     \BNVS_coverage:n { TEST/ZZZ }
 %   } {
-%     \test_fail:n A
+%     \test_fail:n C
 %   }
-% } ^^A [
-% ] { \BNVS_TEST:w }
-% X ]
+% } > { \BNVS_TEST:w }
+% A > Z
 % \relax
-% \assert_scanned:nn { \foo:n { \X: } } Z
-% \assert_coverage:nn { 123 } Z
+% \assert_scanned:nn { \foo:n { \A: } } D
+% \assert_coverage:nn { TEST/ZZZ } Z
 % \end{BNVS.test}
-
-
-
-
-
-
 % \end{BNVS.macrocode}
-
-
-
-
-
 % \end{implementation}
 % \end{document}
 % ^^A
@@ -18968,9 +18950,27 @@ end
 % \end{BNVS.macrocode}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
+\newrobustcmd{\__bnvs_@@pause}[1][]{%
+  \ifblank{#1}%
+    {\BNVS_saved@@pause}%
+    {
+      \group_begin:
+      \tl_clear:N \l_tmpa_tl
+      \exp_args:NNe \__bealover_scan:Nn \l_tmpa_tl { #1 }
+      \exp_last_unbraced:NNNV
+      \group_end:
+      \BNVS_saved@@pause [ \l_tmpa_tl ]
+    }%
+}
+%    \end{macrocode}
+% \end{BNVS.macrocode}
+% \begin{BNVS.macrocode}
+%    \begin{macrocode}
 \cs_new:Npn \BeanovesOff {
   \cs_set_eq:NN \beamer@frame \BNVS_saved@frame
   \cs_set_eq:NN \beamer@masterdecode \BNVS_saved@masterdecode
+  \cs_undefine:N \beamer@@pause
+  \NewCommandCopy\beamer@@pause\BNVS_saved@@pause
 }
 %    \end{macrocode}
 % \end{BNVS.macrocode}
@@ -18979,6 +18979,8 @@ end
 \cs_new:Npn \BeanovesOn {
   \cs_set_eq:NN \beamer@frame \__bnvs_@frame
   \cs_set_eq:NN \beamer@masterdecode \__bnvs_@masterdecode
+  \cs_undefine:N \beamer@@pause
+  \NewCommandCopy\beamer@@pause\__bnvs_@@pause
 }
 %    \end{macrocode}
 % \end{BNVS.macrocode}
@@ -18988,11 +18990,15 @@ end
   \cs_if_exist:NTF \beamer@frame {
     \cs_set_eq:NN \BNVS_saved@frame \beamer@frame
     \cs_set_eq:NN \BNVS_saved@masterdecode \beamer@masterdecode
+    \NewCommandCopy\BNVS_saved@@pause\beamer@@pause
   } {
     \cs_set:Npn \BNVS_saved@frame < #1 > {
       \BNVS_error:n {Missing~package~beamer}
     }
     \cs_set:Npn \BNVS_saved@masterdecode < #1 > {
+      \BNVS_error:n {Missing~package~beamer}
+    }
+    \newrobustcmd{\BNVS_saved@@pause}[1][]{%
       \BNVS_error:n {Missing~package~beamer}
     }
   }
