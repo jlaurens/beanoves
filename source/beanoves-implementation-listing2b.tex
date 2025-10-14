@@ -14,9 +14,9 @@
   }
 }
 \ExplSyntaxOff
-\make{alpha,alnum,index,digit,space}
+\make{alpha,alnum,N,digit,space}
 \make{S,P,R,IKSPR}
-\make{N,Rhs}
+\make{n,Rhs}
 \make{Crl,Sqr,VAZL,VAZLRnd}
 \begin{tcblisting} {
   listing only,
@@ -32,8 +32,8 @@
 }
 &\BNVSS&     ::= &\BNVSalpha& &\BNVSalnum&*
 &\BNVSP&     ::= &\BNVSdigit&* &\BNVSS&
-&\BNVSR&     ::= ( '.' &\BNVSP& ) | ( '.' &\BNVSindex& ) | &\BNVSN&
-&\BNVSN&     ::= '[' &\BNVSRhs& ']'
+&\BNVSR&     ::= ( '.' &\BNVSP& ) | ( '.' &\BNVSN& ) | &\BNVSn&
+&\BNVSn&     ::= '[' &\BNVSRhs& ']'
 &\BNVSIKSPR& ::= (  ( &\BNVSS&? '!' )? &\BNVSS& ) | '.' &\BNVSP& ) &\BNVSR&*
 &\BNVSRhs&   ::= &\BNVSCrl& | &\BNVSSqr& | &\BNVSVAZL& | &\BNVSVAZLRnd&
 \end{tcblisting}
