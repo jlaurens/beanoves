@@ -15,7 +15,7 @@
 }
 \ExplSyntaxOff
 \make{space,comma,Rnd,Sqr,Crl,Rlv,Raw,IKSPR,other}
-\make{V,A,Z,L,VAZL,VAZLRnd,VAZLLst,Blnc}
+\make{V,A,Z,L,AZL,ALZ,VAZL,VAZLRnd,VAZLLst,blnc}
 \begin{tcblisting} {
   listing only,
   minted options={
@@ -28,15 +28,16 @@
   },
   minted language=bnf,
 }
-&\BNVSV&       ::= &\BNVSBlnc&
-&\BNVSA&       ::= &\BNVSBlnc&
-&\BNVSZ&       ::= &\BNVSBlnc&
-&\BNVSL&       ::= &\BNVSBlnc&
-&\BNVSVAZL&    ::= &\BNVSV& | ( &\BNVSA& ':'  &\BNVSZ&? ( "::" &\BNVSL&? )? )
-                    | ( &\BNVSA& "::" &\BNVSL&? ( ':'  &\BNVSZ&? )? )
-&\BNVSBlnc&    ::= ( &\BNVSspace& | &\BNVSIKSPR& | &\BNVSRnd& | &\BNVSSqr& | &\BNVSCrl& | &\BNVSRlv& | &\BNVSRaw& | &\BNVSother& )*
+&\BNVSV&       ::= &\BNVSblnc&
+&\BNVSA&       ::= &\BNVSblnc&
+&\BNVSZ&       ::= &\BNVSblnc&
+&\BNVSL&       ::= &\BNVSblnc&
+&\BNVSVAZL&    ::= &\BNVSV& | &\BNVSAZL& | &\BNVSALZ&
+&\BNVSAZL&     ::= &\BNVSA&? ':'  &\BNVSZ& ( "::" &\BNVSL&? )?
+&\BNVSALZ&     ::= &\BNVSA&? "::" &\BNVSL& ( ':'  &\BNVSZ&? )?
 &\BNVSVAZLRnd& ::= '(' &\BNVSVAZLLst& ')'
 &\BNVSVAZLLst& ::= &\BNVSspace& &\BNVSVAZL& ( &\BNVScomma& &\BNVSVAZL& )* &\BNVSspace&
 &\BNVSRlv&     ::= '?' &\BNVSVAZLRnd&
+&\BNVSblnc&    ::= ( &\BNVSspace& | &\BNVSIKSPR& | &\BNVSRnd& | &\BNVSSqr& | &\BNVSCrl& | &\BNVSRlv& | &\BNVSRaw& | &\BNVSother& )*
 \end{tcblisting}
 \end{@empty}
