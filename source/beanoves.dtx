@@ -66,7 +66,7 @@ Named overlay specifications are very handy both during edition and to manage co
 \generate{
   \nopreamble
   \nopostamble
-  \file{\jobname-implementation-listing2b.tex}{\from{\jobname.dtx}{implementation-listing2b-tex}}
+  \file{\jobname-grammar-ISRCE.tex}{\from{\jobname.dtx}{grammar-ISRCE-tex}}
 }
 \generate{
   \nopreamble
@@ -81,7 +81,7 @@ Named overlay specifications are very handy both during edition and to manage co
 \generate{
   \nopreamble
   \nopostamble
-  \file{\jobname-implementation-listing2e.tex}{\from{\jobname.dtx}{implementation-listing2e-tex}}
+  \file{\jobname-grammar-VAZL.tex}{\from{\jobname.dtx}{grammar-VAZL-tex}}
 }
 \generate{
   \nopreamble
@@ -372,69 +372,6 @@ end
   \RenewDocumentEnvironment {BNVS.OnlyImplementation} { +b } {} {}%
 }%
 %\OnlyDescription
-% \begin{BNVS.test}{BNVS:Nn=\BNVS_scan_close:nnNn{/1}, eringo}
-% \test_catch_error:n {}
-% \BNVS_scan_close:nnNn { \TEST:n } {
-%   \test_fail:n A
-% } ? { \BNVS_scanned_q_stop: }
-% \assert_in_error:nn { Missing~`?' } A
-% \assert_xprted:nn { \TEST: } D
-% \end{BNVS.test}
-% \typein{}
-% \begin{BNVS.test}{bnvs:cn={ scan_ISRCQ:TFw }{/.P}, eringo}
-% \__bnvs_tl_set:cn I { III }
-% \__bnvs_tl_set:cn S { SSS }
-% \cs_set:Npn \BNVS_scanned_P_RCQ:nww #1 #2 {
-%   \BNVS_xprt:n { \P:nn { #2 } {} }
-%   #1
-% }
-% \__bnvs_scan_ISRCQ:TFw {
-%   \BNVS_coverage:n { 1234 }
-% } {
-%   \test_fail:n D
-% }
-% .PPP
-% \relax
-% \assert_coverage:nn { 1234 } Z
-% \assert_xprted:nn { \ISP:w { III } { SSS } { \P:nn { PPP } {} } } Y
-% \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:cn={ scan_ISRCQ:TFw }{/.P}, eringo, debug}
-% \__bnvs_tl_set:cn I { III }
-% \__bnvs_tl_set:cn S { SSS }
-% \cs_set:Npn \BNVS_scan_R:nw #1 {
-%   \peek_charcode_remove:NTF . {
-%     \peek_regex_replace_once:NnTF \c__bnvs_P_regex { { \0 } } {
-%       % output: \PR:w {<P>} {<R>}
-%       \BNVS_scanned_P:nww { #1 }
-%     } {
-%     }
-%   } {
-%     . #1
-%   }
-% }
-% \cs_set:Npn \BNVS_scanned_P:nww #1 #2 {
-%   \BNVS_xprt:n { \PR:w { #2 } }
-%   \BNVS_begin_scan:nnnnnnn { { ##1 } } { #1 } {} {} {} {} {}
-%   \BNVS_scan_R:nw { #1 } {
-%   } {
-%   }
-% }
-% \cs_set:Npn \BNVS_scanned_P_RCQ:nww #1 #2 {
-%   \BNVS_xprt:n { \P:nn { #2 } }
-%   \BNVS_scan_R:nTFw { #1 } {
-%   } {
-%   }
-% }
-% \__bnvs_scan_ISRCQ:TFw {
-%   \BNVS_coverage:n { 1234 }
-% } {
-%   \test_fail:n D
-% }
-% .PPP
-% \relax
-% \assert_coverage:nn { 1234 } Z
-% \assert_xprted:nn { \ISP:w { III } { SSS } { \P:nn { PPP } {} } } Y
-% \end{BNVS.test}
 %\typein{}
 \begin{document}
 \maketitle
@@ -9552,12 +9489,6 @@ end
 % \end{BNVS.test}
 % \end{variable}
 % ^^A
-% Then we define identifiers.
-% \KWNmeta{S} stands for a short identifier,
-% \KWNmeta{P} stands for a path component and
-% \KWNmeta{R} stands for a relative component.
-% \input{\jobname-implementation-listing2b.tex}
-% ^^A
 % \begin{variable}{\c__bnvs_S_regex}
 % This regular expression is used for short names.
 % The short name of an overlay set consists of a non void list of alphanumerical characters and
@@ -10235,10 +10166,25 @@ end
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
 \cs_new:Npn \BNVS_begin_scan: {
-  \BNVS_xprt_stored:
+  \BNVS_scan_will_begin:
   \BNVS_begin:
+  \BNVS_scan_did_begin:
+}
+%    \end{macrocode}
+% \end{BNVS.macrocode}
+% \begin{BNVS.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scan_will_begin: {
+  \BNVS_xprt_stored:
+}
+%    \end{macrocode}
+% \end{BNVS.macrocode}
+% \begin{BNVS.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scan_did_begin: {
   \BNVS_xprt_clear:
   \BNVS_scan_xprt_prefix:n {}
+  \BNVS_next_set:n {}
 }
 %    \end{macrocode}
 % \end{BNVS.macrocode}
@@ -10255,10 +10201,9 @@ end
 %<*!final>
 \cs_new:Npn \BNVS_DEBUG_begin_scan:n #1 {
   \BNVS_coverage:n { begin_scan: #1 }
-  \BNVS_xprt_stored:
+  \BNVS_scan_will_begin:
   \BNVS_DEBUG_begin:n { #1 }
-  \BNVS_xprt_clear:
-  \BNVS_scan_xprt_prefix:n {}
+  \BNVS_scan_did_begin:
   \tl_set:Nn \l_BNVS_DEBUG_scan_tl { #1 / }
 }
 %</!final>
@@ -11836,7 +11781,7 @@ end
 % \subsubsection{VAZL atoms}
 % ^^A
 % Here is a preliminar grammar for ranges or values:
-% \input{\jobname-implementation-listing2e.tex}
+% \input{\jobname-grammar-VAZL.tex}
 % ^^A
 % \begin{function} {
 %   \BNVS_scan_VAZL:nw,
@@ -12525,6 +12470,11 @@ end
 % ^^A
 % \subsubsection{Assignments, function calls and identifiers}
 % ^^A
+% In the following grammar,
+% \KWNmeta{S} stands for a short identifier,
+% \KWNmeta{P} stands for a path component and
+% \KWNmeta{R} stands for a relative component.
+% \input{\jobname-grammar-ISRCE.tex}
 % \begin{function}{
 %   \BNVS_scan_R_crl:nw ,
 % }
@@ -12698,7 +12648,7 @@ end
 % If we scan a ``\KWNlatex*{.}'',
 % scan \KWNmeta{P} material and call
 % \KWNlatex{\BNVS_scanned_P:nww} or
-% scan \KWNmeta{i} material and call
+% scan \KWNmeta{N} material and call
 % \KWNlatex{\BNVS_scanned_N:nww},
 % both with \KWNmeta{next:} code
 % \begin{BNVS.macrocode}
@@ -12776,7 +12726,7 @@ end
 %    \end{macrocode}
 % \end{BNVS.macrocode}
 % \KWNfootprints
-% Scan for a rhs in a cls.
+% Scan for a rhs in a csl.
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
       { \BNVS_scan_R_crl:nw { #1 } } %[
@@ -12787,17 +12737,28 @@ end
 % \cs_set:Npn \BNVS_scan_blnc:w {
 %   \BNVS_xprt:n
 % }
-% \BNVS_scan_R:nw { \BNVS_coverage:n { 1234 } }
+% \BNVS_scan_R:nw { \BNVS_coverage:n { TEST / next: } }
 % [ { 123 }
 % \__bnvs_scan_close:Fw {
 %   \test_fail:n A
 % } ]
+% \assert_coverage:nn { TEST / next: } A
 % \assert_xprted:nn { \nR:w { 123 } {} } Z
 % \end{BNVS.test}
 % \begin{BNVS.test}{BNVS:Nn=\BNVS_scan_R:nw{/[]}, eringo}
-% \BNVS_scan_R:nw { \BNVS_coverage:n { 123 } }
-% [123]
-% \assert_xprted:nn { \nR:w { 123 } {} } Z
+% \cs_set:Npn \BNVS_test:n #1 {
+%   \BNVS_xprt:n { #1 }
+%   \BNVS_scan_blnc:w
+% }
+% \cs_set:Npn \BNVS_scan_blnc:w {
+%   \__bnvs_scan_close:Fw {
+%     \BNVS_test:n
+%   }
+% }
+% \BNVS_scan_R:nw { \BNVS_coverage:n { TEST / next: } }
+% [XYZ]
+% \assert_coverage:nn { TEST / next: } A
+% \assert_xprted:nn { \nR:w { XYZ } {} } Z
 % \end{BNVS.test}
 %    \begin{macrocode}
     } {
@@ -12818,9 +12779,6 @@ end
 }
 %    \end{macrocode}
 % \end{BNVS.macrocode}
-% ^^A
-% \end{implementation}
-% \end{document}
 % ^^A
 % \begin{variable}{\c__bnvs_IKS_regex}
 % The start of a qualified dotted name, with three capture groups.
@@ -12898,10 +12856,10 @@ end
 % \end{BNVS.test}
 % ^^A
 % \begin{function} {
-%   \__bnvs_scan_ISRCQ:TFw,
+%   \__bnvs_scan_ISRCE:TFw,
 % }
 % \begin{syntax}
-% \KWNlatex*{\__bnvs_scan_ISRCQ:TFw}^^A
+% \KWNlatex*{\__bnvs_scan_ISRCE:TFw}^^A
 % \KWNlatex{{|\KWNmeta{yes:}|}}^^A
 % \KWNlatex{{|\KWNmeta{no:}|}}^^A
 % \KWNlatex{|\KWNmeta{input stream}|}
@@ -12928,8 +12886,9 @@ end
 % \end{function}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
-\BNVS_new:cpn { scan_ISRCQ:TFw } #1 #2 {
+\BNVS_new:cpn { scan_ISRCE:TFw } #1 #2 {
   \peek_regex_replace_once:NnTF \c__bnvs_IKS_regex { { \1 } { \2 } { \3 } } {
+    \BNVS_scan:nnnnnnnw {
 %    \end{macrocode}
 % \end{BNVS.macrocode}
 % \KWNfootprints
@@ -12939,20 +12898,22 @@ end
 % \KWNlatex*{\BNVS_scanned_IKS_RCQ:nww} will feed the |scanned| variable.
 % \begin{BNVS.gobble}
 %<*!final>
-    \BNVS_DEBUG_begin_scan:nnnnnnnn { scan_ISRCQ:TFw } 
+      \BNVS_DEBUG_begin_scan:n { scan_ISRCE:TFw } 
 %</!final>
 %<*!debug>
 % \end{BNVS.gobble}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
-    \BNVS_begin_scan:nnnnnnn
+      \BNVS_begin_scan:
 %    \end{macrocode}
 % \begin{BNVS.gobble}
 %</!debug>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-      { ##1 }
-      { #1 }
+      \BNVS_next_set:n { \BNVS_scan_CQ:nw { #1 } }
+      \BNVS_scan_xprt_prefix:n { \ISP:w }
+      \BNVS_scan_wrap_xprt:n { ##1 }
+    }
       { \BNVS_end_scan_next: \BNVS_scanned_close: }
       { \BNVS_end_scan_next: \BNVS_scanned_comma: }
       { \BNVS_end_scan_next: \BNVS_scanned_one_colon: }
@@ -12964,17 +12925,18 @@ end
 % By default we start on a standalone identifier,
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
-    \BNVS_scan_xprt_prefix:n { \ISP:w }
-    \BNVS_scan_wrap_xprt:n { ##1 }
-    \BNVS_scanned_IKS_RCQ:nww { \BNVS_end_scan_next: }
+      { \BNVS_scanned_IKS_RCQ:nww { \BNVS_end_scan_next: } }
 %    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ scan_ISRCQ:TFw }{/ISR}, eringo}
+% \begin{BNVS.test}{bnvs:cn={ scan_ISRCE:TFw }{/ISR}, eringo}
+% \cs_set:Npn \BNVS_scan_CQ:nw #1 {
+%   #1
+% }
 % \cs_set:Npn \BNVS_scanned_IKS_RCQ:nww #1 #2 #3 #4 {
 %   \assert_equal:nnn { #3 } { ! } A
 %   \BNVS_xprt:n { { #2 } { #4 } { PPP } }
 %   #1
 % }
-% \__bnvs_scan_ISRCQ:TFw {
+% \__bnvs_scan_ISRCE:TFw {
 %   \BNVS_coverage:n { 1234 }
 % } {
 %   \test_fail:n D
@@ -12996,6 +12958,7 @@ end
 %    \begin{macrocode}
     \peek_charcode_remove:NTF . {
       \peek_regex_replace_once:NnTF \c__bnvs_P_regex { { \0 } } {
+        \BNVS_scan:nnnnnnnw {
 %    \end{macrocode}
 % \end{BNVS.macrocode}
 % \KWNfootprints
@@ -13006,19 +12969,25 @@ end
 % \begin{BNVS.macrocode}
 % \begin{BNVS.gobble}
 %<*!final>
-        \BNVS_DEBUG_begin_scan:nnnnnnnn { scan_ISRCQ:TFw / P } 
+          \BNVS_DEBUG_begin_scan:n { scan_ISRCE:TFw / P } 
 %</!final>
 %<*!debug>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-        \BNVS_begin_scan:nnnnnnn
+          \BNVS_begin_scan:
 %    \end{macrocode}
 % \begin{BNVS.gobble}
 %</!debug>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-      { ##1 }
-      { #1 }
+        \BNVS_scan_xprt_prefix:n { \ISP:w }
+        \BNVS_next_set:n { \BNVS_scan_CQ:nw { #1 } }
+        \exp_args:Ne \BNVS_scan_wrap_xprt:n {
+          { \__bnvs_tl_use:c I }
+          { \__bnvs_tl_use:c S }
+          \exp_not:n { { ##1 } }
+        }
+      }
       { \BNVS_end_scan_next: \BNVS_scanned_close: }
       { \BNVS_end_scan_next: \BNVS_scanned_comma: }
       { \BNVS_end_scan_next: \BNVS_scanned_one_colon: }
@@ -13030,36 +12999,34 @@ end
 % By default we start on a standalone identifier,
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
-        \BNVS_scan_xprt_prefix:n { \ISP:w }
-        \exp_args:Ne \BNVS_scan_wrap_xprt:n {
-          { \__bnvs_tl_use:c I }
-          { \__bnvs_tl_use:c S }
-          \exp_not:n { { ##1 } }
-        }
 %    \end{macrocode}
 %    \begin{macrocode}
-        \BNVS_scanned_P_RCQ:nww { \BNVS_end_scan_next: }
+      { \BNVS_scanned_P:nww { \BNVS_end_scan_next: } }
 %    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ scan_ISRCQ:TFw }{/.P}, eringo}
+% \begin{BNVS.test}{bnvs:cn={ scan_ISRCE:TFw }{/.P}, eringo}
+% \cs_set:Npn \BNVS_scan_CQ:nw #1 {
+%   #1
+% }
 % \__bnvs_tl_set:cn I { III }
 % \__bnvs_tl_set:cn S { SSS }
 % \cs_set:Npn \BNVS_scanned_P_RCQ:nww #1 #2 {
-%   \BNVS_xprt_crl:n { #2 }
+%   \BNVS_xprt:n { #2 }
 %   #1
 % }
-% \__bnvs_scan_ISRCQ:TFw {
-%   \BNVS_coverage:n { 1234 }
+% \__bnvs_scan_ISRCE:TFw {
+%   \BNVS_coverage:n { TEST / yes: }
 % } {
 %   \test_fail:n D
 % }
 % .PPP
 % \relax
-% \assert_coverage:nn { 1234 } Z
-% \assert_xprted:nn { \ISP:w { III } { SSS } { PPP } } Y
+% \assert_coverage:nn { TEST / yes: } Z
+% \assert_xprted:nn { \ISP:w { III } { SSS } { \PR:w {PPP}{} } } Y
 % \end{BNVS.test}
 %    \begin{macrocode}
       } {
         \peek_regex_replace_once:NnTF \c__bnvs_N_regex { { \0 } } {
+          \BNVS_scan:nnnnnnnw {
 %    \end{macrocode}
 % \end{BNVS.macrocode}
 % \KWNfootprints
@@ -13067,72 +13034,51 @@ end
 % By default we start on a standalone identifier,
 % and we will change when necessary.
 % The |xprted| variable will be properly fed by
-% \KWNlatex*{\BNVS_scanned_i_RCQ:nww}.
+% \KWNlatex*{\BNVS_scanned_N_RCQ:nww}.
 % \begin{BNVS.macrocode}
 % \begin{BNVS.gobble}
 %<*!final>
-          \BNVS_DEBUG_begin_scan:nnnnnnnn { scan_ISRCQ:TFw / i } 
+            \BNVS_DEBUG_begin_scan:n { scan_ISRCE:TFw / N } 
 %</!final>
 %<*!debug>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-          \BNVS_begin_scan:nnnnnnn
+            \BNVS_begin_scan:
 %    \end{macrocode}
 % \begin{BNVS.gobble}
 %</!debug>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-            { { ##1 } } { \BNVS_end_scan_next: } {} {} {} {} {}
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% By default we start on a standalone identifier,
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-          \BNVS_scan_xprt_prefix:n { \ISP:w }
-          \exp_args:Ne \BNVS_scan_wrap_xprt:n {
-            { \__bnvs_tl_use:c I }
-            { \__bnvs_tl_use:c S }
-            \exp_not:n { { ##1 } }
+            \BNVS_next_set:n { \BNVS_scan_CQ:nw { #1 } }
+            \BNVS_scan_xprt_prefix:n { \ISP:w }
+            \exp_args:Ne \BNVS_scan_wrap_xprt:n {
+              { \__bnvs_tl_use:c I }
+              { \__bnvs_tl_use:c S }
+              \exp_not:n { { ##1 } }
+            }
           }
+            { \BNVS_end_scan_next: \BNVS_scanned_close: }
+            { \BNVS_end_scan_next: \BNVS_scanned_comma: }
+            { \BNVS_end_scan_next: \BNVS_scanned_one_colon: }
+            { \BNVS_end_scan_next: \BNVS_scanned_colons: }
+            { \BNVS_end_scan_next: \BNVS_scanned_q_stop: }
+          { \BNVS_scanned_N:nww { \BNVS_end_scan_next: } }  
 %    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% We begin another scan group to enclose the scanned material
-% between curly braces.
-% \begin{BNVS.macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-          \BNVS_DEBUG_begin_scan:nnnnnnnn { scan_ISRCQ:TFw / i' } 
-%</!final>
-%<*!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-          \BNVS_begin_scan:nnnnnnn
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%</!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-            { ##1 } {} {} {} {} {} {}
-          \BNVS_scanned_i_RCQ:nww { \BNVS_end_scan: }
-%    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ scan_ISRCQ:TFw }{/.i}, eringo}
-% \__bnvs_tl_set:cn I { III }
-% \__bnvs_tl_set:cn S { SSS }
-% \cs_set:Npn \BNVS_scanned_i_RCQ:nww #1 #2 {
-%   \BNVS_xprt:n { #2 }
+% \begin{BNVS.test}{bnvs:cn={ scan_ISRCE:TFw }{/.N}, eringo}
+% \cs_set:Npn \BNVS_scan_CQ:nw #1 {
 %   #1
 % }
-% \__bnvs_scan_ISRCQ:TFw {
-%   \BNVS_coverage:n { 1234 }
+% \__bnvs_tl_set:cn I { III }
+% \__bnvs_tl_set:cn S { SSS }
+% \__bnvs_scan_ISRCE:TFw {
+%   \BNVS_coverage:n { TEST / yes: }
 % } {
 %   \test_fail:n D
 % }
 % .5678
 % \relax
-% \assert_coverage:nn { 1234 } Z
-% \assert_xprted:nn { \ISP:w { III } { SSS } { 5678 } } Z
+% \assert_coverage:nn { TEST / yes: } A
+% \assert_xprted:nn { \ISP:w { III } { SSS } { \NR:w {5678}{} } } Z
 % \end{BNVS.test}
 %    \begin{macrocode}
         } {
@@ -13143,15 +13089,15 @@ end
 % \begin{BNVS.macrocode}
 % \begin{BNVS.gobble}
 %<*!final>
-          \BNVS_coverage:n { scan_ISRCQ:TFw / F }
+          \BNVS_coverage:n { scan_ISRCE:TFw / F }
 %</!final>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
           #2
           .
 %    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ scan_ISRCQ:TFw }{/ISR}, eringo}
-% \__bnvs_scan_ISRCQ:TFw {
+% \begin{BNVS.test}{bnvs:cn={ scan_ISRCE:TFw }{/ISR}, eringo}
+% \__bnvs_scan_ISRCE:TFw {
 %   \test_fail:n D
 % } {
 %   \peek_charcode_remove:NTF . {
@@ -13175,14 +13121,14 @@ end
 % \begin{BNVS.macrocode}
 % \begin{BNVS.gobble}
 %<*!final>
-  \BNVS_coverage:n { scan_ISRCQ:TFw / F' }
+      \BNVS_coverage:n { scan_ISRCE:TFw / F' }
 %</!final>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
       #2
 %    \end{macrocode}
-% \begin{BNVS.test}{bnvs:cn={ scan_ISRCQ:TFw }{/ISR}, eringo}
-% \__bnvs_scan_ISRCQ:TFw {
+% \begin{BNVS.test}{bnvs:cn={ scan_ISRCE:TFw }{/ISR}, eringo}
+% \__bnvs_scan_ISRCE:TFw {
 %   \test_fail:n D
 % } {
 %   \BNVS_coverage:n { 1234 }
@@ -13195,7 +13141,7 @@ end
   }
 }
 %    \end{macrocode}
-% \begin{BNVS.test}{bnvs:Nn=\BNVS_scanned_IKS_RCQ:nww/3, ignore}
+% \begin{BNVS.test}{bnvs:Nn=\BNVS_scanned_IKS_RCQ:nww{/3}, ignore}
 % \BNVS_DEBUG_begin_scan:nnn { BNVS_scanned_P:nww / begin } {
 %   \BNVS_xprt:n { #1 }
 % } { }
@@ -13207,11 +13153,11 @@ end
 %  . 1P3
 % \assert_xprted:nn { { 1 } { 3 } { \PR:w { 1P3 } {} } } A
 % \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:cn={scan_ISRCQ:TFw}{/4}, ignore}
+% \begin{BNVS.test}{bnvs:cn={scan_ISRCE:TFw}{/4}, ignore}
 % \BNVS_DEBUG_begin_scan:nN {
 %   1234
 % } \BNVS_xprt_crl:n
-% \__bnvs_scan_ISRCQ:TFw {
+% \__bnvs_scan_ISRCE:TFw {
 %   \assert_xprted:nn { \ISR:w { I } { S } { \PR:w { 1P3 } {} } } A
 %   \BNVS_coverage:n { 5678 }
 %   \BNVS_end_scan:
@@ -13221,8 +13167,8 @@ end
 % I!S.1P3
 % \assert_xprted:nn { { \ISR:w { I } { S } { \PR:w { 1P3 } {} } } } Z
 % \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:cn={scan_ISRCQ:TFw}/5, ignore}
-% \__bnvs_scan_ISRCQ:TFw {
+% \begin{BNVS.test}{bnvs:cn={scan_ISRCE:TFw}{/5}, ignore}
+% \__bnvs_scan_ISRCE:TFw {
 %   \assert_xprted:nn { \ISR:w { I } { S } { \PR:w { P } { \PR:w { Q } {} } } } A
 % } {
 %   \test_fail:n B
@@ -13230,16 +13176,11 @@ end
 % I!S.P.Q
 % \assert_xprted:nn { \ISR:w { I } { S } { \PR:w { P } { \PR:w { Q } {} } } } B
 % \end{BNVS.test}
-% \__bnvs_scan_ISRCQ:TFw {
-%   \assert_xprted:nn { \ISR:w { I } { S } { \PR:w { P } { \PR:w { Q } {} } } } A
-% } {
-%   \test_fail:n B
+% \begin{BNVS.test}{bnvs:cn={scan_ISRCE:TFw}{/3}, eringo}
+% \cs_set:Npn \BNVS_scan_CQ:nw #1 {
+%   #1
 % }
-% I!S.P.Q
-% \assert_xprted:nn { \ISR:w { I } { S } { \PR:w { P } { \PR:w { Q } {} } } } B
-% \end{BNVS.test}
-% \begin{BNVS.test}{bnvs:cn={scan_ISRCQ:TFw}{/3}, eringo}
-% \__bnvs_scan_ISRCQ:TFw {
+% \__bnvs_scan_ISRCE:TFw {
 %   \assert_xprted:nn { \ISR:w { I } { S } { \NR:w { 123 } { \NR:w { -321 } {} } } } A
 % } {
 %   \test_fail:n B
@@ -13261,7 +13202,7 @@ end
 % \KWNlatex{{|\KWNmeta{P}|}}
 % \end{syntax}
 % Utility function only called once by
-% \KWNlatex{\__bnvs_scan_ISRCQ:TFw}.
+% \KWNlatex{\__bnvs_scan_ISRCE:TFw}.
 % \end{function}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
@@ -13287,7 +13228,7 @@ end
 % \KWNlatex{|\KWNmeta{input stream}|}
 % \end{syntax}
 % Utility function only called once by
-% \KWNlatex{\__bnvs_scan_ISRCQ:TFw}.
+% \KWNlatex{\__bnvs_scan_ISRCE:TFw}.
 % \end{function}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
@@ -13396,6 +13337,7 @@ end
 %    \begin{macrocode}
   \BNVS_tl_use:Nv \BNVS_xprt_crl:n I
   \BNVS_xprt_crl:n { #4 }
+  \BNVS_scan:nnnnnnnw {
 %    \end{macrocode}
 % \end{BNVS.macrocode}
 % \KWNfootprints
@@ -13403,246 +13345,35 @@ end
 % \begin{BNVS.macrocode}
 % \begin{BNVS.gobble}
 %<*!final>
-  \BNVS_DEBUG_begin_scan:nnn { BNVS_scanned_IKS_RCQ:nww / R }
+  \BNVS_DEBUG_begin_scan:n { BNVS_‡scanned_IKS_RCQ:nww / R }
 %</!final>
 %<*!debug>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-  \BNVS_begin_scan:nn
+  \BNVS_begin_scan:
 %    \end{macrocode}
 % \begin{BNVS.gobble}
 %</!debug>
 % \end{BNVS.gobble}
 %    \begin{macrocode}
-    { \BNVS_xprt_crl:n { ##1 } }
-    { }
-  \BNVS_scan_R:nw {
-    \BNVS_end_scan:
-    \BNVS_scan_CQ:nnnw { #1 } { #1 } { #1 }
-  }
+    \BNVS_next_set:n { \BNVS_scan_CQ:nw { #1 } }
+    \BNVS_xprt_crl:n { ##1 }
+  } { \BNVS_end_scan_next: \BNVS_scanned_close: }
+    { \BNVS_end_scan_next: \BNVS_scanned_comma: }
+    { \BNVS_end_scan_next: \BNVS_scanned_one_colon: }
+    { \BNVS_end_scan_next: \BNVS_scanned_colons: }
+    { \BNVS_end_scan_next: \BNVS_scanned_q_stop: }
+    { \BNVS_scan_R:nw { \BNVS_scan_end_next: } }
 }
 %    \end{macrocode}
 % \end{BNVS.macrocode}
 % ^^A
-% \begin{function}{
-%   \BNVS_scan_R:nw,
-% }
-% \begin{syntax}
-% \KWNlatex*{\BNVS_scan_R:nw}^^A
-% \KWNlatex{{|\KWNmeta{next:}|}}^^A
-% \KWNlatex*{|\KWNmeta{input stream}|}
-% \end{syntax}
-% Calls \KWNlatex*{\BNVS_scanned_P:nww} or
-% \KWNlatex*{\BNVS_scanned_N:nww},
-% export the scanned material between curly braces and
-% execute \KWNmeta{next:} code.
-% \end{function}
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-\cs_new:Npn \BNVS_scan_R:nwX #1 {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-  \BNVS_coverage:n { BNVS_scan_R:nw }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-  \peek_charcode_remove:NTF . {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% If we scan a ``\KWNlatex*{.}'',
-% scan \KWNmeta{P} material and call
-% \KWNlatex{\BNVS_scanned_P:nww} or
-% scan \KWNmeta{i} material and call
-% \KWNlatex{\BNVS_scanned_N:nww},
-% both with \KWNmeta{next:} code
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-    \peek_regex_replace_once:NnTF \c__bnvs_P_regex { { \0 } } {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% We begin another scan group to enclose the scanned material
-% between curly braces.
-% \begin{BNVS.macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-      \BNVS_DEBUG_begin_scan:nnn { BNVS_scan_R:nw / P } 
-%</!final>
-%<*!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-      \BNVS_begin_scan:nn
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%</!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-        { \BNVS_xprt:n { ##1 } }
-        { #1 }
-      \BNVS_scanned_P:nww { \BNVS_end_scan: }
-%    \end{macrocode}
-% \begin{BNVS.test}{BNVS:Nn=\BNVS_scan_R:nw{/.P}, eringo}
-% \BNVS_scan_R:nw { \BNVS_coverage:n { 1234 } }
-% .PPP
-% \assert_xprted:nn { \PR:w { PPP } {} } A
-% \assert_coverage:nn { 1234 } Z
-% \end{BNVS.test}
-% \begin{BNVS.test}{BNVS:Nn=\BNVS_scan_R:nw{/.P.Q}, eringo}
-% \BNVS_scan_R:nw { \BNVS_coverage:n { 1234 } }
-% .PPP.QQQ
-% \assert_xprted:nn { \PR:w { PPP } { \PR:w { QQQ } {} } } A
-% \assert_coverage:nn { 1234 } Z
-% \end{BNVS.test}
-%    \begin{macrocode}
-    } {
-      \peek_regex_replace_once:NnTF \c__bnvs_N_regex { { \0 } } {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% We begin another scan group to enclose the scanned material
-% between curly brackets.
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-        \BNVS_scanned_N:nww { \BNVS_end_scan: }
-%    \end{macrocode}
-% \begin{BNVS.test}{BNVS:Nn=\BNVS_scan_R:nw{/.1}, eringo}
-% \BNVS_scan_R:nw { \BNVS_coverage:n { 1234 } }
-% .123
-% \assert_xprted:nn { \NR:w { 123 } {} } A
-% \assert_coverage:nn { 1234 } Z
-% \end{BNVS.test}
-% \begin{BNVS.test}{BNVS:Nn=\BNVS_scan_R:nw{/.1.1}, eringo}
-% \BNVS_scan_R:nw { \BNVS_coverage:n { 1234 } }
-% .123 .456
-% \assert_xprted:nn { \NR:w { 123 } { \NR:w { 456 } {} } } A
-% \assert_coverage:nn { 1234 } Z
-% \end{BNVS.test}
-%    \begin{macrocode}
-      } {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% Otherwise execute \KWNmeta{no:} code.
-% \begin{BNVS.macrocode}
-%    \begin{macrocode}
-        #1
-        .
-%    \end{macrocode}
-% \begin{BNVS.test}{BNVS:Nn=\BNVS_scan_R:nw{/.}, eringo}
-% \BNVS_scan_R:nw {
-%   \peek_charcode_remove:NTF . {
-%     \BNVS_coverage:n { 1234 }
-%   } {
-%     \test_fail:n { 5678 }
-%   }
-% }
-% .
-% \relax
-% \assert_coverage:nn { 1234 } Z
-% \end{BNVS.test}
-%    \begin{macrocode}
-      }
-    }
-  } {
-    \peek_charcode_remove:NTF [%]
-    {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% If we scan a ``\KWNlatex*{[^^A]
-% }'',
-% scan balanced material and execute \KWNmeta{next:} code.
-% \begin{BNVS.macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-      \BNVS_DEBUG_scan_close:nnnN { BNVS_scan_R:nw / [] } {
-%</!final>
-% }
-%<*!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-      \BNVS_scan_close:nnN {
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%</!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-        \tl_if_empty:nTF { ##1 } {
-          \BNVS_scan_R:nw {}
-        } {
-          \BNVS_xprt:n { \nR:w { ##1 } }
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% Scan for a rhs in a cls.
-% \begin{BNVS.macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-          \BNVS_DEBUG_begin_scan:nnn { BNVS_scan_R:nw / [] / ... }
-%</!final>
-%<*!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-          \BNVS_begin_scan:nn
-%    \end{macrocode}
-% \begin{BNVS.gobble}
-%</!debug>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-            { \BNVS_xprt_crl:n { ####1 } }
-            { }
-          \BNVS_scan_R:nw { \BNVS_end_scan: }
-        }
-      } { #1 } %[
-      ]
-      \BNVS_scan_csl_rhs:nw { \BNVS_end_scan: }
-%    \end{macrocode}
-% \begin{BNVS.test}{BNVS:Nn=\BNVS_scan_R:nw{/[]}, eringo}
-% \cs_set:Npn \BNVS_scan_csl_rhs:nw #1 {
-%   \peek_charcode_remove:NTF ? {
-%     \BNVS_coverage:n { 1234 } ^^A[
-%     \peek_charcode_remove:NTF ] { ^^A[
-%       \BNVS_scan_close:N ]
-%     } {
-%       #1
-%     }
-%   } {
-%     \test_fail:n { 5678 }
-%   }
-% }
-% \BNVS_scan_R:nw { \BNVS_coverage:n { 1234 } }
-% [?]
-% \assert_xprted:nn { \nR:w { 123 } {} } A
-% \assert_coverage:nn { 1234 } Z
-% \end{BNVS.test}
-%    \begin{macrocode}
-    } {
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% \KWNfootprints
-% Otherwise execute \KWNmeta{no:} code.
-% \begin{BNVS.macrocode}
-% \begin{BNVS.gobble}
-%<*!final>
-      \BNVS_coverage:n { BNVS_scan_R:nw / F }
-%</!final>
-% \end{BNVS.gobble}
-%    \begin{macrocode}
-      #1
-    }
-  }
-}
-%    \end{macrocode}
-% \end{BNVS.macrocode}
-% ^^A
-% \begin{variable}{\c__bnvs_modeq_regex}
+% \begin{variable}{\c__bnvs_mireql_regex}
 % Assignment operators.
 % \end{variable}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
-\regex_const:Nn \c__bnvs_modeq_regex {
+\regex_const:Nn \c__bnvs_mireql_regex {
   \s* 
 %    \end{macrocode}
 % \end{BNVS.macrocode}
@@ -13660,9 +13391,9 @@ end
 %    \end{macrocode}
 % \end{BNVS.macrocode}
 % \end{myList}
-% \begin{BNVS.test}{:N=\c__bnvs_modeq_regex}
+% \begin{BNVS.test}{:N=\c__bnvs_mireql_regex}
 % \cs_set:Npn \BNVS_test:nnn #1 #2 {
-%   \test_extract:Nnnn \c__bnvs_modeq_regex { #1 } { #1, #2 }
+%   \test_extract:Nnnn \c__bnvs_mireql_regex { #1 } { #1, #2 }
 % }
 % \BNVS_test:nnn {  = } { {} } { 1 }
 % \BNVS_test:nnn { += } { + } { 2 }
@@ -13814,8 +13545,8 @@ end
 % \end{BNVS.test}
 %    \begin{macrocode}
   } {
-    \peek_regex_replace_once:NnTF \c__bnvs_modeq_regex { { \1 } } {
-      \BNVS_scanned_modeq:nnnnw { #1 } { #2 } { #3 }
+    \peek_regex_replace_once:NnTF \c__bnvs_mireql_regex { { \1 } } {
+      \BNVS_scanned_mireql:nnnnw { #1 } { #2 } { #3 }
 %    \end{macrocode}
 % \begin{BNVS.test}{bnvs:Nn=\BNVS_scan_CQ:nnnnw{/2}, ignore}
 % \BNVS_DEBUG_begin_scan:nnn {
@@ -13858,10 +13589,10 @@ end
 % \end{BNVS.macrocode}
 % ^^A
 % \begin{function}{
-%   \BNVS_scanned_modeq:nnnnw,
+%   \BNVS_scanned_mireql:nnnnw,
 % }
 % \begin{syntax}
-% \KWNlatex*{\BNVS_scanned_modeq:nnnnw}^^A
+% \KWNlatex*{\BNVS_scanned_mireql:nnnnw}^^A
 % \KWNlatex*{{|\KWNmeta{closed:}|}}^^A
 % \KWNlatex*{{|\KWNmeta{comma:}|}}^^A
 % \KWNlatex*{{|\KWNmeta{stopped:}|}}^^A
@@ -13881,11 +13612,11 @@ end
 % \end{function}
 % \begin{BNVS.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_scanned_modeq:nnnnw #1 #2 #3 #4 {
+\cs_new:Npn \BNVS_scanned_mireql:nnnnw #1 #2 #3 #4 {
 %    \end{macrocode}
 % \begin{BNVS.gobble}
 %<*!final>
-  \BNVS_DEBUG_begin_scan:nnnnnnnn { scanned_modeq:nnnnw }
+  \BNVS_DEBUG_begin_scan:nnnnnnnn { scanned_mireql:nnnnw }
 %</!final>
 %<*!debug>
 % \end{BNVS.gobble}
@@ -13905,7 +13636,7 @@ end
 %    \begin{macrocode}
   { \BNVS_end_scan: #1 }
 %    \end{macrocode}
-% \begin{BNVS.test}{bnvs:Nn=\BNVS_scanned_modeq:nnnnw{/close}, ignore}
+% \begin{BNVS.test}{bnvs:Nn=\BNVS_scanned_mireql:nnnnw{/close}, ignore}
 % \BNVS_begin_scan:nnnnnnn {
 %   \BNVS_xprt:n { \:n #1 }
 % } {} {} {} {} {} {}
@@ -13930,11 +13661,11 @@ end
 % \cs_set:Npn \BNVS_scanned_q_stop: {
 %   \test_fail:n { stop: }
 % }\STOP
-% \BNVS_scanned_modeq:nnnnw {} {} {} {}
+% \BNVS_scanned_mireql:nnnnw {} {} {} {}
 % ?^^A(
 % )
 % \assert_xprted:nn { \:n { ITEM } } A
-% \assert_coverage:nn { scanned_modeq:nnnnw / close:} Z
+% \assert_coverage:nn { scanned_mireql:nnnnw / close:} Z
 % \end{BNVS.test}
 % \end{BNVS.macrocode}
 % \KWNfootprints
@@ -13943,7 +13674,7 @@ end
 %    \begin{macrocode}
   { \BNVS_end_scan: #2 }
 %    \end{macrocode}
-% \begin{BNVS.test}{bnvs:Nn=\BNVS_scanned_modeq:nnnnw{/comma}, ignore}
+% \begin{BNVS.test}{bnvs:Nn=\BNVS_scanned_mireql:nnnnw{/comma}, ignore}
 % \BNVS_begin_scan:nnnnnnn {
 %   \:n #1
 % } {} {
@@ -13964,13 +13695,13 @@ end
 % \cs_set:Npn \BNVS_scanned_close:N #1 {
 %   \test_fail:n { close:N }
 % }
-% \BNVS_scanned_modeq:nnnnw {
+% \BNVS_scanned_mireql:nnnnw {
 % } {
 % } {
 % }
 % ?,
 % \assert_xprted:nn { \:n { ITEM } } A
-% \assert_coverage:nn { scanned_modeq:nnnnw / comma:} Z
+% \assert_coverage:nn { scanned_mireql:nnnnw / comma:} Z
 % \end{BNVS.test}
 % \end{BNVS.macrocode}
 % \KWNfootprints
@@ -13993,7 +13724,7 @@ end
 %    \begin{macrocode}
   { \BNVS_end_scan: #3 }
 %    \end{macrocode}
-% \begin{BNVS.test}{bnvs:Nn=\BNVS_scanned_modeq:nnnnw{/stop}, ignore}
+% \begin{BNVS.test}{bnvs:Nn=\BNVS_scanned_mireql:nnnnw{/stop}, ignore}
 % \BNVS_begin_scan:nnnnnnn {
 %   \BNVS_xprt:n { \:n #1 }
 % } {} {} {} {} {} {}
@@ -14017,7 +13748,7 @@ end
 %   \BNVS_end_scan:
 %   \BNVS_scanned_q_stop:
 % }\STOP
-% \BNVS_scanned_modeq:nnnnw {
+% \BNVS_scanned_mireql:nnnnw {
 % } {
 % } {
 % } {
@@ -14025,7 +13756,7 @@ end
 % ?
 % \q_stop
 % \assert_xprted:nn { \:n { ITEM } } A
-% \assert_coverage:nn { scanned_modeq:nnnnw / stop:} Z
+% \assert_coverage:nn { scanned_mireql:nnnnw / stop:} Z
 % \end{BNVS.test}
 %    \begin{macrocode}
   \BNVS_scan_xprt_wrap:n { { #4 } }
@@ -30391,7 +30122,7 @@ fig.show()
 \ExplSyntaxOff
 \make{LstEql,RndLst,SqrLst,CrlLst}
 \make{DefItem,RndItm,SqrItm,CrlItm}
-\make{alpha,space,comma,equal,lower,upper,digit,alnum}
+\make{alpha,spc,comma,lower,upper,digit,alnum}
 \make{sign,digit,index,significand,exponent,number,other}
 \begin{tcblisting} {
   listing only,
@@ -30404,13 +30135,12 @@ fig.show()
   },
   minted language=bnf,
 }
-&\BNVSspace&       ::= &\textrm{Horizontal white space characters}&
+&\BNVSspc&         ::= &\textrm{Horizontal white space characters}&
 &\BNVSlower&       ::= &\textrm{a lowercase letter}&
 &\BNVSupper&       ::= &\textrm{an uppercase letter}&
 &\BNVSdigit&       ::= &\textrm{a decimal digit}&
 &\BNVSsign&        ::= '-' | '+'
-&\BNVScomma&       ::= &\BNVSspace& ',' &\BNVSspace&
-&\BNVSequal&       ::= &\BNVSspace& ( '=' | '?=' | '"=' | '+=' ) &\BNVSspace&
+&\BNVScomma&       ::= &\BNVSspc& ',' &\BNVSspc&
 &\BNVSalpha&       ::= &\BNVSlower& | &\BNVSupper& | '_'
 &\BNVSalnum&       ::= &\BNVSalpha& | &\BNVSdigit&
 &\BNVSindex&       ::= &\BNVSsign&* &\BNVSdigit&+
@@ -30421,7 +30151,7 @@ fig.show()
 \end{tcblisting}
 \end{@empty}
 %</implementation-listing2a-tex>
-%<*implementation-listing2b-tex>
+%<*grammar-ISRCE-tex>
 \begin{@empty}
 \ExplSyntaxOn
 \cs_set_eq:NN \saved_langle \langle
@@ -30438,10 +30168,11 @@ fig.show()
   }
 }
 \ExplSyntaxOff
-\make{alpha,alnum,N,digit,space}
-\make{S,P,R,IKSPR}
-\make{n,Rhs}
-\make{Crl,Sqr,VAZL,VAZLRnd}
+\make{alpha,alnum,N,digit,spc}
+\make{S,P,R,n,ISR,C,Mir,MirEql,Q,Rhs,ISRCE}
+\make{blnc}
+\make{VAZL,VAZLRnd,VAZLRhs}
+\make{Crl,Sqr}
 \begin{tcblisting} {
   listing only,
   minted options={
@@ -30454,15 +30185,21 @@ fig.show()
   },
   minted language=bnf,
 }
-&\BNVSS&     ::= &\BNVSalpha& &\BNVSalnum&* 
-&\BNVSP&     ::= &\BNVSdigit&* &\BNVSS&
-&\BNVSR&     ::= ( '.' &\BNVSP& ) | ( '.' &\BNVSN& ) | &\BNVSn&
-&\BNVSn&     ::= '[' &\BNVSRhs& ']'
-&\BNVSIKSPR& ::= (  ( &\BNVSS&? '!' )? &\BNVSS& ) | '.' &\BNVSP& ) &\BNVSR&*
-&\BNVSRhs&   ::= &\BNVSCrl& | &\BNVSSqr& | &\BNVSVAZL& | &\BNVSVAZLRnd&
+&\BNVSS&       ::= &\BNVSalpha& &\BNVSalnum&* 
+&\BNVSP&       ::= &\BNVSdigit&* &\BNVSS&
+&\BNVSR&       ::= ( '.' &\BNVSP& ) | ( '.' &\BNVSN& ) | &\BNVSn&
+&\BNVSn&       ::= '[' &\BNVSspc& &\BNVSblnc& &\BNVSspc& ']'
+&\BNVSISR&     ::= ( ( &\BNVSS&? '!' )? &\BNVSS& ) | '.' &\BNVSP& ) &\BNVSR&*
+&\BNVSC&       ::= '(' &\BNVSspc& &\BNVSblnc& &\BNVSspc& ')'
+&\BNVSISRCE&   ::= &\BNVSISR& ( &\BNVSC& | &\BNVSQ& )
+&\BNVSQ&       ::= &\BNVSMirEql& &\BNVSRhs&
+&\BNVSMirEql&  ::= &\BNVSspc& &\BNVSMir&? '=' &\BNVSspc&
+&\BNVSMir&     ::= '+' | '-' | '*' | '/'
+&\BNVSRhs&     ::= &\BNVSVAZLRhs& | '?(' &\BNVSVAZLRhs& ')' | '"(' &\BNVSVAZLRhs& ')'
+&\BNVSVAZLRhs& ::= &\BNVSVAZL& | &\BNVSVAZLRnd& | &\BNVSCrl& | &\BNVSSqr&
 \end{tcblisting}
 \end{@empty}
-%</implementation-listing2b-tex>
+%</grammar-ISRCE-tex>
 %<*implementation-listing2c-tex>
 \begin{@empty}
 \ExplSyntaxOn
@@ -30480,7 +30217,7 @@ fig.show()
   }
 }
 \ExplSyntaxOff
-\make{space,comma,other,equal,IKSPR}
+\make{spc,comma,other,equal,IKSPR}
 \make{Crl,CrlLst,CrlItm,CrlEql,Rhs}
 \make{Crl,Sqr,VAZL,VAZLRnd,VAZLLst}
 \begin{tcblisting} {
@@ -30496,7 +30233,7 @@ fig.show()
   minted language=bnf,
 }
 &\BNVSCrl&     ::= '{' &\BNVSCrlLst& '}'
-&\BNVSCrlLst&  ::= &\BNVSspace& &\BNVSCrlItm& ( &\BNVScomma& &\BNVSCrlItm& )* &\BNVSspace&
+&\BNVSCrlLst&  ::= &\BNVSspc& &\BNVSCrlItm& ( &\BNVScomma& &\BNVSCrlItm& )* &\BNVSspc&
 &\BNVSCrlItm&  ::= &\BNVSCrlEql& | &\BNVSIKSPR&
 &\BNVSCrlEql&  ::= ( &\BNVSIKSPR& &\BNVSequal& )+ &\BNVSRhs&
 \end{tcblisting}
@@ -30519,7 +30256,7 @@ fig.show()
   }
 }
 \ExplSyntaxOff
-\make{space,comma,index,equal,IKSPR}
+\make{spc,comma,index,equal,IKSPR}
 \make{Crl,CrlLst,CrlItm}
 \make{Sqr,SqrLst,SqrItm,SqrEql}
 \make{Rnd,RndLst,RndItm}
@@ -30538,13 +30275,13 @@ fig.show()
   minted language=bnf,
 }
 &\BNVSSqr&    ::= '[' &\BNVSSqrLst& ']'
-&\BNVSSqrLst& ::= &\BNVSspace& &\BNVSSqrItm& ( &\BNVScomma& &\BNVSSqrItm& )* &\BNVSspace&
+&\BNVSSqrLst& ::= &\BNVSspc& &\BNVSSqrItm& ( &\BNVScomma& &\BNVSSqrItm& )* &\BNVSspc&
 &\BNVSSqrItm& ::= &\BNVSSqrEql& | &\BNVSRhs&
 &\BNVSSqrEql& ::= ( ( &\BNVSIKSPR& | &\BNVSindex& ) &\BNVSequal& )+ &\BNVSRhs&
  \end{tcblisting}
 \end{@empty}
 %</implementation-listing2d-tex>
-%<*implementation-listing2e-tex>
+%<*grammar-VAZL-tex>
 \begin{@empty}
 \ExplSyntaxOn
 \cs_set_eq:NN \saved_langle \langle
@@ -30561,7 +30298,7 @@ fig.show()
   }
 }
 \ExplSyntaxOff
-\make{space,comma,Rnd,Sqr,Crl,Rlv,Raw,IKSPR,other}
+\make{spc,comma,Rnd,Sqr,Crl,Rlv,Raw,IKSPR,other}
 \make{V,A,Z,L,AZL,ALZ,VAZL,VAZLRnd,VAZLLst,blnc}
 \begin{tcblisting} {
   listing only,
@@ -30583,12 +30320,57 @@ fig.show()
 &\BNVSAZL&     ::= &\BNVSA&? ':'  &\BNVSZ& ( "::" &\BNVSL&? )?
 &\BNVSALZ&     ::= &\BNVSA&? "::" &\BNVSL& ( ':'  &\BNVSZ&? )?
 &\BNVSVAZLRnd& ::= '(' &\BNVSVAZLLst& ')'
-&\BNVSVAZLLst& ::= &\BNVSspace& &\BNVSVAZL& ( &\BNVScomma& &\BNVSVAZL& )* &\BNVSspace&
+&\BNVSVAZLLst& ::= &\BNVSspc& &\BNVSVAZL& ( &\BNVScomma& &\BNVSVAZL& )* &\BNVSspc&
 &\BNVSRlv&     ::= '?' &\BNVSVAZLRnd&
-&\BNVSblnc&    ::= ( &\BNVSspace& | &\BNVSIKSPR& | &\BNVSRnd& | &\BNVSSqr& | &\BNVSCrl& | &\BNVSRlv& | &\BNVSRaw& | &\BNVSother& )*
+&\BNVSblnc&    ::= ( &\BNVSspc& | &\BNVSIKSPR& | &\BNVSRnd& | &\BNVSSqr& | &\BNVSCrl& | &\BNVSRlv& | &\BNVSRaw& | &\BNVSother& )*
 \end{tcblisting}
 \end{@empty}
-%</implementation-listing2e-tex>
+%</grammar-VAZL-tex>
+%<*grammar-ISRCE-tex>
+\begin{@empty}
+\ExplSyntaxOn
+\cs_set_eq:NN \saved_langle \langle
+\cs_set:Npn \langle {
+  \texttt{\hbox to 0.5em{\hss$\saved_langle$\hss}}
+}
+\cs_set_eq:NN \saved_rangle \rangle
+\cs_set:Npn \rangle {
+  \texttt{\hbox to 0.5em{\hss$\saved_rangle$\hss}}
+}
+\cs_set:Npn \make #1 {
+  \clist_map_inline:nn { #1 } {
+    \cs_set:cpn { BNVS##1 } { \KWNmeta{ ##1 } }
+  }
+}
+\ExplSyntaxOff
+\make{spc,comma,Rnd,Sqr,Crl,Rlv,Raw,IKSPR,other}
+\make{V,A,Z,L,AZL,ALZ,VAZL,VAZLRnd,VAZLLst,blnc}
+\begin{tcblisting} {
+  listing only,
+  minted options={
+    fontsize=\small,
+    breaklines,
+    linenos,
+    numbersep=0.5\baselineskip,
+    escapeinside=&&,
+    firstnumber=last
+  },
+  minted language=bnf,
+}
+&\BNVSV&       ::= &\BNVSblnc&
+&\BNVSA&       ::= &\BNVSblnc&
+&\BNVSZ&       ::= &\BNVSblnc&
+&\BNVSL&       ::= &\BNVSblnc&
+&\BNVSVAZL&    ::= &\BNVSV& | &\BNVSAZL& | &\BNVSALZ&
+&\BNVSAZL&     ::= &\BNVSA&? ':'  &\BNVSZ& ( "::" &\BNVSL&? )?
+&\BNVSALZ&     ::= &\BNVSA&? "::" &\BNVSL& ( ':'  &\BNVSZ&? )?
+&\BNVSVAZLRnd& ::= '(' &\BNVSVAZLLst& ')'
+&\BNVSVAZLLst& ::= &\BNVSspc& &\BNVSVAZL& ( &\BNVScomma& &\BNVSVAZL& )* &\BNVSspc&
+&\BNVSRlv&     ::= '?' &\BNVSVAZLRnd&
+&\BNVSblnc&    ::= ( &\BNVSspc& | &\BNVSIKSPR& | &\BNVSRnd& | &\BNVSSqr& | &\BNVSCrl& | &\BNVSRlv& | &\BNVSRaw& | &\BNVSother& )*
+\end{tcblisting}
+\end{@empty}
+%</grammar-ISRCE-tex>
 %<*implementation-listing2f-tex>
 \begin{@empty}
 \ExplSyntaxOn
@@ -30606,7 +30388,7 @@ fig.show()
   }
 }
 \ExplSyntaxOff
-\make{space,Rlv,comma,alnum,other}
+\make{spc,Rlv,comma,alnum,other}
 \make{Raw,RawLst,RawRnd,RawSqr,RawCrl,RawOtr}
 \begin{tcblisting} {
   listing only,
@@ -30621,7 +30403,7 @@ fig.show()
   minted language=bnf,
 }
 &\BNVSRaw&    ::= '"' '(' &\BNVSRawLst& ')'
-&\BNVSRawLst& ::= ( &\BNVSspace& | &\BNVSRlv& | &\BNVSRawRnd& | &\BNVSRawSqr& | &\BNVSRawCrl& | &\BNVSRawOtr& )*
+&\BNVSRawLst& ::= ( &\BNVSspc& | &\BNVSRlv& | &\BNVSRawRnd& | &\BNVSRawSqr& | &\BNVSRawCrl& | &\BNVSRawOtr& )*
 &\BNVSRawRnd& ::= '(' &\BNVSRawLst& ')'
 &\BNVSRawSqr& ::= '[' &\BNVSRawLst& ']'
 &\BNVSRawCrl& ::= '{' &\BNVSRawLst& '}'
