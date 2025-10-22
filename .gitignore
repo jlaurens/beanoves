@@ -289,6 +289,7 @@ source/beanoves copie.dtx
 source/beanoves-test.lua
 source/beanoves-implementation-*
 source/beanoves-grammar-*
+source/beanoves-ast-*
 source/_minted*
 source/luatex.*
 source/*.minted*
