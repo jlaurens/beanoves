@@ -14204,7 +14204,7 @@ end
 %   \test_fail:n { TEST / stop: }
 % } {
 %   \test_fail:n { TEST / no:w }
-% } ?()
+% } ()
 % \assert_coverage:nn { TEST / close:w } A
 % \assert_xprted:nn { { } } M
 % \BNVS_xprt_clear:
@@ -14214,7 +14214,7 @@ end
 %   \test_fail:n { TEST / stop: }
 % } {
 %   \test_fail:n { TEST / no:w }
-% } ?(1,2)
+% } (1,2)
 % \assert_xprted:nn { { \:nn { \:n { 1 } } { \:nn { \:n { 2 } } { } } } } Z
 % \end{BNVS.test}
 % \begin{BNVS.test}{bnvs:Nn=\BNVS_scan_C:nnFw{/stop:w}, eringo}
@@ -14225,7 +14225,7 @@ end
 %   \BNVS_coverage:n { TEST / stop: }
 % } {
 %   \test_fail:n { TEST / no:w }
-% } ?(
+% } (
 % \assert_in_error:nn { Missing } 0
 % \assert_coverage:nn { TEST / stop: } A
 % \assert_xprted:nn { { } } M
@@ -14236,7 +14236,7 @@ end
 %   \BNVS_coverage:n { TEST / stop: }
 % } {
 %   \test_fail:n { TEST / no:w }
-% } ?(1,2^^A)
+% } (1,2^^A)
 % \assert_xprted:nn { { \:nn { \:n { 1 } } { \:nn { \:n { 2 } } { } } } } Z
 % \end{BNVS.test}
 % \begin{BNVS.test}{bnvs:Nn=\BNVS_scan_C:nnFw{/F}, eringo}
