@@ -8,14 +8,7 @@
 \cs_set:Npn \rangle {
   \texttt{\hbox to 0.5em{\hss$\saved_rangle$\hss}}
 }
-\cs_set:Npn \make #1 {
-  \clist_map_inline:nn { #1 } {
-    \cs_set:cpn { BNVS##1 } { \KWNmeta{ ##1 } }
-  }
-}
 \ExplSyntaxOff
-\make{space,Rlv,comma,alnum,other}
-\make{Raw,RawLst,RawRnd,RawSqr,RawCrl,RawOtr}
 \begin{tcblisting} {
   listing only,
   minted options={
@@ -29,7 +22,7 @@
   minted language=bnf,
 }
 &\BNVSRaw&    ::= '"' '(' &\BNVSRawLst& ')'
-&\BNVSRawLst& ::= ( &\BNVSspace& | &\BNVSRlv& | &\BNVSRawRnd& | &\BNVSRawSqr& | &\BNVSRawCrl& | &\BNVSRawOtr& )*
+&\BNVSRawLst& ::= ( &\BNVSspc& | &\BNVSRlv& | &\BNVSRawRnd& | &\BNVSRawSqr& | &\BNVSRawCrl& | &\BNVSRawOtr& )*
 &\BNVSRawRnd& ::= '(' &\BNVSRawLst& ')'
 &\BNVSRawSqr& ::= '[' &\BNVSRawLst& ']'
 &\BNVSRawCrl& ::= '{' &\BNVSRawLst& '}'
