@@ -991,6 +991,7 @@ end
 %   \cs_new:cpn { KWNscaNc#1cw } { \KWNmeta{ scaN:#1:w } }
 %   \cs_new:cpn { KWNscaNu#1cw } { \KWNmeta{ scaN_#1:w } }
 %   \cs_new:cpn { KWNon#1cw } { \KWNmeta{ on_#1:w } }
+%   \cs_new:cpn { KWN#1cw } { \KWNmeta{ #1:w } }
 % }
 % \cs_new:Npn \KWNPrefiXcw { \KWNmeta{ pfX:w } }
 % \cs_new:Npn \KWNFcw { \KWNmeta{ F:w } }
@@ -1004,8 +1005,10 @@ end
 % }
 % \NewDocumentEnvironment {KWN.@empty} {} {} {}
 % \NewDocumentEnvironment {KWN.GOBBLE.NO} { } { } { }
-% \NewDocumentEnvironment {KWN.GOBBLE.OFF} {} {} {}
-% \NewDocumentEnvironment {KWN.GOBBLE} { +b } {
+% \NewDocumentEnvironment {KWN.GOBBLE} {} {} {}
+% In order to gobble some parts of the documentation
+% drag `.OFF' above or below
+% \NewDocumentEnvironment {KWN.GOBBLE.OFF} { +b } {
 %   \char_set_catcode_other:N \%
 % } {^^A
 %   \typeout{**********~KWN.GOBBLE: \the\inputlineno}^^A
@@ -14966,7 +14969,7 @@ end
 %       \BNVS_TEST_scan:w
 %     } {
 %       \peek_charcode_remove:NTF Z {
-%         \BNVS_xprt_ast:n { \:Z: }
+%         \BNVS_xprt_ast:n { \Z: }
 %         \BNVS_TEST_scan:w
 %       } {
 %         \peek_charcode_remove:NTF , {
@@ -18380,7 +18383,7 @@ end
         \BNVS_did_end:n {
           \BNVS_ast_plc_init_mpt:X:n { \:AZ } { ##1 }
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL_MLS:w{/S:/AZ}, Test_VAZL:w, eringo,debug}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL_MLS:w{/S:/AZ}, Test_VAZL:w, eringo}
 % \Test_VAZL:w 1 : 2
 % \assert_coverage:nn { TEST / top / S: } A
 % \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
@@ -18573,7 +18576,7 @@ end
         \BNVS_did_end:n {
           \BNVS_ast_plc_init_mpt:X:n { \:AL } { ##1 }
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL_MLS:w{/S:/AL}, Test_VAZL:w, eringo,debug}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL_MLS:w{/S:/AL}, Test_VAZL:w, eringo}
 % \Test_VAZL:w 1 :: 2
 % \assert_coverage:nn { TEST / top / S: } A
 % \assert_xprted:nn { \:AL { \:n { 1 } } { \:n { 2 } } } Z
