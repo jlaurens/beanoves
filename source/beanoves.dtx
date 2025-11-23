@@ -932,6 +932,7 @@ end
 %   }
 % }
 % \KWNmake{{before}}
+% \KWNmake{{pfX}}
 % \KWNmake{{none}{alpha}{spc}{comma}{lower}{upper}{digit}{alnum}}
 % \KWNmake{{sign}{digit}{index}{significand}{exponent}{number}{other}}
 % \KWNmake{{ast}{raw}{content}{branch}{item}}
@@ -966,13 +967,13 @@ end
 % \cs_new:Npn \KWNelsecw { \KWNmeta{ else:w } }
 % \cs_new:Npn \KWNelsex  { \KWNmeta{ else:  } }
 % \cs_new:Npn \KWNRc { \KWNmeta{ R: } }
+% \cs_new:Npn \KWNcw { \KWNmeta{ :w } }
 % \cs_new:Npn \KWNBlockcw { \KWNmeta{ Block:w } }
 % \cs_new:Npn \KWNblockc { \KWNmeta{ block: } }
 % \cs_new:Npn \KWNOneColoncw { \KWNmeta{ One\_ colon:w } }
 % \cs_new:Npn \KWNColonscw { \KWNmeta{ Colons:w } }
 % \cs_new:Npn \KWNcomMacw { \KWNmeta{ comMa:w } }
 % \cs_new:Npn \KWNcLose { \KWNmeta{ cLose } }
-% \cs_new:Npn \KWNclosex { \KWNmeta{ close: } }
 % \cs_new:Npn \KWNcLosecw { \KWNmeta{ L:w } }
 % \cs_new:Npn \KWNstopx { \KWNmeta{ stop: } }
 % \cs_new:Npn \KWNStopc { \KWNmeta{ S: } }
@@ -980,6 +981,7 @@ end
 % \cs_new:Npn \KWNscaNcw { \KWNmeta{ scaN:w } }
 % \cs_new:Npn \KWNscaNuLScw { \KWNmeta{ scaN_LS:w } }
 % \cs_new:Npn \KWNscaNuBOCMLScw { \KWNmeta{ scaN_BOCMLS:w } }
+% \cs_new:Npn \KWNscaNuOCMLScw { \KWNmeta{ scaN_OCMLS:w } }
 % \cs_new:Npn \KWNscaNcbc{ \KWNmeta{ scaN:b: } }
 % \cs_new:Npn \KWNscaNcSc{ \KWNmeta{ scaN:S: } }
 % \cs_new:Npn \KWNscaNuSc{ \KWNmeta{ scaN_S: } }
@@ -990,7 +992,7 @@ end
 %   \cs_new:cpn { KWNscaNu#1cw } { \KWNmeta{ scaN_#1:w } }
 %   \cs_new:cpn { KWNon#1cw } { \KWNmeta{ on_#1:w } }
 % }
-% \cs_new:Npn \KWNPrefiXcw { \KWNmeta{ prefiX:w } }
+% \cs_new:Npn \KWNPrefiXcw { \KWNmeta{ pfX:w } }
 % \cs_new:Npn \KWNFcw { \KWNmeta{ F:w } }
 % \cs_set_eq:NN \saved_langle \langle
 % \cs_set:Npn \langle {
@@ -1002,8 +1004,8 @@ end
 % }
 % \NewDocumentEnvironment {KWN.@empty} {} {} {}
 % \NewDocumentEnvironment {KWN.GOBBLE.NO} { } { } { }
-% \NewDocumentEnvironment {KWN.GOBBLE} {} {} {}
-% \NewDocumentEnvironment {KWN.GOBBLE.OFF} { +b } {
+% \NewDocumentEnvironment {KWN.GOBBLE.OFF} {} {} {}
+% \NewDocumentEnvironment {KWN.GOBBLE} { +b } {
 %   \char_set_catcode_other:N \%
 % } {^^A
 %   \typeout{**********~KWN.GOBBLE: \the\inputlineno}^^A
@@ -4027,20 +4029,25 @@ end
   coverage .code:n = \use:c { BNVS_coverage_#1: },
   coverage .default:n = on,
   coverage .initial:n = on,
-  scaN_MLS .code:n = \cs_set:Npn \BNVS_scaN_MLS:w {
+  scaN_MLS:w .code:n = \cs_set:Npn \BNVS_scaN_MLS:w {
     \peek_charcode_remove:NTF 1 {
       \BNVS_xprt_ast:n { \:n { 1 } }
       \BNVS_scaN_MLS:w
     } {
       \peek_charcode_remove:NTF , {
+        \BNVS_coverage:n { ▬▬▬▬▶︎~M:w}
         \BNVS_scanned_M:w
       } {
-        \peek_charcode_remove:NTF^^A(
+        \peek_charcode_remove:NTF %(
         ) {
+          \BNVS_coverage:n { ▬▬▬▬▶︎~L:w%(
+          `)` }
           \BNVS_scanned_L:w
         } {
-          \peek_charcode_remove:NTF^^A[
+          \peek_charcode_remove:NTF %[
           ] {
+            \BNVS_coverage:n { ▬▬▬▬▶︎~L:w%[
+            `]` }
             \BNVS_scanned_L:w
           } {
             \BNVS_scanned_S:
@@ -4049,7 +4056,7 @@ end
       }
     }
   },
-  scaN_OCMLS .code:n = \cs_set:Npn \BNVS_scaN_OCMLS:w {
+  scaN_OCMLS:w .code:n = \cs_set:Npn \BNVS_scaN_OCMLS:w {
     \peek_charcode_remove:NTF 1 {
       \BNVS_xprt_ast:n { \:n { 1 } }
       \BNVS_scaN_OCMLS:w
@@ -4058,30 +4065,62 @@ end
         \BNVS_xprt_ast:n { \:n { 2 } }
         \BNVS_scaN_OCMLS:w
       } {
-        \peek_charcode_remove:NTF : {
-          \peek_charcode_remove:NTF : {
-            \BNVS_scanned_C:w
-          } {
-            \BNVS_scanned_O:w
-          }
+        \peek_charcode_remove:NTF 3 {
+          \BNVS_xprt_ast:n { \:n { 3 } }
+          \BNVS_scaN_OCMLS:w
         } {
-          \peek_charcode_remove:NTF , {
-            \BNVS_scanned_M:w
-          } {
-            \peek_charcode_remove:NTF^^A(
-            ) {
-              \BNVS_scanned_L:w
+          \peek_charcode_remove:NTF : {
+            \peek_charcode_remove:NTF : {
+              \BNVS_coverage:n { ▬▬▬▬▶︎~C:w}
+              \BNVS_scanned_C:w
             } {
-              \peek_charcode_remove:NTF^^A[
-              ] {
+              \BNVS_coverage:n { ▬▬▬▬▶︎~O:w}
+              \BNVS_scanned_O:w
+            }
+          } {
+            \peek_charcode_remove:NTF , {
+              \BNVS_coverage:n { ▬▬▬▬▶︎~M:w}
+              \BNVS_scanned_M:w
+            } {
+              \peek_charcode_remove:NTF %(
+              ) {
+                \BNVS_coverage:n { ▬▬▬▬▶︎~L:w %(
+                `)` }
                 \BNVS_scanned_L:w
               } {
-                \BNVS_scanned_S:
+                \peek_charcode_remove:NTF %[
+                ] {
+                  \BNVS_coverage:n { ▬▬▬▬▶︎~L:w %[
+                  `]` }
+                  \BNVS_scanned_L:w
+                } {
+                  \peek_catcode_remove:NTF \c_space_token {
+                    \BNVS_scaN_OCMLS:w
+                  } {
+                    \BNVS_coverage:n { ▬▬▬▬▶︎~S:}
+                    \BNVS_scanned_S:
+                  }
+                }
               }
             }
           }
         }
       }
+    }
+  },
+  Test_VAZL:w .code:n = {
+    \keys_set:nn { KWN.test } { scaN_OCMLS:w }
+    \BNVS_scanned_set:MLS {
+      \test_fail:n { TEST / M:w }
+    } {
+      \test_fail:n { TEST / L:w }
+    } {
+      \BNVS_coverage:n { TEST / top / S: }
+    }
+    \cs_set:Npn \Test_VAZL:w {
+      \BNVS_xprt_clear:
+      \BNVS_coverage_clear:
+      \BNVS_scaN_VAZL:w
     }
   },
 }
@@ -5373,6 +5412,31 @@ end
     \seq_map_inline:Nn \g__BNVS_TEST_error_seq {
       \str_if_in:nnT { ####1 } { ##1 } {
         \cs_set:Npn \KWN: {}
+        \seq_map_break:
+      }
+    }
+    \KWN:
+    \seq_gclear:N \g__BNVS_TEST_error_seq
+  }
+  \cs_set:Npn \assert_in_error:nnn ##1 ##2 ##3 {
+    \cs_set:Npn \KWN: {
+      \begin{KWN.failure}
+      \item FAILURE~`\tl_to_str:n{##1}'~not~found~(\BeanovesCurrentTestFile :\the\inputlineno)
+      \seq_map_inline:Nn \g__BNVS_TEST_error_seq {
+        \item \emoji{boom}~########1
+      }
+      \item ##3
+      \end{KWN.failure}
+      \seq_map_inline:Nn \g__BNVS_TEST_error_seq {
+        \BNVS_log_a:nx {💥} { \tl_to_str:n { ########1 } }
+      }
+      \msg_error:nnnx { beanoves } { :nn } { FAILED~`##1'~not~found } { \BeanovesCurrentTestFile :\the\inputlineno :##2}
+    }
+    \seq_map_inline:Nn \g__BNVS_TEST_error_seq {
+      \str_if_in:nnT { ####1 } { ##1 } {
+        \cs_set:Npn \KWN: {
+          \assert_in_error:nn { ##2 } { ##3 }
+        }
         \seq_map_break:
       }
     }
@@ -9637,7 +9701,7 @@ end
 % \KWNlatex*{|\PYG{k}{comMa:w}|},
 % \KWNlatex*{|\PYG{k}{L:w}|},
 % \KWNlatex*{|\PYG{k}{Stop:}|},
-% \item call \KWNlatex*{\BNVS_scan:w} or some
+% \item call \KWNlatex*{\BNVS_scaN:w} or some
 % \KWNlatex*{\BNVS_scaN_|\PYG{k}{...:...}|w} function
 % to peek characters from the \KWNInputStream\ and store corresponding AST
 % \item end with \KWNlatex{\BNVS_end_scan:}, which exports the AST created
@@ -10064,6 +10128,30 @@ end
 % \end{KWN.macrocode}
 % ^^A
 % \begin{function} {
+%   \BNVS_xprted_brace:,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_xprted_brace:}
+% \end{syntax}
+% Wraps what was exported so far between a pair of braces.
+% \end{function}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_xprted_brace: {
+  \exp_args:NNx \BNVS_xprt_clear: \BNVS_xprt_ast:n {
+     { \BNVS_xprted_use:n { \exp_not:n } }
+  }
+}
+%    \end{macrocode}
+% \begin{KWN.test}{BNVS:N=\BNVS_xprted_brace:, eringo}
+% \BNVS_xprt_Raw:n { \FOO }
+% \BNVS_xprt_ast:n { { \BAR } }
+% \BNVS_xprted_brace:
+% \assert_xprted:nn { { \:n { \FOO } { \BAR } } } A
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
 %   \BNVS_xprt_space:,
 %   \BNVS_xprt_space_set:n,
 % }
@@ -10153,7 +10241,7 @@ end
 % later by \KWNlatex*{\BNVS_next_use:n}, just after \KWNmeta{code:}.
 % Typically, \KWNlatex*{\BNVS_next_set:n} is used in
 % a scan group closed by \KWNmeta{code:}.
-% \KWNlatex*{\BNVS_end_scaN_next:} ends the scan
+% \KWNlatex*{\BNVS_end_scan_next:} ends the scan
 % and executes \KWNmeta{next:} code.
 % \end{function}
 % \begin{KWN.macrocode}
@@ -10217,41 +10305,42 @@ end
 % \end{KWN.GOBBLE}
 % ^^A
 % \subsubsection{AST exportation policy}
-% ^^A \begin{KWN.GOBBLE}
+% ^^A
+% \begin{KWN.GOBBLE}
 % ^^A
 % This is used by \KWNlatex{\BNVS_end_scan:} to wrap the AST created during
 % the scanning process before it is exported.
 % The case of an empty created AST is sometimes special.
 % \begin{function}{
-%   \BNVS_ast_prefix_set:n,
-%   \BNVS_ast_prefix_will_set:n,
+%   \BNVS_ast_pfX_set:n,
+%   \BNVS_ast_pfX_will_set:n,
 % }
 % \begin{syntax}
-% \KWNlatex*{\BNVS_ast_prefix_set:n} \KWNlatex{{|\KWNmeta{prefix:w}|}}
-% \KWNlatex*{\BNVS_ast_prefix_will_set:n} \KWNlatex{{|\KWNmeta{prefix:w}|}}
+% \KWNlatex*{\BNVS_ast_pfX_set:n} \KWNlatex{{|\KWNmeta{pfX:w}|}}
+% \KWNlatex*{\BNVS_ast_pfX_will_set:n} \KWNlatex{{|\KWNmeta{pfX:w}|}}
 % \end{syntax}
 % Set the function
-% \KWNlatex*{\BNVS_ast_prefix:w} to expand to
-% \KWNlatex*{\exp_not:n { |\KWNmeta{prefix:w}|}}.
+% \KWNlatex*{\BNVS_ast_pfX:w} to expand to
+% \KWNlatex*{\exp_not:n { |\KWNmeta{pfX:w}|}}.
 % This is used to define
-% \KWNlatex*{\BNVS_ast_plc:n},
+% \KWNlatex*{\BNVS_ast_node:n},
 % when the arguments must be scanned prior to knowing which function
-% \KWNmeta{prefix:w} fits.
+% \KWNmeta{pfX:w} fits.
 % The ``|will|'' variant defers the execution just before
 % \KWNlatex{\BNVS_end:}.
 % \end{function}
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_ast_prefix:w {}
+\cs_new:Npn \BNVS_ast_pfX:w {}
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_ast_prefix_set:n #1 {
+\cs_new:Npn \BNVS_ast_pfX_set:n #1 {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-      \BNVS_DEBUG_coverage_scan:n { prefix:n }
+      \BNVS_DEBUG_coverage_scan:n { pfX:n~▬▶︎}
       \tl_if_empty:nTF { #1 } {
         \BNVS_DEBUG_log:nn * { <none> }
       } {
@@ -10260,16 +10349,16 @@ end
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-  \cs_set:Npn \BNVS_ast_prefix:w { \exp_not:n { #1 } }
+  \cs_set:Npn \BNVS_ast_pfX:w { \exp_not:n { #1 } }
 }
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % ^^A
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_ast_prefix_will_set:n #1 {
+\cs_new:Npn \BNVS_ast_pfX_will_set:n #1 {
   \BNVS_will_end:n {
-    \BNVS_ast_prefix_set:n { #1 }
+    \BNVS_ast_pfX_set:n { #1 }
   }
 }
 %    \end{macrocode}
@@ -10277,20 +10366,38 @@ end
 % ^^A
 % \begin{function}{
 %   \BNVS_ast_plc_wrap:n,
-%   \BNVS_ast_plc_wrap_pfx:n,
-%   \BNVS_ast_plc_wrap_mpt:n,
-%   \BNVS_ast_plc_wrap_grp:n,
+%   \BNVS_ast_plc_init:X,
+%   \BNVS_ast_plc_init:X:n,
+%   \BNVS_ast_plc_init_pfx:n,
+%   \BNVS_ast_plc_init_mpt:n,
+%   \BNVS_ast_plc_init_mpt:X,
+%   \BNVS_ast_plc_init_mpt:X:n,
+%   \BNVS_ast_plc_init_grp:n,
+%   \BNVS_ast_plc_init:XXn,
+%   \BNVS_ast_plc_brc:,
 %   \BNVS_ast_plc_Raw:,
+%   \BNVS_ast_plc_none:,
 % }
 % \begin{syntax}
 % \KWNlatex*{\BNVS_ast_plc_wrap:n}     \KWNlatex{{|\KWNmeta{template:n}|}}
-% \KWNlatex*{\BNVS_ast_plc_wrap_pfx:n} \KWNlatex{{|\KWNmeta{template:n}|}}
-% \KWNlatex*{\BNVS_ast_plc_wrap_grp:n} \KWNlatex{{|\KWNmeta{template:n}|}}
-% \KWNlatex*{\BNVS_ast_plc_wrap_mpt:n} \KWNlatex{{|\KWNmeta{template:n}|}}
-% \KWNlatex*{\BNVS_ast_plc_Raw}
+% \KWNlatex*{\BNVS_ast_plc_init:X}^^A
+% \KWNlatex{{|\KWNpfX|}}
+% \KWNlatex*{\BNVS_ast_plc_init:X:n}^^A
+% \KWNlatex{{|\KWNpfX|}}^^A
+% \KWNlatex{{|\KWNmeta{template:n}|}}
+% \KWNlatex*{\BNVS_ast_plc_init_pfx:n} \KWNlatex{{|\KWNmeta{template:n}|}}
+% \KWNlatex*{\BNVS_ast_plc_init_mpt:n} \KWNlatex{{|\KWNmeta{template:n}|}}
+% \KWNlatex*{\BNVS_ast_plc_init_mpt:X}^^A
+% \KWNlatex{{|\KWNpfX|}}
+% \KWNlatex*{\BNVS_ast_plc_init_mpt:X:n}^^A
+% \KWNlatex{{|\KWNpfX|}}^^A
+% \KWNlatex{{|\KWNmeta{template:n}|}}
+% \KWNlatex*{\BNVS_ast_plc_init_grp:n} \KWNlatex{{|\KWNmeta{template:n}|}}
+% \KWNlatex*{\BNVS_ast_plc_Raw:}
+% \KWNlatex*{\BNVS_ast_plc_none:}
 % \end{syntax}
-% Set the AST exportation policy through the meaning of the function
-% \KWNlatex*{\BNVS_ast_plc:n}.
+% Intitialize the AST exportation policy through the meaning of the function
+% \KWNlatex*{\BNVS_ast_node:n}.
 % The \KWNmeta{template:n} is by default \KWNlatex*{#1}.
 % With the first variant, nothing is exported if the input AST is blank,
 % this is the default exportation policy. 
@@ -10301,7 +10408,11 @@ end
 % never export an empty AST.
 % The first one exports the input AST as is whereas
 % the second one  exports the input AST between a pair of braces.
-% \KWNlatex*{\BNVS_ast_plc_Raw} exports as is, with no brace nor prefix.
+% \KWNlatex*{\BNVS_ast_plc_Raw:} exports as is, with no brace nor prefix.
+% \KWNlatex*{\BNVS_ast_plc_ignore:} exports nothing at all.
+% The \KWNlatex*{|\PYG{k}{...:X}|} variant is equivalent to
+% the \KWNlatex*{|\PYG{k}{...:X:n}|} variant with
+% \KWNlatex*{{#1}} as last argument.
 % \end{function}
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
@@ -10309,13 +10420,13 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_coverage_scan:n { scaN_ast_plc_wrap:n }
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_wrap:n~▬▶︎ }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-  \cs_set:Npn \BNVS_ast_plc:n ##1 {
+  \cs_set:Npn \BNVS_ast_node:n ##1 {
     \tl_if_blank:nF { ##1 } {
-      \BNVS_ast_prefix:w
+      \BNVS_ast_pfX:w
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \KWNfootprints
@@ -10328,7 +10439,7 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_plc:n }
+  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_node:n }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
@@ -10337,26 +10448,72 @@ end
 %    \end{macrocode}
 % \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_wrap:n, eringo}
 % \BNVS_ast_plc_wrap:n { /#1/ }
-% \BNVS_ast_prefix_set:n { \FOO:w }
-% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_plc:n { 1234 } }
+% \BNVS_ast_pfX_set:n { \FOO:w }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { 1234 } }
 % \assert_ans_equal:nn { \FOO:w / 1234 / } A
-% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_plc:n { } }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { } }
 % \assert_ans_equal:nn { } B
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % ^^A
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_ast_plc_wrap_pfx:n #1 {
+\cs_new:Npn \BNVS_ast_plc_init:X #1 {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_coverage_scan:n { scaN_ast_plc_wrap_pfx:n }
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_init:X }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-  \cs_set:Npn \BNVS_ast_plc:n ##1 {
-    \BNVS_ast_prefix:w
+  \BNVS_ast_pfX_set:n { #1 }
+  \BNVS_ast_plc_wrap:n { { ##1 } }
+}
+%    \end{macrocode}
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_init:X, eringo}
+% \BNVS_ast_plc_init:X { \FOO:w }
+% \__bnvs_tl_set:ce { ans } { \BNVS_ast_node:n { 12 \BAR: 34 } }
+% \assert_ans_equal:nn { \FOO:w { 12 \BAR: 34 } } A
+% \__bnvs_tl_set:ce { ans } { \BNVS_ast_node:n { } }
+% \assert_ans_equal:nn { } A
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_ast_plc_init:X:n #1 #2 {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_init:X:n }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_ast_pfX_set:n { #1 }
+  \BNVS_ast_plc_wrap:n { #2 }
+}
+%    \end{macrocode}
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_init:X:n, eringo}
+% \BNVS_ast_plc_init:X:n { \FOO:w } { { #1 } }
+% \__bnvs_tl_set:ce { ans } { \BNVS_ast_node:n { 12 \BAR: 34 } }
+% \assert_ans_equal:nn { \FOO:w { 12 \BAR: 34 } } A
+% \__bnvs_tl_set:ce { ans } { \BNVS_ast_node:n { } }
+% \assert_ans_equal:nn { } A
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_ast_plc_init_pfx:n #1 {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_init_pfx:n~▬▶︎ }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \cs_set:Npn \BNVS_ast_node:n ##1 {
+    \BNVS_ast_pfX:w
     \tl_if_blank:nF { ##1 } {
 %    \end{macrocode}
 % \end{KWN.macrocode}
@@ -10370,7 +10527,7 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_plc:n }
+  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_node:n }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
@@ -10378,8 +10535,8 @@ end
 %    \end{macrocode}
 % \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_wrap:n, eringo}
 % \BNVS_xprt_ast:n { 1234 }
-% \BNVS_ast_plc_wrap_pfx:n { /#1/ }
-% \BNVS_ast_prefix_set:n { \FOO:w }
+% \BNVS_ast_plc_init_pfx:n { /#1/ }
+% \BNVS_ast_pfX_set:n { \FOO:w }
 % \BNVS_DEBUG_xprted_ast_use:n {
 %   \BNVS_xprt_clear:
 %   \BNVS_xprt_ast:n
@@ -10396,16 +10553,16 @@ end
 % ^^A
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_ast_plc_wrap_mpt:n #1 {
+\cs_new:Npn \BNVS_ast_plc_init_mpt:n #1 {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_coverage_scan:n { scaN_ast_plc_wrap_mpt:n }
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_init_mpt:n~▬▶︎ }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}s
-  \cs_set:Npn \BNVS_ast_plc:n ##1 {
-    \BNVS_ast_prefix:w
+  \cs_set:Npn \BNVS_ast_node:n ##1 {
+    \BNVS_ast_pfX:w
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \KWNfootprints
@@ -10417,34 +10574,80 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_plc:n }
+  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_node:n }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
 }
 %    \end{macrocode}
-% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_wrap_mpt:n, eringo}
-% \BNVS_ast_plc_wrap_mpt:n { #1 }
-% \BNVS_ast_prefix_set:n { \FOO:w }
-% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_plc:n { 1234 } }
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_init_mpt:n, eringo}
+% \BNVS_ast_plc_init_mpt:n { #1 }
+% \BNVS_ast_pfX_set:n { \FOO:w }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { 1234 } }
 % \assert_ans_equal:nn { \FOO:w 1234 } A
-% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_plc:n { } }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { } }
 % \assert_ans_equal:nn { \FOO:w } B
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % ^^A
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_ast_plc_wrap_grp:n #1 {
+\cs_new:Npn \BNVS_ast_plc_init_mpt:X #1 {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_coverage_scan:n { scaN_ast_plc_wrap_grp:n }
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_init:X:n }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_ast_pfX_set:n { #1 }
+  \BNVS_ast_plc_init_mpt:n { { ##1 } }
+}
+%    \end{macrocode}
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_init_mpt:X, eringo}
+% \BNVS_ast_plc_init_mpt:X { \FOO:w }
+% \__bnvs_tl_set:ce { ans } { \BNVS_ast_node:n { 12 \BAR: 34 } }
+% \assert_ans_equal:nn { \FOO:w { 12 \BAR: 34 } } A
+% \__bnvs_tl_set:ce { ans } { \BNVS_ast_node:n { } }
+% \assert_ans_equal:nn { \FOO:w { } } A
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_ast_plc_init_mpt:X:n #1 #2 {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_init:X:n }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_ast_pfX_set:n { #1 }
+  \BNVS_ast_plc_init_mpt:n { #2 }
+}
+%    \end{macrocode}
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_init_mpt:X:n, eringo}
+% \BNVS_ast_plc_init_mpt:X:n { \FOO:w } { { #1 } }
+% \__bnvs_tl_set:ce { ans } { \BNVS_ast_node:n { 12 \BAR: 34 } }
+% \assert_ans_equal:nn { \FOO:w { 12 \BAR: 34 } } A
+% \__bnvs_tl_set:ce { ans } { \BNVS_ast_node:n { } }
+% \assert_ans_equal:nn { \FOO:w { } } A
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_ast_plc_init_grp:n #1 {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_init_grp:n~▬▶︎ }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}s
-  \cs_set:Npn \BNVS_ast_plc:n ##1 {
-    \BNVS_ast_prefix:w
+  \cs_set:Npn \BNVS_ast_node:n ##1 {
+    \BNVS_ast_pfX:w
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \KWNfootprints
@@ -10456,19 +10659,103 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_plc:n }
+  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_node:n }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
 }
 %    \end{macrocode}
-% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_wrap_grp:n, eringo}
-% \BNVS_ast_plc_wrap_grp:n { #1 }
-% \BNVS_ast_prefix_set:n { \FOO:w }
-% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_plc:n { 1234 } }
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_init_grp:n, eringo}
+% \BNVS_ast_plc_init_grp:n { #1 }
+% \BNVS_ast_pfX_set:n { \FOO:w }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { 1234 } }
 % \assert_ans_equal:nn { \FOO:w { 1234 } } A
-% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_plc:n { } }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { } }
 % \assert_ans_equal:nn { \FOO:w {} } B
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_ast_plc_init:XX:n #1 #2 #3 {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_init_pfx:n~▬▶︎ }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \cs_set:Npn \BNVS_ast_node:n ##1 {
+    \tl_if_blank:nTF { ##1 } {
+      \exp_not:n { #1 }
+    } {
+      \exp_not:n { #2 }
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% and \KWNlatex{\exp_not:n{|\KWNmeta{xprt:n}|}}.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+      \exp_not:n { #3 }
+    }
+  }
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_node:n }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+}
+%    \end{macrocode}
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_Raw:, eringo}
+% \BNVS_ast_plc_Raw:
+% \BNVS_ast_pfX_set:n { \FOO:w }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { 1234 } }
+% \assert_ans_equal:nn { 1234 } A
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { } }
+% \assert_ans_equal:nn { } B
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+\cs_new:Npn \BNVS_DEBUG_log_ast_plc:n #1 {
+  \exp_args:Nno \BNVS_DEBUG_log:nn { #1 } {
+    ast_plc ~▬▶︎~ \cs_meaning:N \BNVS_ast_node:n
+  }
+}
+%</!final>
+% \end{KWN.gobble}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_ast_plc_brc: {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { ast_plc_brc: }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \cs_set:Npn \BNVS_ast_node:n ##1 {
+    \exp_not:n { { ##1 } }
+  }
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_node:n }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+}
+%    \end{macrocode}
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_Raw:, eringo}
+% \BNVS_ast_plc_Raw:
+% \BNVS_ast_pfX_set:n { \FOO:w }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { 1234 } }
+% \assert_ans_equal:nn { 1234 } A
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { } }
+% \assert_ans_equal:nn { } B
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % ^^A
@@ -10482,11 +10769,11 @@ end
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}s
-  \cs_set:Npn \BNVS_ast_plc:n ##1 { \exp_not:n { ##1 } }
+  \cs_set:Npn \BNVS_ast_node:n ##1 { \exp_not:n { ##1 } }
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_plc:n }
+  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_node:n }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
@@ -10494,10 +10781,40 @@ end
 %    \end{macrocode}
 % \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_Raw:, eringo}
 % \BNVS_ast_plc_Raw:
-% \BNVS_ast_prefix_set:n { \FOO:w }
-% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_plc:n { 1234 } }
+% \BNVS_ast_pfX_set:n { \FOO:w }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { 1234 } }
 % \assert_ans_equal:nn { 1234 } A
-% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_plc:n { } }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { } }
+% \assert_ans_equal:nn { } B
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_ast_plc_none: {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { scaN_ast_plc_none: }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}s
+  \cs_set:Npn \BNVS_ast_node:n ##1 { }
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_log:nx * { \cs_to_str:N \# 1 -> \cs_replacement_spec:N \BNVS_ast_node:n }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+}
+%    \end{macrocode}
+% \begin{KWN.test}{BNVS:N=\BNVS_ast_plc_none:, eringo}
+% \BNVS_ast_plc_none:
+% \BNVS_ast_pfX_set:n { \FOO:w }
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { 1234 } }
+% \assert_ans_equal:nn { } A
+% \tl_set:Ne \l__bnvs_ans_tl { \BNVS_ast_node:n { } }
 % \assert_ans_equal:nn { } B
 % \end{KWN.test}
 % \end{KWN.macrocode}
@@ -10520,7 +10837,7 @@ end
 \cs_new:Npn \BNVS_DEBUG_xprted_ast_use:n #1 {
   \BNVS_xprt_ast_Raw:
   \exp_args:Nnx \use:n { #1 } {
-    \BNVS_tl_use:nv { \BNVS_ast_plc:n } { xprted }
+    \BNVS_tl_use:nv { \BNVS_ast_node:n } { xprted }
   }
 }
 % \begin{KWN.gobble}
@@ -10529,15 +10846,15 @@ end
 % \begin{KWN.test}{BNVS:N=\BNVS_DEBUG_xprted_ast_use:n, eringo}
 % \BNVS_xprt_ast:n { \X: }
 % \BNVS_ast_plc_wrap:n { { #1 } }
-% \BNVS_ast_prefix_set:n { \prefix:w }
+% \BNVS_ast_pfX_set:n { \pfX:w }
 % \BNVS_DEBUG_xprted_ast_use:n {
 %   \assert_equal:nnn
-% } { \prefix:w { \X: } } A
+% } { \pfX:w { \X: } } A
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % \end{KWN.gobble}
 % ^^A
-% ^^A \end{KWN.GOBBLE}
+% \end{KWN.GOBBLE}
 % ^^A
 % \subsubsection{Branch functions}
 % ^^A
@@ -10699,10 +11016,12 @@ end
 % { TEST / 1 }
 % \assert_coverage:nn { TEST / 1 } Z
 % \end{KWN.test}
+% ^^A
 % ^^A \end{KWN.GOBBLE}
 % ^^A
 % \paragraph{Colon branch}
-% ^^A \begin{KWN.GOBBLE}
+% ^^A
+% \begin{KWN.GOBBLE}
 % ^^A
 % \begin{variable}{\c__bnvs_Colons_regex}
 % For ranges defined by a colon syntax.
@@ -10818,10 +11137,12 @@ end
 % } ~:::~ K
 % \assert_coverage:nn KL
 % \end{KWN.test}
-% ^^A \end{KWN.GOBBLE}
+% ^^A
+% \end{KWN.GOBBLE}
 % ^^A
 % \paragraph{Comma branch}
-% ^^A \begin{KWN.GOBBLE}
+% ^^A
+% \begin{KWN.GOBBLE}
 % ^^A
 % \begin{variable}{\c__bnvs_M_regex}
 % Comma as a separator.
@@ -10949,10 +11270,12 @@ end
 % } { scanned~other }
 % \assert_coverage:nn { scanned~other } F
 % \end{KWN.test}
-% ^^A \end{KWN.GOBBLE}
+% ^^A
+% \end{KWN.GOBBLE}
 % ^^A
 % \paragraph{Close branch}
-% ^^A \begin{KWN.GOBBLE}
+% ^^A
+% ^^A ERROR \begin{KWN.GOBBLE}
 % ^^A
 % \begin{variable}{\c__bnvs_cLose_regex}
 % Closing delimiters.
@@ -11232,7 +11555,7 @@ end
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % ^^A
-% ^^A \end{KWN.GOBBLE}
+% ^^A ERROR \end{KWN.GOBBLE}
 % ^^A
 % \paragraph{Stop branch}
 % ^^A
@@ -11264,6 +11587,15 @@ end
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
 \cs_new:Npn \BNVS_scanned_set:S #1 {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+% Comment next lines
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { scanned_set:S }
+  \BNVS_DEBUG_log:nx * { \tl_to_str:n { #1 } }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
   \cs_set:Npn \BNVS_scanned_S: {
 %    \end{macrocode}
 % \begin{KWN.gobble}
@@ -11544,6 +11876,7 @@ end
 % \begin{function} {
 %   \BNVS_scanned_set:BOCMLS,
 %   \BNVS_scanned_set:OCMLS,
+%   \BNVS_scanned_set:OC,
 %   \BNVS_scanned_set:MLS,
 % }
 % \begin{syntax}
@@ -11560,6 +11893,9 @@ end
 % \KWNlatex{{|\KWNonMcw|}}^^A
 % \KWNlatex{{|\KWNonLcw|}}^^A
 % \KWNlatex{{|\KWNonSc|}}
+% \KWNlatex*{\BNVS_scanned_set:OC}^^A
+% \KWNlatex{{|\KWNonOcw|}}^^A
+% \KWNlatex{{|\KWNonCcw|}}
 % \KWNlatex*{\BNVS_scanned_set:MLS}^^A
 % \KWNlatex{{|\KWNonMcw|}}^^A
 % \KWNlatex{{|\KWNonLcw|}}^^A
@@ -11577,9 +11913,16 @@ end
 % \end{KWN.macrocode}
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_scanned_set:OCMLS #1 #2 {
+\cs_new:Npn \BNVS_scanned_set:OC #1 #2 {
   \BNVS_scanned_set:O { #1 }
   \BNVS_scanned_set:C { #2 }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scanned_set:OCMLS #1 #2 {
+  \BNVS_scanned_set:OC { #1 } { #2 }
   \BNVS_scanned_set:MLS
 }
 %    \end{macrocode}
@@ -11631,7 +11974,7 @@ end
 \cs_new:Npn \BNVS_scaN_did_begin: {
   \BNVS_xprt_clear:
   \BNVS_ast_plc_wrap:n { ##1 }
-  \BNVS_ast_prefix_set:n {}
+  \BNVS_ast_pfX_set:n {}
   \BNVS_next_set:n {}
 %    \end{macrocode}
 % \begin{KWN.gobble}
@@ -11667,20 +12010,22 @@ end
 % \begin{function} {
 %   \BNVS_end_scan:n,
 %   \BNVS_end_scan:,
-%   \BNVS_end_scaN_next:
+%   \BNVS_end_scan_next:
+%   \BNVS_end_scan_ast:n
 % }
 % \begin{syntax}
 % \KWNlatex*{\BNVS_end_scan:n} \KWNlatex*{{|\KWNcontent\KWNAST|}}
 % \KWNlatex*{\BNVS_end_scan:}
-% \KWNlatex*{\BNVS_end_scaN_next:}
+% \KWNlatex*{\BNVS_end_scan_next:}
+% \KWNlatex*{\BNVS_end_scan_ast:n} \KWNlatex*{{|\KWNcontent\KWNAST|}}
 % \end{syntax}
 % Exactly one of these functions must be called to close the \TeX\ group
 % opened while beginning the scanning process.
-% \KWNlatex*{\BNVS_end_scaN_next:} calls \KWNlatex*{\BNVS_end_scan:}
+% \KWNlatex*{\BNVS_end_scan_next:} calls \KWNlatex*{\BNVS_end_scan:}
 % and what was stored as next instructions before closing the group.
 % \KWNlatex*{\BNVS_end_scan:} call \KWNlatex*{\BNVS_end_scan:n} on
 % what was exported before closing the group (at this level),
-% once prepared by \KWNlatex*{\BNVS_ast_plc:n}...
+% once prepared by \KWNlatex*{\BNVS_ast_node:n}...
 % \KWNlatex*{\BNVS_end_scaN_no_I_change:} does not export
 % |I| and |S(|\KWNI|)| variables.
 % \end{function}
@@ -11714,14 +12059,14 @@ end
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% \KWNlatex{\BNVS_ast_plc:n} must be called as lately as possible before
+% \KWNlatex{\BNVS_ast_node:n} must be called as lately as possible before
 % ending the group.
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
   \BNVS_will_end:n {
     \BNVS_did_end:n { \BNVS_xprt_ast:n }
     \exp_args:Nx \BNVS_did_end_braced:n {
-      \BNVS_ast_plc:n { #1 }
+      \BNVS_ast_node:n { #1 }
     }
   }
   \BNVS_end:
@@ -11734,7 +12079,7 @@ end
 % \BNVS_xprt_clear:
 % \BNVS_begin:
 % \BNVS_ast_plc_wrap:n { { \bar:n { #1 } } }
-% \BNVS_ast_prefix_set:n { \foo:nn { \ONE: } }
+% \BNVS_ast_pfX_set:n { \foo:nn { \ONE: } }
 % \BNVS_end_scan:n { \X: }
 % \assert_xprted:nn { \foo:nn { \ONE: } { \bar:n { \X: } } } Z
 % \end{KWN.test}
@@ -11758,6 +12103,16 @@ end
 % \assert_coverage:nn { TEST } A
 % \assert_xprted:nn { \foo:n { \X: } } Z
 % \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_end_scan_ast:n #1 {
+  \BNVS_ast_plc_none:
+  \BNVS_end_scan:
+  \BNVS_xprt_ast:n { #1 }
+}
+%    \end{macrocode}
 % \end{KWN.macrocode}
 % ^^A
 % \begin{KWN.macrocode}
@@ -11797,7 +12152,7 @@ end
 % \end{KWN.macrocode}
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_end_scaN_next: {
+\cs_new:Npn \BNVS_end_scan_next: {
   \BNVS_next_use:n { \BNVS_end_scan: }
 }
 %    \end{macrocode}
@@ -11806,7 +12161,7 @@ end
 %   \BNVS_coverage:n { TEST/next: }
 % }
 % \BNVS_xprt_ast:n { \X: }
-% \BNVS_end_scaN_next:
+% \BNVS_end_scan_next:
 % \assert_coverage:nn { TEST/next: } A
 % \assert_xprted:nn { \foo:n { \X: } } Z
 % \end{KWN.test}
@@ -11952,11 +12307,11 @@ end
 % \begin{KWN.GOBBLE}
 % ^^A
 % \begin{function}{
-%   \BNVS_scan:w,
+%   \BNVS_scaN:w,
 %   \BNVS_scan:nw,
 % }
 % \begin{syntax}
-% \KWNlatex*{\BNVS_scan:w}^^A
+% \KWNlatex*{\BNVS_scaN:w}^^A
 % \KWNlatex{|\KWNInputStream|}
 % \KWNlatex*{\BNVS_scan:nw}^^A
 % \KWNlatex{{|\KWNraw|}}^^A
@@ -11968,7 +12323,7 @@ end
 % \end{function}
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_new:Npn \BNVS_scan:w {
+\cs_new:Npn \BNVS_scaN:w {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
@@ -12001,7 +12356,7 @@ end
 % \end{KWN.gobble}
 %    \begin{macrocode}
   \BNVS_xprt_Raw:n { #1 }
-  \BNVS_scan:w
+  \BNVS_scaN:w
 }
 %    \end{macrocode}
 % \end{KWN.macrocode}
@@ -12224,12 +12579,25 @@ end
 % ^^A
 % \begin{function} {
 %   \BNVS_subscan:RTN:w,
+%   \BNVS_subscan:N:w,
+%   \BNVS_subscan:MLSN:w,
+%   \BNVS_subscan:OCMLSN:w,
 % }
 % \begin{syntax}
 % \KWNlatex*{\BNVS_subscan:RTN:w}^^A
 % \KWNlatex{{|\KWNRc|}}^^A
 % \KWNlatex{{|\KWNTc|}}^^A
+% \KWNlatex*{\BNVS_subscan:N:w}^^A
+% \KWNlatex{{|\KWNcw||}}
 % \KWNlatex{{|\KWNscaNuBOCMLScw|}}^^A
+% \KWNlatex{|\KWNInputStream|}
+% \KWNlatex*{\BNVS_subscan:OCMLSN:w}^^A
+% \KWNlatex{{|\KWNOcw|}}^^A
+% \KWNlatex{{|\KWNCcw|}}^^A
+% \KWNlatex{{|\KWNMcw|}}^^A
+% \KWNlatex{{|\KWNLcw|}}^^A
+% \KWNlatex{{|\KWNSc|}}^^A
+% \KWNlatex{{|\KWNscaNuOCMLScw|}}^^A
 % \KWNlatex{|\KWNInputStream|}
 % \end{syntax}
 % Start a scanning branch section by executing the \KWNRc\
@@ -12240,6 +12608,7 @@ end
 % Finally, the \KWNscaNuBOCMLScw\ instructions are executed.
 % They must terminate with a call to one of the branch functions.
 % \end{function}
+% ^^A
 % \begin{KWN.macrocode} 
 %    \begin{macrocode}
 \cs_new:Npn \BNVS_subscan:RTN:w #1 #2 #3 {
@@ -12270,56 +12639,56 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-    \BNVS_DEBUG_coverage_scan:n { end_scaN_next: / B:w }
+    \BNVS_DEBUG_coverage_scan:n { end_scan_next: / B:w }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_end_scaN_next: \BNVS_scanned_B:w
+    \BNVS_end_scan_next: \BNVS_scanned_B:w
   } {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-    \BNVS_DEBUG_coverage_scan:n { end_scaN_next: / O:w }
+    \BNVS_DEBUG_coverage_scan:n { end_scan_next: / O:w }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_end_scaN_next: \BNVS_scanned_O:w
+    \BNVS_end_scan_next: \BNVS_scanned_O:w
   } {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-    \BNVS_DEBUG_coverage_scan:n { end_scaN_next: / C:w }
+    \BNVS_DEBUG_coverage_scan:n { end_scan_next: / C:w }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_end_scaN_next: \BNVS_scanned_C:w
+    \BNVS_end_scan_next: \BNVS_scanned_C:w
   } {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-    \BNVS_DEBUG_coverage_scan:n { end_scaN_next: / M:w }
+    \BNVS_DEBUG_coverage_scan:n { end_scan_next: / M:w }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_end_scaN_next: \BNVS_scanned_M:w
+    \BNVS_end_scan_next: \BNVS_scanned_M:w
   } {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-    \BNVS_DEBUG_coverage_scan:n { end_scaN_next: / L:w }
+    \BNVS_DEBUG_coverage_scan:n { end_scan_next: / L:w }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_end_scaN_next: \BNVS_scanned_L:w
+    \BNVS_end_scan_next: \BNVS_scanned_L:w
   } {
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-    \BNVS_DEBUG_coverage_scan:n { end_scaN_next: / S: }
+    \BNVS_DEBUG_coverage_scan:n { end_scan_next: / S: }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_end_scaN_next: \BNVS_scanned_S:
+    \BNVS_end_scan_next: \BNVS_scanned_S:
   } {
 %    \end{macrocode}
 % \begin{KWN.gobble}
@@ -12333,7 +12702,7 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-    \BNVS_DEBUG_coverage_scan:n { scaN:w }
+    \BNVS_DEBUG_coverage_scan:n { scaN_BOCMLS:w }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
@@ -12347,14 +12716,21 @@ end
 \cs_new:Npn \BNVS_DEBUG_subscan:n:RTN:w #1 #2 #3 #4 {
   \BNVS_scan:RBOCMLSTN:w {
     \BNVS_DEBUG_begin_scan:n { #1 }
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+    \BNVS_DEBUG_coverage_scan:n { R: }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
     #2
   }
-    { \BNVS_end_scaN_next: \BNVS_scanned_B:w }
-    { \BNVS_end_scaN_next: \BNVS_scanned_O:w }
-    { \BNVS_end_scaN_next: \BNVS_scanned_C:w }
-    { \BNVS_end_scaN_next: \BNVS_scanned_M:w }
-    { \BNVS_end_scaN_next: \BNVS_scanned_L:w }
-    { \BNVS_end_scaN_next: \BNVS_scanned_S: }
+    { \BNVS_end_scan_next: \BNVS_scanned_B:w }
+    { \BNVS_end_scan_next: \BNVS_scanned_O:w }
+    { \BNVS_end_scan_next: \BNVS_scanned_C:w }
+    { \BNVS_end_scan_next: \BNVS_scanned_M:w }
+    { \BNVS_end_scan_next: \BNVS_scanned_L:w }
+    { \BNVS_end_scan_next: \BNVS_scanned_S: }
   {
 %    \end{macrocode}
 % \begin{KWN.gobble}
@@ -12368,11 +12744,79 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-    \BNVS_DEBUG_coverage_scan:n { scaN:w }
+    \BNVS_DEBUG_coverage_scan:n { scaN_BOCMLS:w }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
     #4
+  }
+}
+%</!final>
+% \end{KWN.gobble}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode} 
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_subscan:N:w {
+  \BNVS_subscan:RTN:w { } { }
+}
+%    \end{macrocode}
+% \begin{KWN.gobble}
+% This DEBUG version is veeeeeery close to the original.
+%<*!final>
+\cs_new:Npn \BNVS_DEBUG_subscan:n:N:w #1 {
+  \BNVS_DEBUG_subscan:n:RTN:w { #1 } { } { }
+}
+%</!final>
+% \end{KWN.gobble}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode} 
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_subscan:OCMLSN:w #1 #2 #3 #4 #5 {
+  \BNVS_subscan:RTN:w { } {
+    \BNVS_scanned_set:OCMLS { #1 } { #2 } { #3 } { #4 } { #5 }
+  }
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNprohibited
+% There must be absolutely no code here. No hook is allowed either.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+}
+%    \end{macrocode}
+% \begin{KWN.gobble}
+% This DEBUG version is veeeeeery close to the original.
+%<*!final>
+\cs_new:Npn \BNVS_DEBUG_subscan:n:OCMLSN:w #1 #2 #3 #4 #5 #6 {
+  \BNVS_DEBUG_subscan:n:RTN:w { #1 } { } {
+    \BNVS_scanned_set:OCMLS { #2 } { #3 } { #4 } { #5 } { #6 }
+  }
+}
+%</!final>
+% \end{KWN.gobble}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode} 
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_subscan:MLSN:w #1 #2 #3 {
+  \BNVS_subscan:RTN:w { } {
+    \BNVS_scanned_set:MLS { #1 } { #2 } { #3 }
+  }
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNprohibited
+% There must be absolutely no code here. No hook is allowed either.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+}
+%    \end{macrocode}
+% \begin{KWN.gobble}
+% This DEBUG version is veeeeeery close to the original.
+%<*!final>
+\cs_new:Npn \BNVS_DEBUG_subscan:n:MLSN:w #1 #2 #3 #4 {
+  \BNVS_DEBUG_subscan:n:RTN:w { #1 } { } {
+    \BNVS_scanned_set:MLS { #2 } { #3 } { #4 }
   }
 }
 %</!final>
@@ -12394,10 +12838,10 @@ end
 % \BNVS_end_scan:
 % \assert_xprted:nn { 2 3 } E
 % \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_ast_plc:n{/0},eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_ast_node:n{/0},eringo}
 % \group_begin:
 % \BNVS_xprt_ast:n { \KWN: }
-% \cs_set:Npn \BNVS_ast_plc:n #1 {
+% \cs_set:Npn \BNVS_ast_node:n #1 {
 %   \exp_not:N \KWN:w { \exp_not:n { #1 } }
 % }
 % \BNVS_end_scan:
@@ -12405,7 +12849,7 @@ end
 % \BNVS_xprt_clear:
 % \assert_xprted:nn { } B
 % \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_ast_plc:n{/1},eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_xprt_ast:n{/1},eringo}
 % \BNVS_begin_scan:nn {
 %   \BNVS_TEST:w { #1 }
 % } {}
@@ -12446,7 +12890,7 @@ end
 % \KWNlatex*{\BNVS_scaN_L:N:PXBSTN:w}^^A
 % \KWNlatex{|\KWNcLose|}
 % \KWNlatex{  {|\KWNmeta{xprt:n}|}}^^A
-% \KWNlatex{{|\KWNmeta{prefix:w}|}}^^A
+% \KWNlatex{{|\KWNmeta{pfX:w}|}}^^A
 % \KWNlatex{{|\KWNscaNcBcw|}}^^A
 % \KWNlatex{{|\KWNscaNcSc|}}^^A
 % \KWNlatex{{|\KWNTc|}}^^A
@@ -12462,7 +12906,7 @@ end
 % \KWNInputStream, and is expected to end on
 % a closing delimiter at the current level by sending
 % \KWNlatex{\BNVS_scanned_L:w}, which meaning is
-% \KWNclosex\ followed by \KWNlatex{\BNVS_scanned_L:w}.
+% \KWNcLose\ followed by \KWNlatex{\BNVS_scanned_L:w}.
 % If the \KWNscaNcw\ will call itself after a block, a comma or a colon
 % if the corresponding branch function is called.
 % This is the normal instruction flow.
@@ -12552,8 +12996,8 @@ end
 % }
 % \TEST_undefine:n { \BNVS_TEST_scan:w }
 % \BNVS_scaN_L:N:RBSTN:w ? {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / block: }
 %   \BNVS_scanned_B:w
@@ -12592,8 +13036,8 @@ end
 % }
 % \TEST_undefine:n { \BNVS_TEST_scan:w }
 % \BNVS_scaN_L:N:RBSTN:w ? {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / block: }
 %   \BNVS_scanned_B:w
@@ -12632,8 +13076,8 @@ end
 % }
 % \TEST_undefine:n { \BNVS_TEST_scan:w }
 % \BNVS_scaN_L:N:RBSTN:w ? {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / block: }
 %   \BNVS_scanned_B:w
@@ -12672,8 +13116,8 @@ end
 % }
 % \TEST_undefine:n { \BNVS_TEST_scan:w }
 % \BNVS_scaN_L:N:RBSTN:w ? {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / Block: }
 %   \BNVS_scanned_B:w
@@ -12713,8 +13157,8 @@ end
 %   \BNVS_coverage:n { TEST / top / B:w }
 % }
 % \BNVS_scaN_L:N:RBSTN:w ? {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / Block: }
 %   \BNVS_scanned_B:w
@@ -12746,8 +13190,8 @@ end
 %   \BNVS_coverage:n { TEST / top / S: }
 % }
 % \BNVS_scaN_L:N:RBSTN:w ? {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \test_fail:n { TEST / block: }
 % } {
@@ -12814,8 +13258,8 @@ end
 %   }
 % }
 % \BNVS_scaN_L:N:RBSTN:w > {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / block: }
 %   \BNVS_scanned_B:w
@@ -12852,8 +13296,8 @@ end
 %   }
 % }
 % \BNVS_scaN_L:N:RBSTN:w > {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / block: }
 %   \BNVS_scanned_B:w
@@ -12877,8 +13321,8 @@ end
 %    \begin{macrocode}
 \cs_new:Npn \BNVS_scaN_L:N:PXBSTN:w #1 #2 #3 {
   \BNVS_scaN_L:N:RBSTN:w #1 {
-    \BNVS_ast_plc_wrap_pfx:n { #2 }
-    \BNVS_ast_prefix_will_set:n { #3 }
+    \BNVS_ast_plc_init_pfx:n { #2 }
+    \BNVS_ast_pfX_will_set:n { #3 }
   }
 }
 %    \end{macrocode}
@@ -13011,7 +13455,7 @@ end
 %    \begin{macrocode}
     \BNVS_scaN_L:N:RBSTN:w %(
     ) {
-      \BNVS_ast_plc_wrap_grp:n { ##1 }
+      \BNVS_ast_plc_init_grp:n { ##1 }
       #1
     } { #2 } { #3 } { #4 } { #5 }
 %    \end{macrocode}
@@ -13024,10 +13468,10 @@ end
 %   }
 % }
 % \BNVS_scaN_Rnd:RBSTN:Fw {
-% \BNVS_ast_prefix_set:n { IGNORED }
+% \BNVS_ast_pfX_set:n { IGNORED }
 %   \BNVS_coverage:n { TEST / R: }
-%   \BNVS_ast_plc_wrap_grp:n { #1 }
-%   \BNVS_ast_prefix_set:n { OVERLOADED }
+%   \BNVS_ast_plc_init_grp:n { #1 }
+%   \BNVS_ast_pfX_set:n { OVERLOADED }
 % } {
 %   \BNVS_coverage:n { TEST / Block: }
 %   \BNVS_scanned_B:w
@@ -13035,10 +13479,10 @@ end
 %   \test_fail:n { TEST / stop: }
 % } {
 %   \BNVS_coverage:n { TEST / postamble: }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { TEST / F:w }
 % }
@@ -13049,7 +13493,7 @@ end
 % \BNVS_xprt_clear:
 % \BNVS_scaN_Rnd:RBSTN:Fw {
 %   \BNVS_coverage:n { TEST / R: }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / block: }
 %   \BNVS_scanned_B:w
@@ -13059,7 +13503,7 @@ end
 %   \BNVS_coverage:n { TEST / postamble: }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { TEST / F:w }
 % }
@@ -13072,7 +13516,7 @@ end
 % \test_catch_error:n {}
 % \BNVS_scaN_Rnd:RBSTN:Fw {
 %   \BNVS_coverage:n { TEST / R: }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \test_fail:n { TEST / Block:w }
 % } {
@@ -13081,7 +13525,7 @@ end
 %   \BNVS_coverage:n { TEST / postamble: }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { TEST / F:w }
 % }
@@ -13094,7 +13538,7 @@ end
 % \test_catch_error:n {}
 % \BNVS_scaN_Rnd:RBSTN:Fw {
 %   \BNVS_coverage:n { TEST / R: }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \test_fail:n { TEST / block: }
 %   \BNVS_scanned_B:w
@@ -13104,7 +13548,7 @@ end
 %   \BNVS_coverage:n { TEST / T: }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { TEST / F:w }
 % }
@@ -13223,7 +13667,7 @@ end
 % \BNVS_scaN_Sqr:RBSTN:Fw {
 %   \BNVS_coverage:n { Test / R: }
 %   \BNVS_ast_plc_wrap:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { UNUSED~WHEN~NOTHING~EXPORTED }
+%   \BNVS_ast_pfX_set:n { UNUSED~WHEN~NOTHING~EXPORTED }
 % } {
 %   \BNVS_coverage:n { Test / Block: }
 %   \BNVS_scanned_B:w
@@ -13233,7 +13677,7 @@ end
 %   \BNVS_coverage:n { Test / T: }
 % } {
 %   \BNVS_coverage:n { Test / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { Test / F:w }
 % } [] Z
@@ -13242,8 +13686,8 @@ end
 % \assert_xprted:nn { } M
 % \BNVS_scaN_Sqr:RBSTN:Fw {
 %   \BNVS_coverage:n { Test / R: }
-%   \BNVS_ast_plc_wrap_grp:n { #1 }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_grp:n { #1 }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { Test / block: }
 %   \BNVS_scanned_B:w
@@ -13253,7 +13697,7 @@ end
 %   \BNVS_coverage:n { Test / T: }
 % } {
 %   \BNVS_coverage:n { Test / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { Test / F:w }
 % } [] Z
@@ -13270,7 +13714,7 @@ end
 % \BNVS_scaN_Sqr:RBSTN:Fw {
 %   \BNVS_coverage:n { Test / R: }
 %   \BNVS_ast_plc_wrap:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { Test / block: }
 %   \BNVS_scanned_B:w
@@ -13280,7 +13724,7 @@ end
 %   \BNVS_coverage:n { Test / T: }
 % } {
 %   \BNVS_coverage:n { Test / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { Test / F:w }
 % } [ 1 ] Z
@@ -13299,7 +13743,7 @@ end
 %   \BNVS_coverage:n { Test / Sqr~posTamble }
 % } {
 %   \BNVS_coverage:n { Test / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { Test / F:w }
 % } [ 1 ] Z
@@ -13312,8 +13756,8 @@ end
 % }
 % \BNVS_scaN_Sqr:RBSTN:Fw {
 %   \BNVS_coverage:n { Test / R: }
-%   \BNVS_ast_plc_wrap_grp:n { #1 }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_grp:n { #1 }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \test_fail:n { Test / block:w }
 % } {
@@ -13323,7 +13767,7 @@ end
 %   \BNVS_coverage:n { Test / T: }
 % } {
 %   \BNVS_coverage:n { Test / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { Test / F:w }
 % } [^^A]
@@ -13334,8 +13778,8 @@ end
 % \BNVS_xprt_clear:
 % \BNVS_scaN_Sqr:RBSTN:Fw {
 %   \BNVS_coverage:n { Test / R: }
-%   \BNVS_ast_plc_wrap_grp:n { #1 }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_grp:n { #1 }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \test_fail:n { Test / Block:w }
 % } {
@@ -13345,7 +13789,7 @@ end
 %   \BNVS_coverage:n { Test / T: }
 % } {
 %   \BNVS_coverage:n { Test / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { Test / F:w }
 % } [ 1 ^^A]
@@ -13474,7 +13918,7 @@ end
 % \BNVS_scaN_Sqr:RBSTN:Fw {
 %   \BNVS_coverage:n { Test / R: }
 %   \BNVS_ast_plc_wrap:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { UNUSED~WHEN~NOTHING~EXPORTED }
+%   \BNVS_ast_pfX_set:n { UNUSED~WHEN~NOTHING~EXPORTED }
 % } {
 %   \BNVS_coverage:n { Test / block: }
 %   \BNVS_scanned_B:w
@@ -13484,7 +13928,7 @@ end
 %   \BNVS_coverage:n { Test / T: }
 % } {
 %   \BNVS_coverage:n { Test / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { Test / F:w }
 % } []
@@ -13499,8 +13943,8 @@ end
 % \cs_set:Npn \BNVS_test:n #1 {
 %   \BNVS_scaN_Sqr:RBSTN:Fw {
 %     \BNVS_coverage:n { Test / R: }
-%     \BNVS_ast_plc_wrap_grp:n { ##1 }
-%     \BNVS_ast_prefix_set:n { \TEST:n }
+%     \BNVS_ast_plc_init_grp:n { ##1 }
+%     \BNVS_ast_pfX_set:n { \TEST:n }
 %   } {
 %     \BNVS_coverage:n { Test / block: }
 %     \BNVS_scanned_B:w
@@ -13510,7 +13954,7 @@ end
 %     \BNVS_coverage:n { Test / T: }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13526,8 +13970,8 @@ end
 %   \BNVS_DEBUG_log:nn * { / #1 / }
 %   \BNVS_scaN_Sqr:RBSTN:Fw {
 %     \BNVS_coverage:n { Test / R: }
-%     \BNVS_ast_plc_wrap_grp:n { ##1 }
-%     \BNVS_ast_prefix_set:n { \TEST:n }
+%     \BNVS_ast_plc_init_grp:n { ##1 }
+%     \BNVS_ast_pfX_set:n { \TEST:n }
 %   } {
 %     \BNVS_coverage:n { Test / block: }
 %     \BNVS_scanned_B:w
@@ -13537,7 +13981,7 @@ end
 %     \BNVS_coverage:n { Test / T: }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13561,7 +14005,7 @@ end
 %   \BNVS_scaN_Crl:RBSTN:Fw {
 %     \BNVS_coverage:n { Test / R: }
 %     \BNVS_ast_plc_wrap:n { { ##1 } }
-%     \BNVS_ast_prefix_set:n { UNUSED~WHEN~NOTHING~EXPORTED }
+%     \BNVS_ast_pfX_set:n { UNUSED~WHEN~NOTHING~EXPORTED }
 %   } {
 %     \BNVS_coverage:n { Test / block: }
 %     \BNVS_scanned_B:w
@@ -13571,7 +14015,7 @@ end
 %     \BNVS_coverage:n { Test / T: }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13589,7 +14033,7 @@ end
 %   \BNVS_scaN_Crl:RBSTN:Fw {
 %     \BNVS_coverage:n { Test / R: }
 %     \BNVS_ast_plc_wrap:n { { ##1 } }
-%     \BNVS_ast_prefix_set:n { UNUSED~WHEN~NOTHING~EXPORTED }
+%     \BNVS_ast_pfX_set:n { UNUSED~WHEN~NOTHING~EXPORTED }
 %   } {
 %     \BNVS_coverage:n { Test / block: }
 %     \BNVS_scanned_B:w
@@ -13603,7 +14047,7 @@ end
 %     }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13620,8 +14064,8 @@ end
 % \cs_set:Npn \TEST:w #1 {
 %   \BNVS_scaN_Crl:RBSTN:Fw {
 %     \BNVS_coverage:n { Test / R: }
-%     \BNVS_ast_plc_wrap_grp:n { ##1 }
-%     \BNVS_ast_prefix_set:n { \TEST:n }
+%     \BNVS_ast_plc_init_grp:n { ##1 }
+%     \BNVS_ast_pfX_set:n { \TEST:n }
 %   } {
 %     \BNVS_coverage:n { Test / block: }
 %     \BNVS_scanned_B:w
@@ -13631,7 +14075,7 @@ end
 %     \BNVS_coverage:n { Test / T: }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13647,7 +14091,7 @@ end
 %   \BNVS_scaN_Crl:RBSTN:Fw {
 %     \BNVS_coverage:n { Test / R: }
 %     \BNVS_ast_plc_wrap:n { { ##1 } }
-%     \BNVS_ast_prefix_set:n { \TEST:n }
+%     \BNVS_ast_pfX_set:n { \TEST:n }
 %   } {
 %     \BNVS_coverage:n { Test / block: }
 %     \BNVS_scanned_B:w
@@ -13657,7 +14101,7 @@ end
 %     \BNVS_coverage:n { Test / T: }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13679,7 +14123,7 @@ end
 %     \BNVS_coverage:n { Test / T: }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13692,8 +14136,8 @@ end
 % \cs_set:Npn \TEST:w #1 {
 %   \BNVS_scaN_Crl:RBSTN:Fw {
 %     \BNVS_coverage:n { Test / R: }
-%     \BNVS_ast_plc_wrap_grp:n { ##1 }
-%     \BNVS_ast_prefix_set:n { \TEST:n }
+%     \BNVS_ast_plc_init_grp:n { ##1 }
+%     \BNVS_ast_pfX_set:n { \TEST:n }
 %   } {
 %     \test_fail:n { Test / block:w }
 %   } {
@@ -13703,7 +14147,7 @@ end
 %     \BNVS_coverage:n { Test / T: }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13726,7 +14170,7 @@ end
 %   \BNVS_scaN_Crl:RBSTN:Fw {
 %     \BNVS_coverage:n { Test / R: }
 %     \BNVS_ast_plc_wrap:n { { ##1 } }
-%     \BNVS_ast_prefix_set:n { \TEST:n }
+%     \BNVS_ast_pfX_set:n { \TEST:n }
 %   } {
 %     \test_fail:n { Test / Block:w }
 %   } {
@@ -13736,7 +14180,7 @@ end
 %     \BNVS_coverage:n { Test / T: }
 %   } {
 %     \BNVS_coverage:n { Test / scaN:w }
-%     \BNVS_scan:w
+%     \BNVS_scaN:w
 %   } {
 %     \test_fail:n { Test / F:w }
 %   } #1
@@ -13844,13 +14288,13 @@ end
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \begin{KWN.macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_Raw_LS:w{/POC()}, eringo, debug}
+% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_Raw_LS:w{/POC()}, eringo}
 % \BNVS_scanned_set:S {
 %   \BNVS_coverage:n { TEST / top / S: }
 % }
 % \cs_set:Npn \BNVS_scaN_Raw_LS:w {
 %   \BNVS_scaN_Rnd:RBSTN:Fw {
-%     \BNVS_ast_plc_wrap_mpt:n { ##1^^A (
+%     \BNVS_ast_plc_init_mpt:n { ##1^^A (
 %      ) }
 %   } {
 %     \BNV_scanned_B:w
@@ -13907,8 +14351,8 @@ end
 %     }
 %     \BNVS_scanned_L:w
 %   }
-%  \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%  \BNVS_ast_prefix_set:n { \TEST:n }
+%  \BNVS_ast_plc_init_pfx:n { { #1 } }
+%  \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_error:n { Internal~error(Block:w) }
 %   \BNVS_scanned_L:w
@@ -13942,8 +14386,8 @@ end
 % \assert_xprted:nn { \TEST:n { \A: } } Z
 % \BNVS_xprt_clear:
 % \BNVS_scaN_L:N:RBSTN:w > {
-%   \BNVS_ast_plc_wrap_pfx:n { { #1 } }
-%   \BNVS_ast_prefix_set:n { \TEST:n }
+%   \BNVS_ast_plc_init_pfx:n { { #1 } }
+%   \BNVS_ast_pfX_set:n { \TEST:n }
 % } {
 %   \BNVS_coverage:n { TEST / Block: }
 %   \BNVS_scanned_B:w
@@ -13981,7 +14425,7 @@ end
 %    \begin{macrocode}
   \BNVS_scaN_Rnd:RBSTN:Fw <
     \BNVS_xprt_space_set:n < \BNVS_xprt_ast:n < ~ > >%(
-    \BNVS_ast_plc_wrap_mpt:n < ##1 ) >
+    \BNVS_ast_plc_init_mpt:n < ##1 ) >
   > <
     \BNVS_scanned_set:L <
       \BNVS_end_scaN_no_I_change:
@@ -13999,7 +14443,7 @@ end
   > <
     \BNVS_scaN_Sqr:RBSTN:Fw <
       \BNVS_xprt_space_set:n < \BNVS_xprt_ast:n < ~ > >%[
-      \BNVS_ast_plc_wrap_mpt:n < ##1 ] >
+      \BNVS_ast_plc_init_mpt:n < ##1 ] >
     > <
       \BNVS_scanned_set:L <
         \BNVS_end_scaN_no_I_change:
@@ -14017,7 +14461,7 @@ end
     > <
       \BNVS_scaN_Crl:RBSTN:Fw <
         \BNVS_xprt_space_set:n < \BNVS_xprt_ast:n < ~ > >%{
-        \BNVS_ast_plc_wrap_mpt:n < ##1 } >
+        \BNVS_ast_plc_init_mpt:n < ##1 } >
       > <
         \BNVS_scanned_set:L <
           \BNVS_end_scaN_no_I_change:
@@ -14103,7 +14547,7 @@ end
 % \end{KWN.macrocode}
 % ^^A ERROR \end{KWN.GOBBLE}
 % ^^A
-% \begin{KWN.GOBBLE.NO}
+% \begin{KWN.GOBBLE}
 % \begin{function} {
 %   \BNVS_scaN_Raw:BS:Fw,
 % }
@@ -14124,7 +14568,7 @@ end
   \BNVS_peek_regex_remove_once:NTF \c__bnvs_open_Raw_regex {
     \BNVS_scaN_L:N:RBSTN:w %(
     ) {
-      \BNVS_ast_plc_wrap_pfx:n { \:n { ##1 } }
+      \BNVS_ast_plc_init_pfx:n { \:n { ##1 } }
       \BNVS_xprt_space_set:n { \BNVS_xprt_ast:n { ~ } }
     } { #1 } { #2 } { } {
       \BNVS_scaN_Raw_LS:w
@@ -14214,7 +14658,7 @@ end
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % ^^A
-% \end{KWN.GOBBLE.NO}
+% \end{KWN.GOBBLE}
 % ^^A
 % \subsubsection{\KWNcsl\ units}
 % ^^A
@@ -14511,7 +14955,7 @@ end
 %       \BNVS_TEST_scan:w
 %     } {
 %       \peek_charcode_remove:NTF Z {
-%         \BNVS_xprt_ast:n { \Z: }
+%         \BNVS_xprt_ast:n { \:Z: }
 %         \BNVS_TEST_scan:w
 %       } {
 %         \peek_charcode_remove:NTF , {
@@ -14587,7 +15031,7 @@ end
 %   } {
 %     \BNVS_coverage:n { TEST / T: }
 %   } {
-%     \BNVS_ast_prefix_set:n { \TEST:n }
+%     \BNVS_ast_pfX_set:n { \TEST:n }
 %     \BNVS_TEST_scan:w
 %   } #1
 %   \assert_xprted:nn { #2 } { #3 }
@@ -14610,7 +15054,7 @@ end
 % \end{syntax}
 % These functions scan the comma separated list of items,
 % regardless the enclosing delimiters, based on
-% \KWNlatex[from:N=\BNVS_scaN_csl:RT:w]{\BNVS_scan:w}.
+% \KWNlatex[from:N=\BNVS_scaN_csl:RT:w]{\BNVS_scaN:w}.
 % \end{function}
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
@@ -14620,7 +15064,7 @@ end
     { }
     { }
     { #2 }
-    { \BNVS_scan:w }
+    { \BNVS_scaN:w }
 }
 %    \end{macrocode}
 % \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_csl:RT:w{/L:w/empty}, eringo}
@@ -14691,7 +15135,7 @@ end
 % ^^A
 % \subsubsection{ISR unit}
 % ^^A
-% \begin{KWN.GOBBLE.NO}
+% \begin{KWN.GOBBLE}
 % ^^A
 % Here is a partial grammar for identifiers,
 % \input{\jobname-grammar-ISR.tex}
@@ -14702,7 +15146,7 @@ end
 % The start of a qualified dotted name, with three capture groups.
 % \end{variable}
 % ^^A
-% \end{KWN.GOBBLE.NO}
+% \end{KWN.GOBBLE}
 % ^^A
 % ^^A \ERROR begin{KWN.GOBBLE.NO}
 % ^^A
@@ -14729,7 +15173,7 @@ end
 % \end{myList}
 % ^^A ERROR \end{KWN.GOBBLE.NO}
 % ^^A
-% \begin{KWN.GOBBLE.NO}
+% \begin{KWN.GOBBLE}
 % ^^A
 % \begin{KWN.test}{:Nn=\c__bnvs_IKS_regex{/1}, eringo}
 % \cs_set:Npn \BNVS_test:nnn #1 #2 {
@@ -14880,11 +15324,11 @@ end
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% Create a scan group to manage the \KWNmeta{prefix:w}.
+% Create a scan group to manage the \KWNmeta{pfX:w}.
 % \begin{KWN.macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-  \BNVS_DEBUG_subscan:n:RTN:w { scanned:B:IKS:w / * } {
+  \BNVS_DEBUG_subscan:n:RTN:w { scanned:B:IKS:w / X } {
 %</!final>
 % }
 %<*!debug>
@@ -14901,7 +15345,7 @@ end
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
     \BNVS_ast_plc_wrap:n { ##1 }
-    \BNVS_ast_prefix_set:n { \IS:w }
+    \BNVS_ast_pfX_set:n { \IS:w }
   } {
 %    \end{macrocode}
 % \end{KWN.macrocode}
@@ -14917,7 +15361,7 @@ end
 % \KWNfootprints
 % Execute the \KWNscaNcBcw\ instructions including the terminating
 % branch function \KWNlatex*{\BNVS_scanned_B:w}.
-% The \KWNmeta{prefix:w} will possibly change.
+% The \KWNmeta{pfX:w} will possibly change.
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
     \cs_set:Npn \BNVS_scaN:B:w ##1 { #1 }
@@ -15325,7 +15769,7 @@ end
 %</!debug>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_ast_plc_wrap_grp:n { ##1 }
+    \BNVS_ast_plc_init_grp:n { ##1 }
     \BNVS_xprt_grp:n { \P:n { #2 } }
   } {
     \BNVS_scanned_set:B {
@@ -15383,7 +15827,7 @@ end
 %</!debug>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_ast_plc_wrap_grp:n { ##1 }
+    \BNVS_ast_plc_init_grp:n { ##1 }
     \exp_args:Ne \BNVS_xprt_grp:n {
 %    \end{macrocode}
 % \end{KWN.macrocode}
@@ -15450,7 +15894,7 @@ end
 %</!debug>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_ast_plc_wrap_grp:n { ##1 }
+    \BNVS_ast_plc_init_grp:n { ##1 }
   } {
 %    \end{macrocode}
 % \end{KWN.macrocode}
@@ -15845,7 +16289,7 @@ end
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% Create a scan group to manage the \KWNmeta{prefix:w}.
+% Create a scan group to manage the \KWNmeta{pfX:w}.
 % It will be closed by a call to
 % \KWNlatex{\BNVS_scanned_B:w}.
 % \begin{KWN.macrocode}
@@ -15867,8 +16311,8 @@ end
 % By default we start on a standalone identifier,
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-    \BNVS_ast_prefix_set:n { \ISR:w }
-    \exp_args:Ne \BNVS_ast_plc_wrap_mpt:n {
+    \BNVS_ast_pfX_set:n { \ISR:w }
+    \exp_args:Ne \BNVS_ast_plc_init_mpt:n {
       { \__bnvs_tl_use:c I }
       { \__bnvs_tl_use:c S }
       { \exp_not:n { ##1 } }
@@ -15879,7 +16323,7 @@ end
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% Create a scan group to manage the \KWNmeta{prefix:w}.
+% Create a scan group to manage the \KWNmeta{pfX:w}.
 % \begin{KWN.macrocode}
 % \begin{KWN.test}{BNVS:Nn=\BNVS_scanned_dot:n:B:P:w{/1}, eringo}
 % \__bnvs_tl_set:cn I { 0 }
@@ -15890,7 +16334,7 @@ end
 %   \BNVS_coverage:n { TEST / top / B:w }
 % }
 % \BNVS_scanned_dot:n:B:P:w {
-%   \BNVS_ast_prefix_set:n { \TEST:w }
+%   \BNVS_ast_pfX_set:n { \TEST:w }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
 %   \BNVS_scanned_B:w
@@ -16141,7 +16585,7 @@ end
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% Create a scan group to manage the \KWNmeta{prefix:w}.
+% Create a scan group to manage the \KWNmeta{pfX:w}.
 % It will be closed by a call to
 % \KWNlatex{\BNVS_scanned_B:w}.
 % \begin{KWN.macrocode}
@@ -16163,8 +16607,8 @@ end
 % By default we start on a standalone identifier,
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-    \BNVS_ast_prefix_set:n { \ISR:w }
-    \exp_args:Ne \BNVS_ast_plc_wrap_mpt:n {
+    \BNVS_ast_pfX_set:n { \ISR:w }
+    \exp_args:Ne \BNVS_ast_plc_init_mpt:n {
       { \__bnvs_tl_use:c I }
       { \__bnvs_tl_use:c S }
       { \exp_not:n { ##1 } }
@@ -16183,7 +16627,7 @@ end
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% Create a scan group to manage the \KWNmeta{prefix:w}.
+% Create a scan group to manage the \KWNmeta{pfX:w}.
 % \begin{KWN.macrocode}
 % \begin{KWN.test}{BNVS:Nn=\BNVS_scanned_dot:n:B:N:w{/1}, eringo}
 % \__bnvs_tl_set:cn I { 0 }
@@ -16195,7 +16639,7 @@ end
 % }
 % \BNVS_scanned_dot:n:B:N:w {
 %   \BNVS_coverage:n { TEST / before }
-%   \BNVS_ast_prefix_set:n { \TEST:w }
+%   \BNVS_ast_pfX_set:n { \TEST:w }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
 %   \BNVS_scanned_B:w
@@ -16249,7 +16693,7 @@ end
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% Create a scan group to manage the \KWNmeta{prefix:w}.
+% Create a scan group to manage the \KWNmeta{pfX:w}.
 % \begin{KWN.macrocode}
 % \begin{KWN.test}{BNVS:Nn=\BNVS_scanned_dot:B:N:w{/1}, eringo}
 % \__bnvs_tl_set:cn I { 0 }
@@ -16261,7 +16705,7 @@ end
 % }
 % \BNVS_scanned_dot:n:B:N:w {
 %   \BNVS_coverage:n { TEST / before }
-%   \BNVS_ast_prefix_set:n { \TEST:w }
+%   \BNVS_ast_pfX_set:n { \TEST:w }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
 %   \BNVS_scanned_B:w
@@ -16410,7 +16854,7 @@ end
 % }
 % \BNVS_scaN_ISR:B:Fw {
 %   \BNVS_coverage:n { TEST / block: }
-%   \BNVS_ast_prefix_set:n { \ISR:w }
+%   \BNVS_ast_pfX_set:n { \ISR:w }
 %   #1
 % } {
 %   \test_fail:n { TEST / F:w }
@@ -16448,7 +16892,7 @@ end
 %   \peek_charcode_remove:NTF ? {
 %     \BNVS_coverage:n { TEST / Block: }
 %     \BNVS_will_end:n {
-%       \BNVS_ast_prefix_set:n { \TEST:w }
+%       \BNVS_ast_pfX_set:n { \TEST:w }
 %     }
 %     \BNVS_xprt_ast:n { SUKSESON }
 %     \BNVS_scanned_B:w
@@ -16463,11 +16907,11 @@ end
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % ^^A
-% \end{KWN.GOBBLE.NO}
+% \end{KWN.GOBBLE}
 % ^^A
 % \subsubsection{Assignment units}
 % ^^A
-% \begin{KWN.GOBBLE.NO}
+% \begin{KWN.GOBBLE}
 % ^^A
 % Here is the grammar
 % \input{\jobname-grammar-ISRMOR.tex}
@@ -16548,13 +16992,13 @@ end
 %</!debug>
 % \end{KWN.gobble}
 %    \begin{macrocode}
-    \BNVS_ast_plc_wrap_grp:n { ##1 }
+    \BNVS_ast_plc_init_grp:n { ##1 }
   } { \BNVS_error:n { Unexpected } \BNVS_scanned_L:w }
     { \BNVS_error:n { Unexpected } \BNVS_scanned_L:w }
     { \BNVS_error:n { Unexpected } \BNVS_scanned_L:w }
     { \BNVS_end_scaN_no_I_change: #1 }
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:MLS:nnw{/comMa:w}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:MLS:nnw{/comMa:w}, scaN_MLS:w, eringo}
 % \BNVS_scanned_set:M {
 %   \BNVS_coverage:n { TEST / top / comMa:w }
 % }
@@ -16572,7 +17016,7 @@ end
 %    \begin{macrocode}
     { \BNVS_end_scaN_no_I_change: #2 }
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:MLS:nnw{/L:w}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:MLS:nnw{/L:w}, scaN_MLS:w, eringo}
 % \BNVS_scanned_set:L {
 %   \BNVS_coverage:n { TEST / top / L:w }
 % }
@@ -16591,7 +17035,7 @@ end
 %    \begin{macrocode}
     { \BNVS_end_scaN_no_I_change: #3 }
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:MLS:nnw{/Stop:}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:MLS:nnw{/Stop:}, scaN_MLS:w, eringo}
 % \BNVS_scanned_set:S {
 %   \BNVS_coverage:n { TEST / top / S: }
 % }
@@ -16634,10 +17078,10 @@ end
   \peek_regex_replace_once:NnTF \c__bnvs_ModOpEq_regex {
     \cB\{ \1 \cE\} \cB\{ \2 \cE\}
   } {
-    \BNVS_ast_prefix_will_set:n { \ISRMOR:w }
+    \BNVS_ast_pfX_will_set:n { \ISRMOR:w }
     \BNVS_scanned_ModOpEq:MLS:nnw { #1 } { #2 } { #3 }
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/comMa:w}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/comMa:w}, scaN_MLS:w, eringo}
 % \BNVS_scaN_MOR:MLS:Fw {
 %   \BNVS_coverage:n { TEST / comMa:w }
 % } {
@@ -16650,7 +17094,7 @@ end
 % \assert_coverage:nn { TEST / comMa:w } A
 % \assert_xprted:nn { { ? } { - } { \:n { 1 } } } Z
 % \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/L:w}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/L:w}, scaN_MLS:w, eringo}
 % \BNVS_scaN_MOR:MLS:Fw {
 %   \test_fail:n { TEST / comMa:w }
 % } {
@@ -16664,7 +17108,7 @@ end
 % \assert_coverage:nn { TEST / L:w } A
 % \assert_xprted:nn { { } { + } { \:n { 1 } } } Z
 % \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/Stop:}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/Stop:}, scaN_MLS:w, eringo}
 % \BNVS_scaN_MOR:MLS:Fw {
 %   \test_fail:n { TEST / comMa:w }
 % } {
@@ -16726,17 +17170,17 @@ end
 \cs_new:Npn \BNVS_scaN_ISRMOR:MLS:Fw #1 #2 #3 #4 {
   \BNVS_scaN_ISR:B:Fw {
     \BNVS_scaN_MOR:MLS:Fw {
-      \BNVS_ast_prefix_will_set:n { \ISRMOR }
+      \BNVS_ast_pfX_will_set:n { \ISRMOR }
       #1
     } {
-      \BNVS_ast_prefix_will_set:n { \ISRMOR }
+      \BNVS_ast_pfX_will_set:n { \ISRMOR }
       #2
     } {
-      \BNVS_ast_prefix_will_set:n { \ISRMOR }
+      \BNVS_ast_pfX_will_set:n { \ISRMOR }
       #3
     } { #4 }
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/comMa:w}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/comMa:w}, scaN_MLS:w, eringo}
 % \BNVS_scanned_set:B {
 %   \BNVS_coverage:n { TEST / top / B:w }
 % }
@@ -16753,7 +17197,7 @@ end
 % \assert_coverage:nnn { TEST / comMa:w } { TEST / top / B:w } A
 % \assert_xprted:nn { \ISRMOR { I } { S } { { \P:n { R } } } { ? } { - } { \:n { 1 } } } Z
 % \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/L:w}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/L:w}, scaN_MLS:w, eringo}
 % \BNVS_scanned_set:B {
 %   \BNVS_coverage:n { TEST / top / B:w }
 % }
@@ -16771,7 +17215,7 @@ end
 % \assert_coverage:nnn { TEST / L:w } { TEST / top / B:w } A
 % \assert_xprted:nn { \ISRMOR { I } { S } { { \P:n { R } } } { } { + } { \:n { 1 } } } Z
 % \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/Stop:}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/Stop:}, scaN_MLS:w, eringo}
 % \BNVS_scanned_set:B {
 %   \BNVS_coverage:n { TEST / top / B:w }
 % }
@@ -16799,7 +17243,7 @@ end
 %    \begin{macrocode}
     #4
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/F:w}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_MOR:MLS:Fw{/F:w}, scaN_MLS:w, eringo}
 % \BNVS_scaN_ISRMOR:MLS:Fw {
 %   \test_fail:n { TEST / comMa:w }
 % } {
@@ -16818,11 +17262,11 @@ end
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % ^^A
-% \end{KWN.GOBBLE.NO}
+% \end{KWN.GOBBLE}
 % ^^A
 % \subsubsection{Call units}
 % ^^A
-% \begin{KWN.GOBBLE.NO}
+% \begin{KWN.GOBBLE}
 % ^^A
 % ^^A
 % Here is the grammar
@@ -16934,7 +17378,7 @@ end
 %    \begin{macrocode}
 \cs_new:Npn \BNVS_scaN_ISRC:B:Fw #1 {
   \BNVS_scaN_ISR:B:Fw {
-    \BNVS_ast_prefix_will_set:n { \ISRC:w }
+    \BNVS_ast_pfX_will_set:n { \ISRC:w }
     \BNVS_scaN_call:B:w { #1 }
   }
 %    \end{macrocode}
@@ -16945,7 +17389,7 @@ end
 %    \begin{macrocode}
 }
 %    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_ISRC:B:Fw{/1}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_ISRC:B:Fw{/1}, scaN_MLS:w, eringo}
 % \BNVS_scanned_set:B {
 %   \BNVS_coverage:n { TEST / top / B:w }
 % }
@@ -16958,7 +17402,7 @@ end
 % \assert_coverage:nnn { TEST / Block: } { TEST / top / B:w } A
 % \assert_xprted:nn { \ISRC:w { I } { S } { { \P:n { R } } } { ... } } Z
 % \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_ISRC:B:Fw{/F:w}, scaN_MLS, eringo}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_ISRC:B:Fw{/F:w}, scaN_MLS:w, eringo}
 % \BNVS_scanned_set:B {
 %   \BNVS_coverage:n { TEST / top / B:w }
 % }
@@ -16972,11 +17416,11 @@ end
 % \end{KWN.test}
 % \end{KWN.macrocode}
 % ^^A
-% \end{KWN.GOBBLE.NO}
+% \end{KWN.GOBBLE}
 % ^^A
 % \subsubsection{Resolution units}
 % ^^A
-% ^^A \begin{KWN.GOBBLE.NO}
+% \begin{KWN.GOBBLE}
 % ^^A
 % Here is the grammar
 % \input{\jobname-grammar-Rslv.tex}
@@ -17050,7 +17494,7 @@ end
 %   \BNVS_coverage:n { TEST / T: }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { TEST / F:w }
 % } ?()
@@ -17069,7 +17513,7 @@ end
 %   \BNVS_coverage:n { TEST / T: }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
-%    \BNVS_scan:w
+%    \BNVS_scaN:w
 % } {
 %   \test_fail:n { TEST / F:w }
 % } ?(1,2)
@@ -17092,7 +17536,7 @@ end
 %   \BNVS_coverage:n { TEST / T: }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { TEST / F:w }
 % } ?( ^^A)
@@ -17112,7 +17556,7 @@ end
 %   \BNVS_coverage:n { TEST / T: }
 % } {
 %   \BNVS_coverage:n { TEST / scaN:w }
-%   \BNVS_scan:w
+%   \BNVS_scaN:w
 % } {
 %   \test_fail:n { TEST / F:w }
 % } ?(123^^A)
@@ -17173,7 +17617,7 @@ end
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % ^^A
-% ^^A \end{KWN.GOBBLE.NO}
+% \end{KWN.GOBBLE}
 % ^^A
 % \subsubsection{VAZL units}
 % ^^A
@@ -17197,6 +17641,1010 @@ end
 % \input{\jobname-ast-VAZL.tex}
 % ^^A
 % \begin{function} {
+%   \BNVS_skip_OCMLS:oc:w,
+%   \BNVS_skip_OCMLS:w,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_skip_OCMLS:oc:w}^^A
+% \KWNlatex*{{|\KWNmeta{O error}|}}^^A
+% \KWNlatex*{{|\KWNmeta{C error}|}}
+% \KWNlatex*{\BNVS_skip_OCML:w}
+% \end{syntax}
+% Utilities.
+% Skip range components, to recover from errors.
+% \end{function}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_set:Npn \BNVS_skip_OCMLS:oc:w #1 #2 {
+  \BNVS_subscan:RTN:w { } {
+    \BNVS_scanned_set:OCMLS {
+      #1
+      \BNVS_ast_plc_none: \BNVS_end_scan: \BNVS_skip_OCMLS:oc:w { } { }
+    } {
+      #2
+      \BNVS_ast_plc_none: \BNVS_end_scan: \BNVS_skip_OCMLS:oc:w { } { }
+    } {
+      \BNVS_ast_plc_none: \BNVS_end_scan: \BNVS_scanned_M:w
+    } {
+      \BNVS_ast_plc_none: \BNVS_end_scan: \BNVS_scanned_L:w
+    } {
+      \BNVS_ast_plc_none: \BNVS_end_scan: \BNVS_scanned_S:
+    }
+  } {
+    \BNVS_scaN_OCMLS:w
+  }  
+}
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:N=\BNVS_skip_OCMLS:oc:w, scaN_OCMLS:w, eringo}
+% \BNVS_scanned_set:S {
+%   \BNVS_coverage:n { TEST / top / S: }
+% }
+% \BNVS_skip_OCMLS:oc:w {
+%   \BNVS_coverage:n { TEST / O: }
+% } {
+%   \test_fail:n { TEST / C: }
+% } : 1 :: 2 : 3 :: 1 : 2
+% \assert_coverage:nnn { TEST / O: } { TEST / top / S: } A
+% \assert_xprted:nn { } Z
+% \BNVS_coverage_clear:
+% \BNVS_skip_OCMLS:oc:w {
+%   \test_fail:n { TEST / O: }
+% } {
+%   \BNVS_coverage:n { TEST / C: }
+% } :: 1 : 2 :: 3 : 1 :: 2
+% \assert_coverage:nnn { TEST / C: } { TEST / top / S: } A
+% \assert_xprted:nn { } Z
+% \end{KWN.test}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_set:Npn \BNVS_skip_OCMLS:w {
+  \BNVS_skip_OCMLS:oc:w { } { }  
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_end_scan:XX,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_end_scan:XX}^^A
+% \KWNlatex*{{|\KWNpfX|}}^^A
+% \KWNlatex*{{|\KWNpfX|}}
+% \end{syntax}
+% Utility.
+% \end{function}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_set:Npn \BNVS_end_scan:XX #1 #2 {
+  \BNVS_if_xprted_empty:TF {
+    \BNVS_end_scan:
+    \BNVS_ast_pfX_will_set:n { #1 }
+  } {
+    \BNVS_ast_plc_init_grp:n { ##1 }
+    \BNVS_end_scan:
+    \BNVS_ast_pfX_will_set:n { #2 }
+    \BNVS_will_end:n {
+      \BNVS_ast_plc_wrap:n { ##1 }
+    }
+  }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_scaN_VAZL:w,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_scaN_VAZL:w}^^A
+% \KWNlatex*{|\KWNInputStream|}
+% \end{syntax}
+% Scan the input stream for a \KWNVAZL\ unit.
+% The scanning process will end on the first comma,
+% the first unbalanced closing delimiter (at the same level)
+% or in stop situation, calling one of
+% \KWNlatex*{\BNVS_scanned_L:w},
+% \KWNlatex*{\BNVS_scanned_M:w} or
+% \KWNlatex*{\BNVS_scanned_S:}.
+% Used by
+% \KWNlatex[to:N=\BNVS_scaN_VAZL:w]{\BNVS_scaN_VAZL:MLS:w}.
+% \end{function}
+% ^^A
+% \begin{KWN.macrocode}
+%    \begin{macrocode}}
+\cs_new:Npn \BNVS_scaN_VAZL:w {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Create a subscan session to manage the ast policy.
+% The \KWNpfX\ will depend on the material scanned.
+% The first component is scanned in this session,
+% the other ones are scanned in sub sessions.
+% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_subscan:n:OCMLSN:w { scaN_VAZL:w / AST } {
+%</!final>
+% }
+%<*!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_subscan:OCMLSN:w {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%</!debug>
+% \end{KWN.gobble}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% A single colon has been scanned, next operations depend
+% on the emptiness of \KWNA.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+    \BNVS_if_xprted_empty:TF {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Scan a \KWNlatex*{:|\KWNZ|} or a \KWNlatex*{:|\KWNZ|::|\KWNL|} range.
+% Keep the same scanning session for \KWNZ.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+      \BNVS_ast_plc_init:XX:n { \star: } { \:Z } { { ####1 } }
+      \BNVS_scanned_set:OC {
+        \BNVS_error:n { Unexpected~`:',~replaced~by~`::'. }
+        \BNVS_scanned_C:w
+      } {
+        \BNVS_if_xprted_empty:TF {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Bad \KWNlatex*{: ::...|\KWNL|} range.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+          \BNVS_error:n { Unexpected~`::...',~ignored. }
+          \BNVS_ast_plc_init_mpt:X:n { \star: } { }
+          \BNVS_skip_OCMLS:oc:w { } { }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/*}, Test_VAZL:w, eringo}
+% \test_catch_error:n {}
+% \Test_VAZL:w :~::
+% \assert_in_error:nn { Unexpected~`::...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \star: } Z
+% \end{KWN.test}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/*}, Test_VAZL:w, eringo}
+% \test_catch_error:n {}
+% \Test_VAZL:w :~:: 1
+% \assert_in_error:nn { Unexpected~`::...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \star: } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+        } {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% \KWNlatex*{: |\KWNZ|} range.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+          \BNVS_ast_plc_init_mpt:X:n { } { ########1 }
+          \BNVS_xprted_brace:
+          \BNVS_scanning_ZL:w
+        }
+      }
+      \BNVS_scaN_OCMLS:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/*}, Test_VAZL:w, eringo}
+% \Test_VAZL:w :
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \star: } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_xprted_brace:
+      \BNVS_scanning_AZ:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/AZ/M:w}, Test_VAZL:w, ignore}
+% \BNVS_scanned_set:MLS {
+%   \BNVS_coverage:n { TEST / top / M:w }
+% } {
+%   \test_fail:n { TEST / top / L:w }
+% } {
+%   \test_fail:n { TEST / top / S: }
+% }
+% \BNVS_scaN_VAZL:w 1 : 2 ,
+% \assert_coverage:nn { TEST / top / M:w } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/AZ/L:w}, Test_VAZL:w, ignore}
+% \BNVS_scanned_set:MLS {
+%   \test_fail:n { TEST / top / M:w }
+% } {
+%   \BNVS_coverage:n { TEST / top / L:w }
+% } {
+%   \test_fail:n { TEST / top / S: }
+% }
+% \BNVS_scaN_VAZL:MLS:w 1 : 2 ^^A(
+% )
+% \assert_coverage:nn { TEST / top / L:w } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/AZ/S:}, Test_VAZL:w, ignore}
+% \BNVS_scaN_VAZL:w 1 : 2
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    }
+  } {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% A double colon has been scanned, next operations depend
+% on the emptiness of \KWNA.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+    \BNVS_if_xprted_empty:TF {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Scan a \KWNlatex*{::|\KWNL|} or a \KWNlatex*{::|\KWNL|:|\KWNZ|} range.
+% Keep the same scanning session for \KWNL.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+      \BNVS_ast_plc_init:XX:n { \star: } { \:L } { { ####1 } }
+      \BNVS_scanned_set:OC {
+        \BNVS_if_xprted_empty:TF {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Bad \KWNlatex*{:: :...|\KWNL|} range.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+          \BNVS_error:n { Unexpected~`:...',~ignored. }
+          \BNVS_ast_plc_init_mpt:X:n { \star: } { }
+          \BNVS_skip_OCMLS:oc:w { } { }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/*}, Test_VAZL:w, eringo}
+% \test_catch_error:n {}
+% \Test_VAZL:w ::~:
+% \assert_in_error:nn { Unexpected~`:...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \star: } Z
+% \end{KWN.test}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/*}, Test_VAZL:w, eringo}
+% \test_catch_error:n {}
+% \Test_VAZL:w ::~: 1
+% \assert_in_error:nn { Unexpected~`:...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \star: } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+        } {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% \KWNlatex*{:: |\KWNL|} range.
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+          \BNVS_ast_plc_init_mpt:X:n { } { ########1 }
+          \BNVS_xprted_brace:
+          \BNVS_scanning_LZ:w
+        }
+      } {
+        \BNVS_error:n { Unexpected~`::',~replaced~by~`:'. }
+        \BNVS_scanned_O:w
+      }
+      \BNVS_scaN_OCMLS:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/*}, Test_VAZL:w, eringo}
+% \Test_VAZL:w :
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \star: } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_xprted_brace:
+      \BNVS_scanning_AL:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/AZ/M:w}, Test_VAZL:w, ignore}
+% \BNVS_scanned_set:MLS {
+%   \BNVS_coverage:n { TEST / top / M:w }
+% } {
+%   \test_fail:n { TEST / top / L:w }
+% } {
+%   \test_fail:n { TEST / top / S: }
+% }
+% \BNVS_scaN_VAZL:w 1 : 2 ,
+% \assert_coverage:nn { TEST / top / M:w } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/AZ/L:w}, Test_VAZL:w, ignore}
+% \BNVS_scanned_set:MLS {
+%   \test_fail:n { TEST / top / M:w }
+% } {
+%   \BNVS_coverage:n { TEST / top / L:w }
+% } {
+%   \test_fail:n { TEST / top / S: }
+% }
+% \BNVS_scaN_VAZL:MLS:w 1 : 2 ^^A(
+% )
+% \assert_coverage:nn { TEST / top / L:w } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/AZ/S:}, Test_VAZL:w, ignore}
+% \BNVS_scaN_VAZL:w 1 : 2
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    }
+  } {
+    \BNVS_end_scan: \BNVS_scanned_M:w   
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/V/M:w}, Test_VAZL:w, eringo}
+% \BNVS_scanned_set:MLS {
+%   \BNVS_coverage:n { TEST / top / M:w }
+% } {
+%   \test_fail:n { TEST / top / L:w }
+% } {
+%   \test_fail:n { TEST / top / S: }
+% }
+% \BNVS_scaN_VAZL:w 1 ,
+% \assert_coverage:nn { TEST / top / M:w } A
+% \assert_xprted:nn { \:V { \:n { 1 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+  } {
+    \BNVS_end_scan: \BNVS_scanned_L:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/V/L:w}, Test_VAZL:w, eringo}
+% \BNVS_scanned_set:MLS {
+%   \test_fail:n { TEST / top / M:w }
+% } {
+%   \BNVS_coverage:n { TEST / top / L:w }
+% } {
+%   \test_fail:n { TEST / top / S: }
+% }
+% \BNVS_scaN_VAZL:w 1 ^^A(
+% )
+% \assert_coverage:nn { TEST / top / L:w } A
+% \assert_xprted:nn { \:V { \:n { 1 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+  } {
+    \BNVS_end_scan: \BNVS_scanned_S:
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/V/M:w}, Test_VAZL:w, eringo}
+% \BNVS_scaN_VAZL:w 1
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:V { \:n { 1 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+  } {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% By default, we assume a \KWNV.
+% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+    \BNVS_DEBUG_coverage_scan:n { ▬▬▬▬▶︎~scaN_OCMLS:w }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_ast_plc_init:X { \:V }
+    \BNVS_scaN_OCMLS:w
+  }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_scanning_ZL:w,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_scanning_ZL:w}
+% \end{syntax}
+% Utility.
+% Scanning a \KWNlatex*{:|\KWNZ|} or a \KWNlatex*{:|\KWNZ|::|\KWNL|} range,
+% the \KWNZ\ is already exported between braces.
+% \end{function}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scanning_ZL:w {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Create a subscan process to scan the \KWNL\ component.
+% Only the
+% \KWNlatex*{\BNVS_scanned_M:w},
+% \KWNlatex*{\BNVS_scanned_L:w} or
+% \KWNlatex*{\BNVS_scanned_S:}
+% branch functions are expected, the other ones raise.
+% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_log:nn * { xprted~▬▬▬▬▬▬▬▬▬▬▬▬▶︎ }
+  \BNVS_if_xprted_empty:TF {
+    \BNVS_DEBUG_log:nn * { <none> }
+  } {
+    \BNVS_xprted_use:n { \BNVS_DEBUG_log:nn * }
+  }
+  \BNVS_DEBUG_subscan:n:RTN:w { scanning_ZL:w } { } {
+%</!final>
+% }
+%<*!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_subscan:RTN:w { } {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%</!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_will_end:n {
+      \BNVS_if_xprted_empty:TF {
+        \BNVS_did_end:n {
+          \BNVS_ast_pfX_set:n { \:Z }
+        }
+      } {
+        \BNVS_ast_plc_init_grp:n { ##1 }
+        \BNVS_did_end:n {
+          \BNVS_ast_pfX_set:n { \:ZL }
+        }
+      }
+    }
+    \BNVS_scanned_set:OC {
+      \BNVS_error:n { Unexpected~`:...',~ignored. }
+      \BNVS_end_scan:
+      \BNVS_skip_OCMLS:oc:w { } { }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/ZLZ}, Test_VAZL:w, eringo}
+% \test_catch_error:n { }
+% \Test_VAZL:w : 1 :: 2 : 3 :: 3
+% \assert_in_error:nn { Unexpected~`:...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:ZL { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_error:n { Unexpected~`::...',~ignored. }
+      \BNVS_end_scan:
+      \BNVS_skip_OCMLS:oc:w { } { }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/ZLL}, Test_VAZL:w, eringo}
+% \test_catch_error:n { }
+% \Test_VAZL:w : 1 :: 2 :: 3 : 3
+% \assert_in_error:nn { Unexpected~`::...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:ZL { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:MLS:w{/A/S:/Z+ZL}, Test_VAZL:w, eringo}
+% \Test_VAZL:w : 1
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:Z { \:n { 1 } } } Z
+% \BNVS_xprt_clear:
+% \BNVS_coverage_clear:
+% \Test_VAZL:w : 1 :: 2
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:ZL { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+  } {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { scanning_ZL:w~▬▬▬▬▶︎ }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_scaN_OCMLS:w
+  }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_scanning_LZ:w,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_scanning_LZ:w}
+% \end{syntax}
+% Utility.
+% Scanning a \KWNlatex*{::|\KWNL|} or a \KWNlatex*{::|\KWNL|:|\KWNZ|} range,
+% the \KWNL\ is already exported between braces.
+% \end{function}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scanning_LZ:w {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Create a subscan process to scan the \KWNZ\ component.
+% Only the
+% \KWNlatex*{\BNVS_scanned_M:w},
+% \KWNlatex*{\BNVS_scanned_L:w} or
+% \KWNlatex*{\BNVS_scanned_S:}
+% branch functions are expected, the other ones raise.
+% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_log:nn * { xprted~▬▬▬▬▬▬▬▬▬▬▬▬▶︎ }
+  \BNVS_if_xprted_empty:TF {
+    \BNVS_DEBUG_log:nn * { <none> }
+  } {
+    \BNVS_xprted_use:n { \BNVS_DEBUG_log:nn * }
+  }
+  \BNVS_DEBUG_subscan:n:RTN:w { scanning_LZ:w } { } {
+%</!final>
+% }
+%<*!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_subscan:RTN:w { } {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%</!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_will_end:n {
+      \BNVS_if_xprted_empty:TF {
+        \BNVS_did_end:n {
+          \BNVS_ast_pfX_set:n { \:L }
+        }
+      } {
+        \BNVS_ast_plc_init_grp:n { ##1 }
+        \BNVS_did_end:n {
+          \BNVS_ast_pfX_set:n { \:LZ }
+        }
+      }
+    }
+    \BNVS_scanned_set:OC {
+      \BNVS_error:n { Unexpected~`:...',~ignored. }
+      \BNVS_end_scan:
+      \BNVS_skip_OCMLS:oc:w { } { }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/LZL}, Test_VAZL:w, eringo}
+% \test_catch_error:n { }
+% \Test_VAZL:w :: 1 : 2 :: 3 : 3
+% \assert_in_error:nn { Unexpected~`::...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:LZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_error:n { Unexpected~`::...',~ignored. }
+      \BNVS_end_scan:
+      \BNVS_skip_OCMLS:oc:w { } { }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/LZZ}, Test_VAZL:w, eringo}
+% \test_catch_error:n { }
+% \Test_VAZL:w :: 1 : 2 : 3 :: 3
+% \assert_in_error:nn { Unexpected~`:...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:LZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:MLS:w{/A/S:/ZL+LZ}, Test_VAZL:w, eringo}
+% \Test_VAZL:w :: 1
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:L { \:n { 1 } } } Z
+% \BNVS_xprt_clear:
+% \BNVS_coverage_clear:
+% \Test_VAZL:w :: 1 : 2
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:LZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+  } {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_coverage_scan:n { scanning_LZ:w~▬▬▬▬▶︎ }
+%</!final>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_scaN_OCMLS:w
+  }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_scanning_AZ:w,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_scanning_AZ:w}
+% \end{syntax}
+% Utility.
+% Scanning a \KWNlatex*{|\KWNA|:|\KWNZ|}
+% or a \KWNlatex*{|\KWNA|:|\KWNZ|::|\KWNL|} range,
+% only the \KWNA\ is already exported, between braces.
+% \end{function}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scanning_AZ:w {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Create a subscan process to catch the emptiness of \KWNZ.
+% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_subscan:n:N:w { scanning_AZ:w } {
+%</!final>
+% }
+%<*!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_subscan:RTN:w {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%</!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_ast_plc_brc:
+    \BNVS_scanned_set:OCMLS {
+      \BNVS_error:n { Unexpected~`:',~replaced~by~`::'. }
+      \BNVS_scanned_C:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AZZ}, Test_VAZL:w, eringo}
+% \test_catch_error:n { }
+% \Test_VAZL:w 1 : 2 :
+% \assert_in_error:nn { Unexpected~`:' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_end_scan:
+      \BNVS_scanning_AZL:w
+    } {
+      \BNVS_end_scan:
+      \BNVS_ast_plc_init:X:n { \:AZ } { ####1 }
+      \BNVS_scanned_M:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AZZ}, Test_VAZL:w, eringo}
+% \BNVS_scanned_set:M {
+%   \BNVS_coverage:n { TEST / top / M:w }
+% }
+% \Test_VAZL:w 1 : 2 ,
+% \assert_coverage:nn { TEST / top / M:w } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_end_scan:
+      \BNVS_ast_plc_init:X:n { \:AZ } { ####1 }
+      \BNVS_scanned_L:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AZZ}, Test_VAZL:w, eringo}
+% \BNVS_scanned_set:L {
+%   \BNVS_coverage:n { TEST / top / L:w }
+% }
+% \Test_VAZL:w ^^A (
+% 1 : 2 )
+% \assert_coverage:nn { TEST / top / L:w } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_end_scan:
+      \BNVS_ast_plc_init:X:n { \:AZ } { ####1 }
+      \BNVS_scanned_S:
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AZ}, Test_VAZL:w, eringo}
+% \Test_VAZL:w 
+% 1 : 2
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    }
+    \BNVS_scaN_OCMLS:w
+  }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_scanning_AZL:w,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_scanning_AZL:w}
+% \end{syntax}
+% Utility.
+% Scanning a \KWNlatex*{|\KWNA|:|\KWNZ|} range
+% or a \KWNlatex*{|\KWNA|:|\KWNZ|::|\KWNL|} range,
+% the \KWNA\ and \KWNZ\ are already exported between braces.
+% Only the
+% \KWNlatex*{\BNVS_scanned_M:w},
+% \KWNlatex*{\BNVS_scanned_L:w} or
+% \KWNlatex*{\BNVS_scanned_S:}
+% are allowed, the other ones raise.
+% \end{function}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scanning_AZL:w {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Create a subscan process to catch the emptiness of \KWNL.
+% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_subscan:n:N:w { scanning_AZL:w } {
+%</!final>
+% }
+%<*!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_subscan:RTN:w {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%</!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_will_end:n {
+      \BNVS_if_xprted_empty:TF {
+        \BNVS_ast_plc_none:
+        \BNVS_did_end:n {
+          \BNVS_ast_plc_init_mpt:X:n { \:AZ } { ##1 }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AZ}, Test_VAZL:w, eringo,debug}
+% \Test_VAZL:w 1 : 2
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+        }
+      } {
+        \BNVS_ast_plc_brc:
+        \BNVS_did_end:n {
+          \BNVS_ast_plc_init_mpt:X:n { \:AZL } { ##1 }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AZL}, Test_VAZL:w, eringo}
+% \Test_VAZL:w 1 : 2 :: 3
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AZL { \:n { 1 } } { \:n { 2 } } { \:n { 3 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+        }
+      }
+    }
+    \BNVS_scanned_set:OC {
+      \BNVS_error:n { Unexpected~`:...',~ignored. }
+      \BNVS_end_scan:
+      \BNVS_skip_OCMLS:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AZLZ}, Test_VAZL:w, eringo}
+% \test_catch_error:n {}
+% \Test_VAZL:w 1 : 2 :: 3 : 2 :: 3
+% \assert_in_error:nn { Unexpected~`:...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AZL { \:n { 1 } } { \:n { 2 } } { \:n { 3 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_error:n { Unexpected~`::...',~ignored.. }
+      \BNVS_end_scan:
+      \BNVS_skip_OCMLS:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/AZL}, Test_VAZL:w, eringo}
+% \test_catch_error:n {}
+% \Test_VAZL:w 1 : 2 :: 3 :: 1 : 2
+% \assert_in_error:nn { Unexpected~`::...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AZL { \:n { 1 } } { \:n { 2 } } { \:n { 3 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    }
+    \BNVS_scaN_OCMLS:w
+  }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_scanning_AL:w,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_scanning_AL:w}
+% \end{syntax}
+% Utility.
+% Scanning a \KWNlatex*{|\KWNA|::|\KWNL|}
+% or a \KWNlatex*{|\KWNA|::|\KWNL|:|\KWNZ|} range,
+% only the \KWNA\ is already exported, between braces.
+% \end{function}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scanning_AL:w {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Create a subscan process to catch the emptiness of \KWNL.
+% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_subscan:n:N:w { scanning_AL:w } {
+%</!final>
+% }
+%<*!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_subscan:N:w {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%</!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_ast_plc_brc:
+    \BNVS_scanned_set:OCMLS {
+      \BNVS_end_scan:
+      \BNVS_scanning_ALZ:w
+    } {
+      \BNVS_error:n { Unexpected~`::',~replaced~by~`:'. }
+      \BNVS_scanned_O:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/ALL}, Test_VAZL:w, eringo}
+% \test_catch_error:n { }
+% \Test_VAZL:w 1 :: 2 ::
+% \assert_in_error:nn { Unexpected~`::' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_end_scan:
+      \BNVS_ast_plc_init:X:n { \:AL } { ####1 }
+      \BNVS_scanned_M:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/M:w/AL}, Test_VAZL:w, eringo}
+% \BNVS_scanned_set:M {
+%   \BNVS_coverage:n { TEST / top / M:w }
+% }
+% \Test_VAZL:w 1 :: 2 ,
+% \assert_coverage:nn { TEST / top / M:w } A
+% \assert_xprted:nn { \:AL { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_end_scan:
+      \BNVS_ast_plc_init:X:n { \:AL } { ####1 }
+      \BNVS_scanned_L:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/L:w/AL}, Test_VAZL:w, eringo}
+% \BNVS_scanned_set:L {
+%   \BNVS_coverage:n { TEST / top / L:w }
+% }
+% \Test_VAZL:w ^^A (
+% 1 :: 2 )
+% \assert_coverage:nn { TEST / top / L:w } A
+% \assert_xprted:nn { \:AL { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_end_scan:
+      \BNVS_ast_plc_init:X:n { \:AL } { ####1 }
+      \BNVS_scanned_S:
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AL}, Test_VAZL:w, eringo}
+% \Test_VAZL:w 
+% 1 :: 2
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AL { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    }
+    \BNVS_scaN_OCMLS:w
+  }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
+%   \BNVS_scanning_ALZ:w,
+% }
+% \begin{syntax}
+% \KWNlatex*{\BNVS_scanning_ALZ:w}
+% \end{syntax}
+% Utility.
+% Scanning a \KWNlatex*{|\KWNA|::|\KWNL|}
+% or \KWNlatex*{|\KWNA|::|\KWNL|:|\KWNZ|} range,
+% the \KWNA\ and \KWNAL\ are already exported between braces.
+% Only the
+% \KWNlatex*{\BNVS_scanned_M:w},
+% \KWNlatex*{\BNVS_scanned_L:w} or
+% \KWNlatex*{\BNVS_scanned_S:}
+% are allowed, the other ones raise.
+% \end{function}
+% \begin{KWN.macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \BNVS_scanning_ALZ:w {
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% \KWNfootprints
+% Create a subscan process to catch the emptiness of \KWNZ.
+% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_subscan:n:N:w { scanning_ALZ:w } {
+%</!final>
+% }
+%<*!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+  \BNVS_subscan:N:w {
+%    \end{macrocode}
+% \begin{KWN.gobble}
+%</!debug>
+% \end{KWN.gobble}
+%    \begin{macrocode}
+    \BNVS_will_end:n {
+      \BNVS_if_xprted_empty:TF {
+        \BNVS_ast_plc_none:
+        \BNVS_did_end:n {
+          \BNVS_ast_plc_init_mpt:X:n { \:AL } { ##1 }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/AL}, Test_VAZL:w, eringo,debug}
+% \Test_VAZL:w 1 :: 2
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:AL { \:n { 1 } } { \:n { 2 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+        }
+      } {
+        \BNVS_ast_plc_brc:
+        \BNVS_did_end:n {
+          \BNVS_ast_plc_init_mpt:X:n { \:ALZ } { ##1 }
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/ALZ}, Test_VAZL:w, eringo}
+% \Test_VAZL:w 1 :: 2 : 3
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:ALZ { \:n { 1 } } { \:n { 2 } } { \:n { 3 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+        }
+      }
+    }
+    \BNVS_scanned_set:OC {
+      \BNVS_error:n { Unexpected~`:...',~ignored. }
+      \BNVS_end_scan:
+      \BNVS_skip_OCMLS:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/S:/ALZZ}, Test_VAZL:w, eringo}
+% \test_catch_error:n {}
+% \Test_VAZL:w 1 :: 2 : 3 : 2 :: 3
+% \assert_in_error:nn { Unexpected~`:...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:ALZ { \:n { 1 } } { \:n { 2 } } { \:n { 3 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    } {
+      \BNVS_error:n { Unexpected~`::...',~ignored.. }
+      \BNVS_end_scan:
+      \BNVS_skip_OCMLS:w
+%    \end{macrocode}
+% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:w{/A/S:/ALZL}, Test_VAZL:w, eringo}
+% \test_catch_error:n {}
+% \Test_VAZL:w 1 :: 2 : 3 :: 1 : 2
+% \assert_in_error:nn { Unexpected~`::...' } 0
+% \assert_coverage:nn { TEST / top / S: } A
+% \assert_xprted:nn { \:ALZ { \:n { 1 } } { \:n { 2 } } { \:n { 3 } } } Z
+% \end{KWN.test}
+%    \begin{macrocode}
+    }
+    \BNVS_scaN_OCMLS:w
+  }
+}
+%    \end{macrocode}
+% \end{KWN.macrocode}
+% ^^A
+% \begin{function} {
 %   \BNVS_scaN_VAZL:MLS:w,
 % }
 % \begin{syntax}
@@ -17210,275 +18658,49 @@ end
 % The scanning process will end on the first comma,
 % the first unbalanced closing delimiter (at the same level)
 % or in stop situation.
-% The \KWNlatex{\BNVS_scaN_MLS:w} instructions are used to
-% scan the \KWNInputStream, they end with one of
-% \KWNlatex*{\BNVS_scanned_L:w},
-% \KWNlatex*{\BNVS_scanned_M:w} or
+% The \KWNlatex{\BNVS_scaN_OCMLS:w} instructions are used
+% in the background to scan the \KWNInputStream, they end with one of
+% \KWNlatex*{\BNVS_scanned_M:w},
+% \KWNlatex*{\BNVS_scanned_L:w} or
 % \KWNlatex*{\BNVS_scanned_S:}.
 % \end{function}
-% \KWNfootprints
-% Scan a \KWNlatex*{|\KWNA|:|\KWNZ|} range.
-% The \KWNlatex*{{|\KWNA|}} is already exported,
-% we begin a scan group because the prefix will depend whether
-% something more is exported.
+% ^^A
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-\cs_set:Npn \BNVS_scanning_AZ:w {
+\cs_new:Npn \BNVS_scaN_VAZL:MLS:w #1 #2 #3 {
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% Create a subscan process to catch the emptyness of \KWNZ.
+% Create a subscan process to manage the branch parameters.
 % \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%<*!final>
+  \BNVS_DEBUG_subscan:n:MLSN:w { scaN_VAZL:w } {
+%</!final>
+% }
+%<*!debug>
+% \end{KWN.gobble}
 %    \begin{macrocode}
-  \BNVS_subscan:RTN:w
-    { \BNVS_ast_plc_wrap_grp:n { ##1 } }
-    {
-      \BNVS_scanned_set:OCMLS
-        { \BNVS_end_scan: \BNVS_scanned_O:w }
-        { \BNVS_end_scan: \BNVS_scanned_C:w }
-        { \BNVS_end_scan:XX \:A \:AZ \BNVS_scanned_M:w }
-        { \BNVS_end_scan:XX \:A \:AZ \BNVS_scanned_L:w }
-        { \BNVS_end_scan:XX \:A \:AZ \BNVS_scanned_S: }
-    }
-    { \BNVS_scaN_OCMLS:w }
-}
+  \BNVS_subscan:MLSN:w {
 %    \end{macrocode}
-% \end{KWN.macrocode}
-% \begin{KWN.macrocode}
+% \begin{KWN.gobble}
+%</!debug>
+% \end{KWN.gobble}
 %    \begin{macrocode}
-\cs_set:Npn \BNVS_end_scan:XX #1 #2 {
-  \BNVS_if_xprted_empty:TF {
-    \BNVS_ast_plc_wrap:n { ##1 }
-    \BNVS_end_scan:
-    \BNVS_ast_prefix_will_set:n { #1 }
+    \BNVS_end_scan: #1
   } {
-    \BNVS_end_scan:
-    \BNVS_ast_prefix_will_set:n { #2 }
-  }
-}
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-\cs_set:Npn \BNVS_scaN_VAZL:MLS:w #1 #2 #3 {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% Create a subscan process to manage the \KWNmeta{prefix:w}.
-% \begin{KWN.macrocode}
-% \begin{KWN.gobble}
-%<*!final>
-  \BNVS_DEBUG_subscan:n:RTN:w { scaN_VAZL:MLS:w } { } { } {
-%</!final>
-% }
-%<*!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-  \BNVS_subscan:RTN:w { } { } {
-%    \end{macrocode}
-% \begin{KWN.gobble}
-%</!debug>
-% \end{KWN.gobble}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% Create a subscan process to manage some possible empty input.
-% \begin{KWN.macrocode}
-% \begin{KWN.gobble}
-%<*!final>
-    \BNVS_DEBUG_subscan:n:RTN:w { scaN_VAZL:MLS:w / * } {
-%</!final>
-%   }
-%<*!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_subscan:RTN:w {
-%    \end{macrocode}
-% \begin{KWN.gobble}
-%</!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    } { } {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% By default we start on a standalone identifier,
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-      \BNVS_scan:RBOCMLSTN:w {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% New group for the contents.
-% \begin{KWN.macrocode}
-% \begin{KWN.gobble}
-%<*!final>
-        \BNVS_DEBUG_begin_scan:n { scaN_VAZL:MLS:w / * }
-%</!final>
-%<*!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-        \BNVS_begin_scan:
-%    \end{macrocode}
-% \begin{KWN.gobble}
-%</!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-        \BNVS_ast_plc_wrap:n { ##1 }
-      } { \BNVS_error:n { Unexpected } \BNVS_scanned_L:w } {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% A single colon has been scanned.
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-        \BNVS_if_xprted_empty:TF {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% Scan a \KWNlatex*{:|\KWNZ|} or a \KWNlatex*{:|\KWNZ|::|\KWNL|} range.
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-          \BNVS_scaN_Z:w
-%    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:MLS:w{/M:w}, scaN_OCMLS, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / top / M:w }
-% }
-% \BNVS_scaN_VAZL:MLS:w {
-%   \BNVS_coverage:n { TEST / M:w }
-%   \BNVS_scanned_M:w
-% } {
-%   \test_fail:n { TEST / L:w }
-% } {
-%   \test_fail:n { TEST / S: }
-% } 1 : 2 ,
-% \assert_coverage:nnn { TEST / M:w } { TEST / top / M:w } A
-% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-
-        } {
-          \exp_args:NNx \BNVS_xprt_clear: \BNVS_xprt_ast:n {
-            { \BNVS_xprted_use:n { \exp_not:n } }
-          }
-          \BNVS_scanning_AZ:w
-%    \end{macrocode}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:MLS:w{/AZ/M:w}, scaN_OCMLS, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / top / M:w }
-% }
-% \BNVS_scaN_VAZL:MLS:w {
-%   \BNVS_coverage:n { TEST / M:w }
-%   \BNVS_scanned_M:w
-% } {
-%   \test_fail:n { TEST / L:w }
-% } {
-%   \test_fail:n { TEST / S: }
-% } 1 : 2 ,
-% \assert_coverage:nnn { TEST / M:w } { TEST / top / M:w } A
-% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
-% \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:MLS:w{/AZ/L:w}, scaN_OCMLS, eringo}
-% \BNVS_scanned_set:L {
-%   \BNVS_coverage:n { TEST / top / L:w }
-% }
-% \BNVS_scaN_VAZL:MLS:w {
-%   \test_fail:n { TEST / M:w }
-% } {
-%   \BNVS_coverage:n { TEST / L:w }
-%   \BNVS_scanned_L:w
-% } {
-%   \test_fail:n { TEST / S: }
-% } 1 : 2 ^^A(
-% )
-% \assert_coverage:nnn { TEST / L:w } { TEST / top / L:w } A
-% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
-% \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:MLS:w{/AZ/S:}, scaN_OCMLS, eringo}
-% \BNVS_scanned_set:S {
-%   \BNVS_coverage:n { TEST / top / S: }
-% }
-% \BNVS_scaN_VAZL:MLS:w {
-%   \test_fail:n { TEST / M:w }
-% } {
-%   \test_fail:n { TEST / L:w }
-% } {
-%   \BNVS_coverage:n { TEST / S: }
-%   \BNVS_scanned_S:
-% } 1 : 2
-% \assert_coverage:nnn { TEST / S: } { TEST / top / S: } A
-% \assert_xprted:nn { \:AZ { \:n { 1 } } { \:n { 2 } } } Z
-% \end{KWN.test}
-% \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_VAZL:MLS:w{/A/M:w}, scaN_OCMLS, eringo}
-% \BNVS_scanned_set:S {
-%   \BNVS_coverage:n { TEST / top / S: }
-% }
-% \BNVS_scaN_VAZL:MLS:w {
-%   \test_fail:n { TEST / M:w }
-% } {
-%   \test_fail:n { TEST / L:w }
-% } {
-%   \BNVS_coverage:n { TEST / S: }
-%   \BNVS_scanned_S:
-% } 1 :
-% \assert_coverage:nnn { TEST / S: } { TEST / top / S: } A
-% \assert_xprted:nn { \:A { \:n { 1 } } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-        }
-      } {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% Colons have been scanned.
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-      \BNVS_if_xprted_empty:TF {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% It is either a
-% \KWNlatex*{::|\KWNL|} or a 
-% \KWNlatex*{::|\KWNL|:|\KWNZ|} range. 
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-          \BNVS_scaN_L_or_LZ:w
-        } {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% It is a \KWNlatex*{|\KWNA|::|\KWNL|} range. 
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-          \BNVS_scaN_L:w
-        }
-      }
-        { \BNVS_end_scaN_no_I_change: #1 }
-        { \BNVS_end_scaN_no_I_change: #2 }
-        { \BNVS_end_scaN_no_I_change: #3 }
-      {
-      }
-        { \BNVS_scaN_OCMLS:w }
-    }
+    \BNVS_end_scan: #2
+  } {
+    \BNVS_end_scan: #3
+  } {
+    \BNVS_ast_plc_wrap:n { ##1 }
+    \BNVS_scaN_VAZL:w
   }
 }
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % ^^A
-% ^^A
-% ^^A
-% ^^A
-% ^^A
-% ^^A
-% ^^A
-% ^^A
-% ^^A \end{KWN.GOBBLE.NO}
-% ^^A
-% ^^A
-% ^^A
-% ^^A
-% ^^A
-% ^^A
+%% ^^A
 % ^^A
 % ^^A
 % ^^A
@@ -17491,596 +18713,27 @@ end
 % \end{document}
 % ^^A
 % ^^A
+% ^^A
+% ^^A
+% ^^A
+% ^^A
+% ^^A
+% ^^A
+% ^^A
+% ^^A
 
-
-
-
-
-
-% \end{implementation}
-% \end{document}
-
-
-
-
-
-
-
-
-
-
+% ^^A
 % ^^A
 % ^^A
 % ^^A
 % ^^A
 % \begin{function} {
-%   \BNVS_scaN_VAZL:w,
+%   \BNVS_scaN_VAZL_csl:MLS:w,
 % }
 % \begin{syntax}
-% \KWNlatex*{\BNVS_scaN_VAZL:n}^^A
-% \KWNlatex{|\KWNInputStream|}
-% \end{syntax}
-% Scan the input stream for a \KWNVAZL\ unit.
-% The scanning process will end on the first comma,
-% the first unbalanced closing delimiter (at the same level)
-% or on stop situation.
-% The \KWNlatex{{|\KWNscaNcw|}} instructions are used to
-% scan the \KWNInputStream, they end with one of
-% \KWNlatex*{\BNVS_scanned_L:w},
-% \KWNlatex*{\BNVS_scanned_M:w} or
-% \KWNlatex*{\BNVS_scanned_S:}.
-% \end{function}
-% \KWNfootprints
-% Utility function: either a \KWNlatex*{|\KWNmeta{A}|:|\KWNmeta{Z}|::}
-% or a \KWNlatex*{|\KWNmeta{A}|::|\KWNmeta{L}|:} has just been scanned.
-% The argument is a \KWNscaNcw set of instructions.
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-\cs_set:Npn \BNVS_scaN_Z_or_L:w {
-  \BNVS_scan:RBOCMLSTN:w {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% One group level for the contents.
-% \begin{KWN.macrocode}
-% \begin{KWN.gobble}
-%<*!final>
-    \BNVS_DEBUG_begin_scan:n { scaN_Z_or_L:w }
-%</!final>
-%<*!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_begin_scan:
-%    \end{macrocode}
-% \begin{KWN.gobble}
-%</!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_ast_plc_wrap:n { { ##1 } }
-  } { \BNVS_end_scan: \BNVS_scanned_B:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_Z_or_L:w{/B:w}, eringo}
-% \BNVS_scanned_set:B {
-%   \BNVS_coverage:n { TEST / top / B:w }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w {
-%   \peek_charcode_remove:NTF X {
-%     \BNVS_xprt_ast:n { \X: }
-%     \BNVS_scanned_B:w
-%   } {
-%     \test_fail:n A
-%   }
-% }
-% \BNVS_scaN_Z_or_L:w X
-% \assert_coverage:nnn { TEST / S: } { TEST / top / B:w } M
-% \assert_xprted:nn { { \X: } } Z
-% \end{KWN.test}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% No colon separator allowed here. We simply ignore them and
-% scan balanced material. 
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-    { \BNVS_error:n { No~`:'~here,~ignored. } \BNVS_scanned_L:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_Z_or_L:w{/:}, eringo}
-% \test_catch_error:n {}
-% \cs_set:Npn \BNVS_scanned_L:w {
-%   \BNVS_coverage:n { TEST / close }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_Z_or_L:w X :
-% \assert_in_error:nn { No~`:' } A
-% \assert_coverage:nn { TEST / close } M
-% \assert_xprted:nn { { \X: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_error:n { No~`::'~here,~ignored. } \BNVS_scanned_L:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_Z_or_L:w{/::}, eringo}
-% \test_catch_error:n {}
-% \cs_set:Npn \BNVS_scanned_L:w {
-%   \BNVS_coverage:n { TEST / close }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_Z_or_L:w X ::
-% \assert_in_error:nn { No~`::' } A
-% \assert_coverage:nn { TEST / close } M
-% \assert_xprted:nn { { \X: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_scanned_M:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_Z_or_L:w{/comma}, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_Z_or_L:w
-% X,
-% \assert_xprted:nn { { \X: } } A
-% \assert_coverage:nn { TEST / comma } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-   { \BNVS_end_scan: \BNVS_scanned_L:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_Z_or_L:w{/close}, eringo}
-% \cs_set:Npn \BNVS_scanned_L:w {
-%   \BNVS_coverage:n { TEST / close }
-% }
-% \cs_set:Npn \BNVS_test:w #1 {
-%   \BNVS_xprt_ast:n { #1 }
-%   \BNVS_scanned_L:w
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_Z_or_L:w
-% { \X: }
-% \assert_xprted:nn { { \X: } } A
-% \assert_coverage:nn { TEST / close } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_scanned_S: }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_Z_or_L:w{/stop}, eringo}
-% \BNVS_scanned_set:S {
-%   \BNVS_coverage:n { TEST / S: }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_Z_or_L:w X
-% \assert_coverage:nn { TEST / S: } A
-% \assert_xprted:nn { { \X: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { }
-    { \BNVS_scaN_blnc:w }
-}
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% Utility function: a \KWNlatex*{|\KWNmeta{A}|:} has just been scanned.
-% Next argument is \KWNmeta{Z}.
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-\cs_set:Npn \BNVS_scaN_ZL:w {
-  \BNVS_scan:RBOCMLSTN:w {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% One group level for the contents.
-% \begin{KWN.macrocode}
-% \begin{KWN.gobble}
-%<*!final>
-    \BNVS_DEBUG_begin_scan:n { scaN_ZL:w }
-%</!final>
-%<*!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_begin_scan:
-%    \end{macrocode}
-% \begin{KWN.gobble}
-%</!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_ast_plc_wrap:n { { ##1 } }
-  } { \BNVS_end_scan: \BNVS_xprt_ast:n { { } } \BNVS_scanned_B:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_ZL:w{/alter}, eringo}
-% \cs_set:Npn \BNVS_scanned_B:w{
-%   \BNVS_coverage:n { TEST / alter: }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w {
-%   \peek_charcode_remove:NTF X {
-%     \BNVS_xprt_ast:n { \X: }
-%     \BNVS_scanned_B:w
-%   } {
-%     \test_fail:n A
-%   }
-% }
-% \BNVS_scaN_ZL:w X
-% \assert_coverage:nn { TEST / alter: } M
-% \assert_xprted:nn { { \X: } { }     } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% We did not scan colons.
-% We export the third argument which is empty.
-% The same for comma and stop situation below.
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-    {
-      \BNVS_end_scan:
-      \BNVS_error:n { Missing~`:'. }
-      \BNVS_scaN_Z_or_L:w
-    }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_ZL:w{/:}, eringo}
-% \test_catch_error:n {}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_ZL:w
-% X : Y,
-% \assert_coverage:nn { TEST / comma } A
-% \assert_in_error:nn { Missing~`:' } F
-% \assert_xprted:nn { { \X: } { \Y: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_scaN_Z_or_L:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_ZL:w{/::}, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_ZL:w
-% Z :: L ,
-% \assert_coverage:nn { TEST / comma } A
-% \assert_xprted:nn { { \Z: } { \L: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_xprt_ast:n { { } } \BNVS_scanned_M:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_ZL:w{/comma}, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_xprt_ast:n }
-% \BNVS_scaN_ZL:w
-% { \X: }
-% \BNVS_scanned_M:w
-% \assert_coverage:nn { TEST / comma } A
-% \assert_xprted:nn { { \X: } { }     } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_xprt_ast:n { { } } \BNVS_scanned_L:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_ZL:w{/close}, eringo}
-% \cs_set:Npn \BNVS_scanned_L:w {
-%   \BNVS_coverage:n { TEST / close }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_xprt_ast:n }
-% \BNVS_scaN_ZL:w
-% { \X: }
-% \BNVS_scanned_L:w
-% \assert_coverage:nn { TEST / close } A
-% \assert_xprted:nn { { \X: } { }     } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_xprt_ast:n { { } } \BNVS_scanned_S: }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_ZL:w{/Stop:}, eringo}
-% \BNVS_scanned_set:S {
-%   \BNVS_coverage:n { TEST / S: }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \test_tl_to_str_unbraced:Nn \BNVS_scaN_ZL:w { X }
-% \assert_coverage:nn { TEST / S: } A
-% \assert_xprted:nn { { \X: } { }     } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { }
-    { \BNVS_scaN_blnc:w }
-}
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% Utility function: a \KWNlatex*{|\KWNmeta{A}|::} has just been scanned.
-% The argument is a \KWNscaNcw\ set of instructions.
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-\cs_set:Npn \BNVS_scaN_LZ:w {
-  \BNVS_scan:RBOCMLSTN:w {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% One group level for the contents.
-% \begin{KWN.macrocode}
-% \begin{KWN.gobble}
-%<*!final>
-    \BNVS_DEBUG_begin_scan:n { scaN_LZ:w }
-%</!final>
-%<*!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_begin_scan:
-%    \end{macrocode}
-% \begin{KWN.gobble}
-%</!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_ast_plc_wrap:n { { ##1 } }
-  } { \BNVS_end_scan: \BNVS_xprt_ast:n { { } } \BNVS_scanned_B:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_LZ:w{/alter}, eringo}
-% \cs_set:Npn \BNVS_scanned_B:w{
-%   \BNVS_coverage:n { TEST / alter: }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w {
-%   \peek_charcode_remove:NTF X {
-%     \BNVS_xprt_ast:n { \X: }
-%     \BNVS_scanned_B:w
-%   } {
-%     \test_fail:n A
-%   }
-% }
-% \test_tl_to_str:Nn \BNVS_scaN_LZ:w { X }
-% \assert_coverage:nn { TEST / alter: } M
-% \assert_xprted:nn { { \X: } { }     } Z
-% \end{KWN.test}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% We export the third argument which is empty.
-% The same for comma and stop situation below.
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_scaN_Z_or_L:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_LZ:w{/:}, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comMa: }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_LZ:w L : Z ,
-% \assert_coverage:nn { TEST / comMa: } A
-% \assert_xprted:nn { { \L: } { \Z: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    {
-      \BNVS_end_scan:
-      \BNVS_error:n { No~`::'~here. }
-      \BNVS_scaN_Z_or_L:w
-    }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_LZ:w{/::}, eringo}
-% \test_catch_error:n {}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_LZ:w L :: Z ,
-% \assert_coverage:nn { TEST / comma } A
-% \assert_in_error:nn { No~`::' } M
-% \assert_xprted:nn { { \L: } { \Z: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_xprt_ast:n { { } } \BNVS_scanned_M:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_LZ:w{/comma}, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_LZ:w
-% X ,
-% \assert_coverage:nn { TEST / comma } A
-% \assert_xprted:nn { { \X: } { }     } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_xprt_ast:n { { } } \BNVS_scanned_L:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_LZ:w{/close}, eringo}
-% \test_catch_error:n {}
-% \cs_set:Npn \BNVS_scanned_L:w {
-%   \BNVS_coverage:n { TEST / close }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_LZ:w ^^A(
-% X )
-% \assert_in_error:nn { Unexpected~delimiter } A
-% \assert_coverage:nn { TEST / close } M
-% \assert_xprted:nn { { \X: } { }     } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_xprt_ast:n { { } } \BNVS_scanned_S: }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_LZ:w{/q_stop}, eringo}
-% \BNVS_scanned_set:S {
-%   \BNVS_coverage:n { TEST / q_stop }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_LZ:w X \q_stop
-% \assert_coverage:nn { TEST / q_stop } A
-% \assert_xprted:nn { { \X: } { }     } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-  { }
-  { \BNVS_scaN_blnc:w }
-}
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \begin{KWN.macrocode}
-%    \begin{macrocode}
-\cs_set:Npn \BNVS_scaN_VAZL:w {
-  \BNVS_scan:RBOCMLSTN:w {
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% \KWNfootprints
-% One group level for the contents.
-% \begin{KWN.macrocode}
-% \begin{KWN.gobble}
-%<*!final>
-    \BNVS_DEBUG_begin_scan:n { scaN_VAZL:w }
-%</!final>
-%<*!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_begin_scan:
-%    \end{macrocode}
-% \begin{KWN.gobble}
-%</!debug>
-% \end{KWN.gobble}
-%    \begin{macrocode}
-    \BNVS_ast_plc_wrap:n { { ##1 } }
-    \BNVS_ast_prefix_set:n { \V:w }
-  } { \BNVS_end_scan: \BNVS_scanned_B:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_VAZL:w{/alter}, eringo}
-% \cs_set:Npn \BNVS_scanned_B:w{
-%   \BNVS_coverage:n { TEST / alter: }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w {
-%   \peek_charcode_remove:NTF V {
-%     \BNVS_xprt_ast:n { \V: }
-%     \BNVS_scanned_B:w
-%   } {
-%     \test_fail:n A
-%   }
-% }
-% \test_tl_to_str:Nn \BNVS_scaN_VAZL:w { V }
-% \assert_coverage:nn { TEST / alter: } A
-% \assert_xprted:nn { \V:w { \V: }    } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    {
-      \BNVS_ast_prefix_set:n { \AZL:w }
-      \BNVS_end_scan:
-      \BNVS_scaN_ZL:w
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_VAZL:w{/:}, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_VAZL:w A : Z ,
-% \assert_coverage:nn { TEST / comma   } A
-% \assert_xprted:nn { \AZL:w { \A: } { \Z: } { } } Z
-% \end{KWN.test}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_VAZL:w{/:/::}, eringo}
-% \test_catch_error:n {}
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \clist_map_inline:nn { close, comma, q_stop } {
-%   \cs_set:cpn { BNVS_scanned_#1: } {
-%     \BNVS_coverage:n { TEST / #1 }
-%   }
-% }
-% \BNVS_xprt_clear:^^A (
-% \BNVS_scaN_VAZL:w A : Z :: L )
-% \assert_in_error:nn { Unexpected~delimiter } A
-% \assert_coverage:nn { TEST / close   } { A/close }
-% \assert_xprted:nn { \AZL:w { \A: } { \Z: } { \L: } } { Z/close }
-% \BNVS_xprt_clear:
-% \BNVS_scaN_VAZL:w A : Z :: L ,
-% \assert_coverage:nn { TEST / comma   } { A/comma }
-% \assert_xprted:nn { \AZL:w { \A: } { \Z: } { \L: } } { Z/comma }
-% \BNVS_xprt_clear:
-% \BNVS_scaN_VAZL:w A : Z :: L \q_stop
-% \assert_coverage:nn { TEST / q_stop   } { A/q_stop }
-% \assert_xprted:nn { \AZL:w { \A: } { \Z: } { \L: } } { Z/q_stop }
-% \end{KWN.test}
-%    \begin{macrocode}
-    }
-    {
-      \BNVS_ast_prefix_set:n { \ALZ:w }
-      \BNVS_end_scan:
-      \BNVS_scaN_LZ:w
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_VAZL:w{/:}, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_VAZL:w  A : Z ,
-% \assert_coverage:nn { TEST / comma   } A
-% \assert_xprted:nn { \AZL:w { \A: } { \Z: } { } } Z
-% \end{KWN.test}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_VAZL:w{/:/::}, eringo}
-% \test_catch_error:n {}
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \clist_map_inline:nn { close, comma, q_stop } {
-%   \cs_set:cpn { BNVS_scanned_#1: } {
-%     \BNVS_coverage:n { TEST / #1 }
-%   }
-% }
-% \BNVS_xprt_clear:^^A (
-% \BNVS_scaN_VAZL:w A :: L : Z )
-% \assert_coverage:nn { TEST / close   } { A/close }
-% \assert_xprted:nn { \ALZ:w { \A: } { \L: } { \Z: } } { Z/close }
-% \BNVS_xprt_clear:
-% \BNVS_scaN_VAZL:w A :: L : Z ,
-% \assert_coverage:nn { TEST / comma   } { A/comma }
-% \assert_xprted:nn { \ALZ:w { \A: } { \L: } { \Z: } } { Z/comma }
-% \BNVS_xprt_clear:
-% \BNVS_scaN_VAZL:w A :: L : Z \q_stop
-% \assert_coverage:nn { TEST / q_stop   } { A/q_stop }
-% \assert_xprted:nn { \ALZ:w { \A: } { \L: } { \Z: } } { Z/q_stop }
-% \end{KWN.test}
-%    \begin{macrocode}
-    }
-    { \BNVS_end_scan: \BNVS_scanned_M:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_VAZL:w{/comma}, eringo}
-% \BNVS_scanned_set:M {
-%   \BNVS_coverage:n { TEST / comma }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_VAZL:w V ,
-% \assert_coverage:nn { TEST / comma   } A
-% \assert_xprted:nn { \V:w { \V: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_scanned_L:w }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_VAZL:w{/close}, eringo}
-% \test_catch_error:n {}
-% \cs_set:Npn \BNVS_scanned_L:w {
-%   \BNVS_coverage:n { TEST / close }
-% }
-% \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_VAZL:w ^^A
-% V )
-% \assert_in_error:nn { Unexpected~delimiter } A
-% \assert_coverage:nn { TEST / close   } M
-% \assert_xprted:nn { \V:w { \V: } } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-    { \BNVS_end_scan: \BNVS_scanned_S: }
-%    \end{macrocode}
-% \begin{KWN.test}{BNVS:Nn=\BNVS_scaN_VAZL:w{/q_stop}, eringo}
-% \BNVS_scanned_set:S {
-%   \BNVS_coverage:n { TEST / q_stop }
-% }
-% % \cs_set:Npn \BNVS_scaN_blnc:w { \BNVS_test:w }
-% \BNVS_scaN_VAZL:w V \q_stop
-% \assert_coverage:nn { TEST / q_stop } A
-% \assert_xprted:nn { \V:w { \V: }    } Z
-% \end{KWN.test}
-%    \begin{macrocode}
-  { }
-  { \BNVS_scaN_blnc:w }
-}
-%    \end{macrocode}
-% \end{KWN.macrocode}
-% ^^A
-% \begin{function} {
-%   \BNVS_scaN_VAZL_csl:nnnw,
-% }
-% \begin{syntax}
-% \KWNlatex*{\BNVS_scaN_VAZL_csl:nnw}^^A
-% \KWNlatex{{|\KWNmeta{xprt prefix:w}|}} ^^A
-% \KWNlatex{{|\KWNclosex|}} ^^A
+% \KWNlatex*{\BNVS_scaN_VAZL_csl:MLS:w}^^A
+% \KWNlatex{{|\KWNonMcw|}} ^^A
+% \KWNlatex{{|\KWNonLcw|}} ^^A
 % \KWNlatex{{|\KWNonSc|}} ^^A
 % \KWNlatex{|\KWNInputStream|}
 % \end{syntax}
@@ -18109,7 +18762,7 @@ end
 % \end{KWN.gobble}
 %    \begin{macrocode}
     \BNVS_ast_plc_wrap:n { { ##1 } }
-    \BNVS_ast_prefix_set:n { #1 }
+    \BNVS_ast_pfX_set:n { #1 }
   }
   { \BNVS_end_scan: #2 } { } { } { } { } { \BNVS_end_scan: #3 }
   { }
@@ -18243,10 +18896,10 @@ end
 % \begin{KWN.gobble}
 %</!debug>
 % \end{KWN.gobble}
-    \BNVS_ast_plc_wrap_grp:n { ##1 }
+    \BNVS_ast_plc_init_grp:n { ##1 }
     \BNVS_next_set:n { #1 }
     \BNVS_no_I_change:
-  } { } { \BNVS_scaN_R:nw { \BNVS_end_scaN_next: } }
+  } { } { \BNVS_scaN_R:nw { \BNVS_end_scan_next: } }
 }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_R_crl:nw/0, eringo}
@@ -18581,16 +19234,16 @@ end
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
       \BNVS_ast_plc_wrap:n { ##1 }
-      \BNVS_ast_prefix_set:n { \ISR:w }
+      \BNVS_ast_pfX_set:n { \ISR:w }
     } {
     } {
-      \BNVS_scanned_IKS_RCE:nww { \BNVS_end_scaN_next: }
+      \BNVS_scanned_IKS_RCE:nww { \BNVS_end_scan_next: }
     }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:cn={ scaN_ISRCE:TFw }{/ISR}, eringo}
 % \cs_set:Npn \BNVS_scaN_CE:nw #1 {
 %   #1
-% }
+% }}}
 % \cs_set:Npn \BNVS_scanned_IKS_RCE:nww #1 #2 #3 #4 {
 %   \assert_equal:nnn { #3 } { ! } A
 %   \BNVS_xprt_ast:n { { #2 } { #4 } { PPP } }
@@ -18645,10 +19298,10 @@ end
             { \__bnvs_tl_use:c S }
             \exp_not:n { { ##1 } }
         }
-        \BNVS_ast_prefix_set:n { \ISR:w }
+        \BNVS_ast_pfX_set:n { \ISR:w }
       }
       { }
-      { \BNVS_scanning_R::B:P:w { \BNVS_end_scaN_next: ##1 } }
+      { \BNVS_scanning_R::B:P:w { \BNVS_end_scan_next: ##1 } }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:cn={ scaN_ISRCE:TFw }{/.P}, eringo}
 % \cs_set:Npn \BNVS_scaN_CE:nw #1 {
@@ -18698,10 +19351,10 @@ end
               { \__bnvs_tl_use:c S }
               \exp_not:n { { ##1 } }
             }
-            \BNVS_ast_prefix_set:n { \ISR:w }
+            \BNVS_ast_pfX_set:n { \ISR:w }
           } {
           } {
-            \BNVS_scanning_R::B:N:w { \BNVS_end_scaN_next: }
+            \BNVS_scanning_R::B:N:w { \BNVS_end_scan_next: }
           }  
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:cn={ scaN_ISRCE:TFw }{/.N}, eringo}
@@ -18956,10 +19609,10 @@ end
 % \end{KWN.gobble}
 %    \begin{macrocode}
     \BNVS_next_set:n { \BNVS_scaN_CE:nw { #1 } }
-    \BNVS_ast_plc_wrap_grp:n { ##1 }
+    \BNVS_ast_plc_init_grp:n { ##1 }
   } {
   } {
-    \BNVS_scaN_R:nw { \BNVS_end_scaN_next: }
+    \BNVS_scaN_R:nw { \BNVS_end_scan_next: }
   }
 }
 %    \end{macrocode}
@@ -18992,11 +19645,11 @@ end
 %    \end{macrocode}
 % \end{KWN.macrocode}
 % \KWNfootprints
-% This is a call: change the \KWNmeta{xprt prefix:w},
+% This is a call: change the \KWNmeta{xprt pfX:w},
 % scan all the arguments as one group, only taking delimiters into account.
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-    \BNVS_ast_prefix_set:n { \ISRC:w }
+    \BNVS_ast_pfX_set:n { \ISRC:w }
     \BNVS_scaN_L:N:PXBSTN:w %(
       ) 
       { { ##1 } } { } { #1 } {
@@ -19004,7 +19657,7 @@ end
         `)'. }
         #2
       }
-      { \BNVS_ast_plc_wrap_grp:n { ##1 } }
+      { \BNVS_ast_plc_init_grp:n { ##1 } }
       { \BNVS_scaN_Raw_LS:w }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_CE:nw{/1}, eringo}
@@ -19130,7 +19783,7 @@ end
       `)' }
       #1
     }
-    { \BNVS_ast_plc_wrap_grp:n { ##1 } }
+    { \BNVS_ast_plc_init_grp:n { ##1 } }
     { \BNVS_scaN_VAZLRhs:nw { } }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_Rhs:nw{/?(VAZLRhs)}, eringo}
@@ -19151,7 +19804,7 @@ end
         `)' }
         #1
       }
-      { \BNVS_ast_plc_wrap_grp:n { ##1 } }
+      { \BNVS_ast_plc_init_grp:n { ##1 } }
       { \BNVS_scaN_Raw_LS:w }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:Nn=\BNVS_scaN_Rhs:nw{/"(inside)}, eringo}
@@ -19328,8 +19981,8 @@ end
 %    \begin{macrocode}
     \BNVS_next_set:n { #1 }
     \BNVS_xprt_ast:n { { #2 } { #3 } }
-    \BNVS_ast_plc_wrap_grp:n { ##1 }
-    \BNVS_ast_prefix_set:n { \ISRMOQ:w }
+    \BNVS_ast_plc_init_grp:n { ##1 }
+    \BNVS_ast_pfX_set:n { \ISRMOQ:w }
   }
   { \BNVS_error:n { Unreachable } \BNVS_scanned_L:w }
 %    \end{macrocode}
@@ -19352,7 +20005,7 @@ end
 % Comma branch function.
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-  { \BNVS_end_scaN_next: \BNVS_scanned_M:w }
+  { \BNVS_end_scan_next: \BNVS_scanned_M:w }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:nnnnw{/comma}, eringo}
 % \BNVS_begin_scan:
@@ -19390,12 +20043,12 @@ end
 % Closing delimiter branch function.
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-  { \BNVS_end_scaN_next: \BNVS_scanned_L:w }
+  { \BNVS_end_scan_next: \BNVS_scanned_L:w }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:nnnnw{/close;}, eringo}
 % \STOP
 % \BNVS_xprt_ast:n { { III } { SSS } { RRR } }
-% \BNVS_ast_prefix_set:n { \FIASKO:w }
+% \BNVS_ast_pfX_set:n { \FIASKO:w }
 % \cs_set:Npn \BNVS_test:n #1 {
 %   \BNVS_xprt_ast:n { #1 }
 %   \BNVS_test:w
@@ -19416,7 +20069,7 @@ end
 % \KWNlatex*{\q_stop} branch function.
 % \begin{KWN.macrocode}
 %    \begin{macrocode}
-  { \BNVS_end_scaN_next: \BNVS_scanned_S: }
+  { \BNVS_end_scan_next: \BNVS_scanned_S: }
 %    \end{macrocode}
 % \begin{KWN.test}{bnvs:Nn=\BNVS_scanned_ModOpEq:nnw{/q_stop}, eringo}
 % \BNVS_begin_scan:nn {
@@ -32428,7 +33081,7 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-        \BNVS_coverage:n { !z }
+    \BNVS_coverage:n { !z }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
@@ -32436,7 +33089,7 @@ end
 %    \end{macrocode}
 % \begin{KWN.gobble}
 %<*!final>
-        \BNVS_coverage:n { !!A }
+      \BNVS_coverage:n { !!A }
 %</!final>
 % \end{KWN.gobble}
 %    \begin{macrocode}
@@ -32555,8 +33208,9 @@ end
 % \BNVS_test:nnnnnnnnn {5} {3} {7} {1} {7} {7} {1} {7} I
 % \end{KWN.test}
 % \begin{KWN.gobble}
-    } {%}
+    } {
 %</!final>
+% }
 %<*!debug>
 % \end{KWN.gobble}
 %    \begin{macrocode}
@@ -32577,8 +33231,9 @@ end
 % \begin{KWN.gobble}
 %<*!final>
         \BNVS_coverage:n { !!A }
-        \int_compare:nNnTF \l__bnvs_a_tl < \l__bnvs_A_tl {%}
+        \int_compare:nNnTF \l__bnvs_a_tl < \l__bnvs_A_tl {
 %</!final>
+% }
 %<*!debug>
 % \end{KWN.gobble}
 %    \begin{macrocode}
@@ -35806,8 +36461,8 @@ fig.show()
   },
   minted language=latex,
 }
-  |\rlap{\KWNRndT{\KWNblnc}\KWNAST}\phantom{-------------}| ::= |\KWNmeta{prefix:w}| { |\KWNblnc\KWNAST| }
-   |\phantom{-------------}| |\vert|  |\KWNmeta{prefix:w}|   |\KWNblnc\KWNAST|
+  |\rlap{\KWNRndT{\KWNblnc}\KWNAST}\phantom{-------------}| ::= |\KWNmeta{pfX:w}| { |\KWNblnc\KWNAST| }
+   |\phantom{-------------}| |\vert|  |\KWNmeta{pfX:w}|   |\KWNblnc\KWNAST|
    |\phantom{-------------}| |\vert|             { |\KWNblnc\KWNAST| } 
    |\phantom{-------------}| |\vert|               |\KWNblnc\KWNAST|
 \end{tcblisting}
@@ -36080,6 +36735,8 @@ fig.show()
   &\rlap{\KWNAL\KWNAST}\hphantom{-------}& ::= \AL:w { &\KWNMLS\KWNAST& } { &\KWNMLS\KWNAST& }
   &\rlap{\KWNZL\KWNAST}\hphantom{-------}& ::= \ZL:w { &\KWNMLS\KWNAST& } { &\KWNMLS\KWNAST& }
   &\rlap{\KWNLZ\KWNAST}\hphantom{-------}& ::= \LZ:w { &\KWNMLS\KWNAST& } { &\KWNblnc\KWNAST& }
+  &\rlap{\KWNAZL\KWNAST}\hphantom{-------}& ::= \AZL:w { &\KWNMLS\KWNAST& } { &\KWNblnc\KWNAST& } { &\KWNblnc\KWNAST& }
+  &\rlap{\KWNALZ\KWNAST}\hphantom{-------}& ::= \ALZ:w { &\KWNMLS\KWNAST& } { &\KWNblnc\KWNAST& } { &\KWNblnc\KWNAST& }
   &\rlap{\KWNstar\KWNAST}\hphantom{-------}& ::= \star:
 \end{tcblisting}
 %</ast-VAZL-tex>
